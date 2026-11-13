@@ -1,9 +1,9 @@
-name: Build Gharb Studi App APK
+name: Build Gharb Android APK
 
 on:
-  workflow_dispatch:
   push:
     branches: [ main, master ]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -38,24 +38,24 @@ jobs:
       - name: Generate Release Keystore
         run: |
           mkdir -p keystore
-          keytool -genkeypair -v -keystore keystore/gharb-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias gharb_release_key -storepass "gharb@2026" -keypass "gharb@2026" -dname "CN=Gharb Studi, OU=Mobile, O=GharbStudi, L=Cairo, S=EG, C=EG"
+          keytool -genkeypair -v -keystore keystore/gharb-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias "gharb_release_key" -storepass "gharb@2026" -keypass "gharb@2026" -dname "CN=Gharb Studi, OU=Mobile, O=GharbStudi, L=Cairo, S=EG, C=EG"
 
       - name: Build Signed Release APK
         run: |
           gradle assembleRelease --no-daemon -Pandroid.injected.signing.store.file="$PWD/keystore/gharb-release.jks" -Pandroid.injected.signing.store.password="gharb@2026" -Pandroid.injected.signing.key.alias="gharb_release_key" -Pandroid.injected.signing.key.password="gharb@2026"
           mkdir -p release_out
           APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
-          cp "$APK_PATH" "release_out/gharb_studi_app.apk"
+          cp "$APK_PATH" "release_out/Calculator_app_v1.0.0.apk"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: gharb-studi-release-apk
-          path: release_out/gharb_studi_app.apk
+          name: gharb-built-apk
+          path: release_out/Calculator_app_v1.0.0.apk
 
       - name: Publish Direct APK Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="gharb-studi-v${{ github.run_number }}"
-          gh release create "$TAG" "release_out/gharb_studi_app.apk" --title "gharb studi app ($TAG)" --notes "Signed Release APK for gharb studi app built automatically via GitHub Actions."
+          TAG="apk-${{ github.run_number }}"
+          gh release create "$TAG" "release_out/Calculator_app_v1.0.0.apk" --title "Build $TAG (Calculator_app_v1.0.0.apk)" --notes "Built automatically by gharb studi app." || true
