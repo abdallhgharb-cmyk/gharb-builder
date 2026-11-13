@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gharb_bg"
+    android:layoutDirection="rtl"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="محول التطبيقات الأساسي"
+            android:textColor="@color/gharb_text_primary"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="14dp"
+            android:text="اختر مصدر المشروع ليقوم محرك البناء الداخلي بحقنه داخل قالب أندرويد وتوقيعه رقمياً للعمل بدون إنترنت."
+            android:textColor="@color/gharb_text_secondary"
+            android:textSize="12sp" />
+
+        <!-- إشعار وشريط تقدم الاستخراج الذكي -->
+        <LinearLayout
+            android:id="@+id/layoutExtractionBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:background="@color/gharb_surface_elevated"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvExtractionMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="جاري استخراج الملفات وقراءة بيانات المشروع..."
+                android:textColor="@color/gharb_primary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/pbExtractionProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:max="100"
+                android:progress="0"
+                android:progressTint="@color/gharb_primary" />
+        </LinearLayout>
+
+        <!-- البطاقة 1: تحويل ملف ZIP إلى تطبيق -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardConvertZip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/gharb_surface"
+            app:cardCornerRadius="16dp"
+            app:strokeColor="@color/gharb_border"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@color/gharb_surface_elevated"
+                    android:padding="10dp"
+                    android:src="@android:drawable/ic_menu_save"
+                    app:tint="@color/gharb_primary" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1. تحويل من ملف ZIP إلى تطبيق"
+                        android:textColor="@color/gharb_text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="فك ضغط حزمة HTML/CSS/JS كاملة وحقنها في المشروع"
+                        android:textColor="@color/gharb_text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- البطاقة 2: تحويل ملف HTML إلى تطبيق -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardConvertHtml"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/gharb_surface"
+            app:cardCornerRadius="16dp"
+            app:strokeColor="@color/gharb_border"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@color/gharb_surface_elevated"
+                    android:padding="10dp"
+                    android:src="@android:drawable/ic_menu_agenda"
+                    app:tint="@color/gharb_accent" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2. تحويل من ملف HTML إلى تطبيق"
+                        android:textColor="@color/gharb_text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="استيراد ملف HTML مفرد من الهاتف وتشغيله بدون إنترنت"
+                        android:textColor="@color/gharb_text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- البطاقة 3: تحويل رابط موقع URL إلى تطبيق -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardConvertUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/gharb_surface"
+            app:cardCornerRadius="16dp"
+            app:strokeColor="@color/gharb_border"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@color/gharb_surface_elevated"
+                    android:padding="10dp"
+                    android:src="@android:drawable/ic_menu_compass"
+                    app:tint="@color/gharb_warning" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3. تحويل من رابط موقع URL إلى تطبيق"
+                        android:textColor="@color/gharb_text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="تحويل أي موقع إلكتروني مباشر إلى تطبيق WebView متجاوب"
+                        android:textColor="@color/gharb_text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- لوحة محرك البناء الداخلي وسجل الحقن -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:text="حالة محرك البناء الداخلي والتوقيع:"
+            android:textColor="@color/gharb_text_primary"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvBuildEngineLog"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@color/gharb_editor_bg"
+            android:fontFamily="monospace"
+            android:padding="12dp"
+            android:scrollbars="vertical"
+            android:text="> محرك البناء الداخلي جاهز.\n> اختر أحد خيارات التحويل الثلاثة أعلاه."
+            android:textColor="#93C5FD"
+            android:textSize="11sp" />
+
+    </LinearLayout>
+</ScrollView>
