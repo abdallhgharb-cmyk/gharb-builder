@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_download"
+        android:icon="@android:drawable/stat_sys_download"
+        android:title="تحميل (Download)" />
+    <item
+        android:id="@+id/action_copy"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="نسخ (Copy)" />
+    <item
+        android:id="@+id/action_paste"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="لصق (Paste)" />
+    <item
+        android:id="@+id/action_upload"
+        android:icon="@android:drawable/ic_menu_upload"
+        android:title="رفع ملف (Upload)" />
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="تحرير (Edit)" />
+    <item
+        android:id="@+id/action_modify"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="تعديل (Modify)" />
+    <item
+        android:id="@+id/action_share"
+        android:icon="@android:drawable/ic_menu_share"
+        android:title="مشاركة (Share)" />
+</menu>
