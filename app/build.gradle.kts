@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.gharb.studiapp"
+    namespace = "com.gharb.studiapp2"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.gharb.studiapp"
+        applicationId = "com.gharb.studiapp2"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

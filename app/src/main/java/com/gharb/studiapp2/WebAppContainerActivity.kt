@@ -1,4 +1,4 @@
-package com.gharb.studiapp
+package com.gharb.studiapp2
 
 import android.annotation.SuppressLint
 import android.app.Dialog
