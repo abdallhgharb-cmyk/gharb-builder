@@ -3,10 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "eshrahli.apk"
+    namespace = "Gharbshare.apk"
     compileSdk = 34
     defaultConfig {
-        applicationId = "eshrahli.apk"
+        applicationId = "Gharbshare.apk"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
