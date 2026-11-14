@@ -1,4 +1,4 @@
-package Gharbshare.apk
+package com.supershar.app
 
 import android.annotation.SuppressLint
 import android.os.Bundle

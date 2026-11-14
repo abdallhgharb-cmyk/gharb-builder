@@ -3,10 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "Gharbshare.apk"
+    namespace = "com.supershar.app"
     compileSdk = 34
     defaultConfig {
-        applicationId = "Gharbshare.apk"
+        applicationId = "com.supershar.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
