@@ -1,4 +1,4 @@
-package com.SeriesBuilder.app
+package com. gharb studi.app
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -44,7 +44,7 @@ class WebAppContainerActivity : AppCompatActivity() {
             }
         })
 
-        val initialUrl = ""
+        val initialUrl = "https://ais-pre-25czqkejrbjbynm3tkb4bh-731978972581.europe-west1.run.app/"
         if (initialUrl.isNotBlank()) {
             webView.loadUrl(initialUrl)
         } else {

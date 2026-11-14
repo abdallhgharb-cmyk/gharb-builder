@@ -3,10 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "com.SeriesBuilder.app"
+    namespace = "com. gharb studi.app"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.SeriesBuilder.app"
+        applicationId = "com. gharb studi.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
