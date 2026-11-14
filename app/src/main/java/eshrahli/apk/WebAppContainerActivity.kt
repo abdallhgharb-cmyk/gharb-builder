@@ -30,7 +30,7 @@ class WebAppContainerActivity : AppCompatActivity() {
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean = false
         }
-        val initialUrl = "https://eshrahli-academy.savorystork16.chatgpt.site/"
+        val initialUrl = ""
         if (initialUrl.isNotBlank()) {
             webView.loadUrl(initialUrl)
         } else {
