@@ -1,4 +1,4 @@
-package com.gharb.studiapp
+package com.gharb.myapp
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,7 +10,6 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 
 class WebAppContainerActivity : AppCompatActivity() {
-
     private lateinit var webView: WebView
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -18,7 +17,6 @@ class WebAppContainerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         webView = WebView(this)
         setContentView(webView)
-
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -28,15 +26,16 @@ class WebAppContainerActivity : AppCompatActivity() {
             useWideViewPort = true
             loadWithOverviewMode = true
         }
-
         webView.webChromeClient = WebChromeClient()
         webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                return false
-            }
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean = false
         }
-
-        webView.loadUrl("file:///android_asset/www/index.html")
+        val initialUrl = ""
+        if (initialUrl.isNotBlank()) {
+            webView.loadUrl(initialUrl)
+        } else {
+            webView.loadUrl("file:///android_asset/www/index.html")
+        }
     }
 
     @Deprecated("Deprecated in Java")

@@ -1,71 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gharb studi app</title>
-  <style>
-    body {
-      margin: 0;
-      background: #090D16;
-      color: #F8FAFC;
-      font-family: system-ui, -apple-system, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 24px;
-      box-sizing: border-box;
-      text-align: center;
-    }
-    .card {
-      background: #111827;
-      border: 1px solid #334155;
-      border-radius: 24px;
-      padding: 32px 24px;
-      max-width: 360px;
-      width: 100%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    }
-    .logo {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin: 0 auto 16px;
-      border: 2px solid #10B981;
-      display: block;
-      object-fit: cover;
-    }
-    h1 {
-      color: #10B981;
-      font-size: 22px;
-      margin: 0 0 8px;
-    }
-    p {
-      color: #94A3B8;
-      font-size: 13px;
-      line-height: 1.6;
-      margin: 0 0 20px;
-    }
-    .badge {
-      display: inline-block;
-      background: rgba(16, 185, 129, 0.15);
-      color: #34D399;
-      padding: 6px 14px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: bold;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-  </style>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق مولد محلياً</title>
+    <style>
+        body{margin:0;background:#0B1120;color:#F8FAFC;font-family:sans-serif;padding:24px;}
+        .card{background:#111827;border:1px solid #334155;border-radius:18px;padding:20px;text-align:center;}
+        .btn{background:#10B981;color:#0B1120;border:none;padding:12px 20px;border-radius:10px;font-weight:bold;margin-top:12px;}
+    </style>
+<style>/* اكتب تنسيقات CSS هنا */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 16px;
+}</style></head>
 <body>
-  <div class="card">
-    <img src="app_icon.png" class="logo" alt="gharb studio app" />
-    <h1>gharb studi app</h1>
-    <p>منصة الغارب لصناعة وتحويل التطبيقات من الصفر (ZIP • HTML • URL) إلى APK حقيقي.</p>
-    <div class="badge">يعمل بنجاح داخل أندرويد WebView</div>
-  </div>
-</body>
+    <div class="card">
+        <h2 style="color:#10B981;">تطبيق تم إنشاؤه محلياً</h2>
+        <p>الفكرة: انشاء تطبيق يقوم بترجمة الملزمه ترجمة عربيه إنجليزي كلمه بكلمه كل كلمة انجليزيه يترجم معناها بالعربي ويكتب بخط احمر تحتها اي كل كلمه إنجليزي سوى حرف او فعل او أسماء تترجم بالعربي وتضع الترجمه بالعربي تكتب بخط احمر تحت الكلمه الانجليزي ترجمة بالتصوير مباشره بتقنية التعرف على الحروف</p>
+        <button class="btn" onclick="document.getElementById('status').innerText='تم التفاعل بنجاح بدون إنترنت!'">تشغيل الإجراء</button>
+        <p id="status" style="color:#38BDF8;margin-top:14px;"></p>
+    </div>
+<script>// اكتب دوال JavaScript هنا
+console.log('gharb studi app ready');</script></body>
 </html>
