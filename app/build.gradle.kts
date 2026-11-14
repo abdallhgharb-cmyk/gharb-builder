@@ -3,10 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "com.supershar.app"
+    namespace = "com.supershsr.app"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.supershar.app"
+        applicationId = "com.supershsr.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

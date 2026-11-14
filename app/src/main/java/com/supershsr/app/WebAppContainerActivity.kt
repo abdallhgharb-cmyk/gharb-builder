@@ -1,4 +1,4 @@
-package com.supershar.app
+package com.supershsr.app
 
 import android.annotation.SuppressLint
 import android.os.Bundle
