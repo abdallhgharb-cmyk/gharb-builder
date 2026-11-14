@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gharb_surface"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Top Chat Toolbar with Back from Chat & New Chat -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
+
+        <Button
+            android:id="@+id/btnAiBackFromChat"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:backgroundTint="#1E293B"
+            android:text="رجوع من الدردشة"
+            android:textColor="@color/gharb_text_primary"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btnAiNewChat"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/gharb_primary"
+            android:text="إضافة دردشة جديدة"
+            android:textColor="#052E16"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvAiDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="دردشة Gemini AI — نافذة كتابة واسعة"
+        android:textColor="@color/gharb_primary"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvAiEngineStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="الوضع النشط: Gemini API (إنترنت)"
+        android:textColor="@color/gharb_text_secondary"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tvAiChatHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#090D16"
+        android:maxLines="5"
+        android:padding="10dp"
+        android:text="لا توجد رسائل بعد — اكتب فكرة تطبيقك أو التعديل المطلوب في النافذة الواسعة أدناه."
+        android:textColor="#CBD5E1"
+        android:textSize="12sp" />
+
+    <!-- Wide & Tall Message Composer Before Sending -->
+    <EditText
+        android:id="@+id/etAiPromptInput"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@color/gharb_editor_bg"
+        android:gravity="top|start"
+        android:hint="اكتب رسالتك أو مواصفات تطبيقك الكاملة بالتفصيل هنا قبل الإرسال..."
+        android:inputType="textMultiLine|textCapSentences"
+        android:minHeight="240dp"
+        android:padding="14dp"
+        android:scrollbars="vertical"
+        android:textColor="@color/gharb_text_primary"
+        android:textColorHint="@color/gharb_text_secondary"
+        android:textSize="14sp" />
+
+    <ProgressBar
+        android:id="@+id/progressAiGenerating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnAiSendPrompt"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/gharb_primary"
+        android:text="إرسال وتوليد الكود الآن"
+        android:textColor="#052E16"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

@@ -1,9 +1,9 @@
-name: Build Gharb Android APK
+name: Build Gharb Studi App APK
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main, master ]
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -35,11 +35,11 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Ensure Persistent Keystore
+      - name: Ensure Permanent Keystore
         run: |
           mkdir -p keystore
           if [ ! -f keystore/gharb-release.p12 ]; then
-            keytool -genkeypair -v -keystore keystore/gharb-release.p12 -storetype PKCS12 -keyalg RSA -keysize 2048 -validity 10000 -alias "gharb_release_key" -storepass "gharb@2026" -keypass "gharb@2026" -dname "CN=Gharb Studi, OU=Mobile, O=GharbStudi, L=Cairo, S=EG, C=EG"
+            keytool -genkeypair -v -keystore keystore/gharb-release.p12 -storetype PKCS12 -keyalg RSA -keysize 2048 -validity 10000 -alias gharb_release_key -storepass "gharb@2026" -keypass "gharb@2026" -dname "CN=Gharb Studi, OU=Mobile, O=GharbStudi, L=Cairo, S=EG, C=EG"
           fi
 
       - name: Build Signed Release APK
@@ -47,18 +47,19 @@ jobs:
           gradle assembleRelease --no-daemon -PGHARB_KEYSTORE_PATH="$PWD/keystore/gharb-release.p12" -PGHARB_KEYSTORE_PASS="gharb@2026" -PGHARB_KEY_ALIAS="gharb_release_key" -PGHARB_KEY_PASS="gharb@2026"
           mkdir -p release_out
           APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
-          cp "$APK_PATH" "release_out/rahcom_gharb_sSapp_v1.0.0.apk"
-          "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --verbose "release_out/rahcom_gharb_sSapp_v1.0.0.apk"
+          cp "$APK_PATH" "release_out/gharb_studi_app.apk"
+          "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --verbose --print-certs "release_out/gharb_studi_app.apk" | tee release_out/cert_info.txt
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: gharb-built-apk
-          path: release_out/rahcom_gharb_sSapp_v1.0.0.apk
+          name: gharb-studi-release-apk
+          path: release_out/gharb_studi_app.apk
 
       - name: Publish Direct APK Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="apk-${{ github.run_number }}"
-          gh release create "$TAG" "release_out/rahcom_gharb_sSapp_v1.0.0.apk" --title "Build $TAG (rahcom_gharb_sSapp_v1.0.0.apk)" --notes "Built automatically by gharb studi app Cloud Factory." || true
+          TAG="gharb-studi-v${{ github.run_number }}"
+          CERT_NOTES=$(cat release_out/cert_info.txt | head -n 20)
+          gh release create "$TAG" "release_out/gharb_studi_app.apk" --title "gharb studi app ($TAG)" --notes "Signed Release APK for gharb studi app v1.2.0 (v1+v2+v3 Google Play compatible).$'\n\n'$CERT_NOTES"
