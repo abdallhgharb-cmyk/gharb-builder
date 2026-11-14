@@ -1,5 +1,6 @@
 package com.gharb.studiapp.engine
 
+import android.util.Base64
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -14,12 +15,12 @@ object GeminiAiEngine {
     // Default factory API key built-in automatically so no manual key is required in APK
     private fun getDefaultFactoryApiKey(): String {
         val parts = arrayOf("QUl6YVN5Q0JpZ0E4", "bF8xWnB5WlV4", "V2NfWV90b3R3", "VzFfS19v")
-        return parts.join("").let { 
-            try {
-                android.util.Base64.decode(it, android.util.Base64.DEFAULT).toString(Charsets.UTF_8)
-            } catch (_: Exception) {
-                "AIzaSyCBigE8lXnPyZVxWc_Y_totwW1_K_o"
-            }
+        val joined = parts.joinToString("")
+        return try {
+            val bytes = Base64.decode(joined, Base64.DEFAULT)
+            String(bytes, Charsets.UTF_8)
+        } catch (_: Exception) {
+            "AIzaSyCBigE8lXnPyZVxWc_Y_totwW1_K_o"
         }
     }
 
@@ -32,7 +33,7 @@ object GeminiAiEngine {
             return@withContext Result.success(generateOfflineTemplate(prompt))
         }
 
-        val resolvedKey = apiKey.ifBlank { getDefaultFactoryApiKey() }
+        val resolvedKey = if (apiKey.isNotBlank()) apiKey else getDefaultFactoryApiKey()
 
         try {
             val endpoint =
@@ -72,7 +73,6 @@ object GeminiAiEngine {
             val rawResponse = stream.bufferedReader().use(BufferedReader::readText)
 
             if (status !in 200..299) {
-                // Fallback to gemini-2.5-flash if hydrogen is restricted on client key
                 return@withContext generateWithFlashFallback(prompt, resolvedKey)
             }
 
@@ -87,8 +87,7 @@ object GeminiAiEngine {
 
             val cleaned = cleanMarkdownCodeBlock(text)
             Result.success(cleaned)
-        } catch (ex: Exception) {
-            // Fallback to offline template if network fails
+        } catch (_: Exception) {
             Result.success(generateOfflineTemplate(prompt))
         }
     }
@@ -158,7 +157,7 @@ object GeminiAiEngine {
         if (!isOnline) {
             return@withContext Result.success(fileContent)
         }
-        val resolvedKey = apiKey.ifBlank { getDefaultFactoryApiKey() }
+        val resolvedKey = if (apiKey.isNotBlank()) apiKey else getDefaultFactoryApiKey()
         try {
             val endpoint =
                 "https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:generateContent?key=$resolvedKey"
