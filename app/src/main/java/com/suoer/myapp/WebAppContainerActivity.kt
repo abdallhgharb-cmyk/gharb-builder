@@ -1,4 +1,4 @@
-package com.super.app
+package com.suoer.myapp
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -30,7 +30,7 @@ class WebAppContainerActivity : AppCompatActivity() {
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean = false
         }
-        val initialUrl = "https://share.gemini.google/Z4d1IgkEB1no"
+        val initialUrl = ""
         if (initialUrl.isNotBlank()) {
             webView.loadUrl(initialUrl)
         } else {
