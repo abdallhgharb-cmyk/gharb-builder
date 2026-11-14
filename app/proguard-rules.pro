@@ -1,5 +1,2 @@
-# Keep AndroidX & WebView bridge classes intact
+# Keep WebView JS bridge methods
 -keepattributes *Annotation*
--keepclassmembers class * {
-    @android.webkit.JavascriptInterface <methods>;
-}

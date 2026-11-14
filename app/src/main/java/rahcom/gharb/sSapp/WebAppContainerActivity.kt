@@ -1,4 +1,4 @@
-package com.gharb.studiapp
+package rahcom.gharb.sSapp
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -33,13 +33,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.webkit.WebViewAssetLoader
-import java.io.File
 
-/**
- * حاوية تشغيل تطبيقات الويب الكاملة (WebAppContainerActivity)
- * - تقدم ملفات www عبر HTTPS محلي آمن (WebViewAssetLoader) لدعم ES Modules و Fetch و Images و LocalStorage.
- * - تدعم النوافذ المتعددة (onCreateWindow / target="_blank") واختيار الملفات والأذونات والحوارات.
- */
 class WebAppContainerActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
@@ -56,12 +50,6 @@ class WebAppContainerActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val appTitle = intent.getStringExtra(EXTRA_APP_TITLE)
-        if (!appTitle.isNullOrBlank()) {
-            title = appTitle
-        }
-
         webView = WebView(this)
         setContentView(webView)
 
@@ -83,15 +71,11 @@ class WebAppContainerActivity : AppCompatActivity() {
             }
         })
 
-        val targetUrl = intent.getStringExtra(EXTRA_TARGET_URL)
-        val localHtmlPath = intent.getStringExtra(EXTRA_LOCAL_HTML_PATH)
-
-        when {
-            !targetUrl.isNullOrBlank() -> webView.loadUrl(targetUrl)
-            !localHtmlPath.isNullOrBlank() && File(localHtmlPath).exists() -> {
-                webView.loadUrl(File(localHtmlPath).toURI().toString())
-            }
-            else -> webView.loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
+        val initialUrl = ""
+        if (initialUrl.isNotBlank()) {
+            webView.loadUrl(initialUrl)
+        } else {
+            webView.loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
         }
     }
 
@@ -124,17 +108,11 @@ class WebAppContainerActivity : AppCompatActivity() {
         }
 
         targetWebView.webViewClient = object : WebViewClient() {
-            override fun shouldInterceptRequest(
-                view: WebView,
-                request: WebResourceRequest
-            ): WebResourceResponse? {
+            override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
                 return assetLoader.shouldInterceptRequest(request.url)
             }
 
-            override fun shouldOverrideUrlLoading(
-                view: WebView?,
-                request: WebResourceRequest?
-            ): Boolean {
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 val uri = request?.url ?: return false
                 val scheme = uri.scheme?.lowercase() ?: return false
                 if (scheme == "http" || scheme == "https" || scheme == "file" || scheme == "data" || scheme == "blob") {
@@ -150,16 +128,9 @@ class WebAppContainerActivity : AppCompatActivity() {
         }
 
         targetWebView.webChromeClient = object : WebChromeClient() {
-            override fun onCreateWindow(
-                view: WebView?,
-                isDialog: Boolean,
-                isUserGesture: Boolean,
-                resultMsg: Message?
-            ): Boolean {
+            override fun onCreateWindow(view: WebView?, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean {
                 val popupDialog = Dialog(this@WebAppContainerActivity, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-                val container = LinearLayout(this@WebAppContainerActivity).apply {
-                    orientation = LinearLayout.VERTICAL
-                }
+                val container = LinearLayout(this@WebAppContainerActivity).apply { orientation = LinearLayout.VERTICAL }
                 val topBar = LinearLayout(this@WebAppContainerActivity).apply {
                     orientation = LinearLayout.HORIZONTAL
                     gravity = Gravity.END
@@ -175,9 +146,7 @@ class WebAppContainerActivity : AppCompatActivity() {
                 val childWebView = WebView(this@WebAppContainerActivity)
                 configureWebView(childWebView, assetLoader)
                 childWebView.webChromeClient = object : WebChromeClient() {
-                    override fun onCloseWindow(window: WebView?) {
-                        popupDialog.dismiss()
-                    }
+                    override fun onCloseWindow(window: WebView?) { popupDialog.dismiss() }
                 }
 
                 container.addView(topBar, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
@@ -192,15 +161,11 @@ class WebAppContainerActivity : AppCompatActivity() {
                 return true
             }
 
-            override fun onShowFileChooser(
-                webView: WebView?,
-                callback: ValueCallback<Array<Uri>>?,
-                fileChooserParams: FileChooserParams?
-            ): Boolean {
+            override fun onShowFileChooser(webView: WebView?, callback: ValueCallback<Array<Uri>>?, params: FileChooserParams?): Boolean {
                 filePathCallback?.onReceiveValue(null)
                 filePathCallback = callback
                 return try {
-                    val intent = fileChooserParams?.createIntent() ?: Intent(Intent.ACTION_GET_CONTENT).apply {
+                    val intent = params?.createIntent() ?: Intent(Intent.ACTION_GET_CONTENT).apply {
                         type = "*/*"
                         addCategory(Intent.CATEGORY_OPENABLE)
                     }
@@ -216,47 +181,31 @@ class WebAppContainerActivity : AppCompatActivity() {
                 request?.grant(request.resources)
             }
 
-            override fun onGeolocationPermissionsShowPrompt(
-                origin: String?,
-                callback: GeolocationPermissions.Callback?
-            ) {
+            override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {
                 callback?.invoke(origin, true, false)
             }
 
             override fun onJsAlert(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
-                AlertDialog.Builder(this@WebAppContainerActivity)
-                    .setMessage(message)
+                AlertDialog.Builder(this@WebAppContainerActivity).setMessage(message)
                     .setPositiveButton("حسناً") { _, _ -> result?.confirm() }
-                    .setOnCancelListener { result?.cancel() }
-                    .show()
+                    .setOnCancelListener { result?.cancel() }.show()
                 return true
             }
 
             override fun onJsConfirm(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
-                AlertDialog.Builder(this@WebAppContainerActivity)
-                    .setMessage(message)
+                AlertDialog.Builder(this@WebAppContainerActivity).setMessage(message)
                     .setPositiveButton("موافق") { _, _ -> result?.confirm() }
                     .setNegativeButton("إلغاء") { _, _ -> result?.cancel() }
-                    .setOnCancelListener { result?.cancel() }
-                    .show()
+                    .setOnCancelListener { result?.cancel() }.show()
                 return true
             }
 
-            override fun onJsPrompt(
-                view: WebView?,
-                url: String?,
-                message: String?,
-                defaultValue: String?,
-                result: JsPromptResult?
-            ): Boolean {
+            override fun onJsPrompt(view: WebView?, url: String?, message: String?, defaultValue: String?, result: JsPromptResult?): Boolean {
                 val input = EditText(this@WebAppContainerActivity).apply { setText(defaultValue ?: "") }
-                AlertDialog.Builder(this@WebAppContainerActivity)
-                    .setMessage(message)
-                    .setView(input)
+                AlertDialog.Builder(this@WebAppContainerActivity).setMessage(message).setView(input)
                     .setPositiveButton("موافق") { _, _ -> result?.confirm(input.text.toString()) }
                     .setNegativeButton("إلغاء") { _, _ -> result?.cancel() }
-                    .setOnCancelListener { result?.cancel() }
-                    .show()
+                    .setOnCancelListener { result?.cancel() }.show()
                 return true
             }
         }
@@ -268,22 +217,12 @@ class WebAppContainerActivity : AppCompatActivity() {
                         setMimeType(mimetype)
                         addRequestHeader("User-Agent", userAgent)
                         setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                        val name = URLUtil.guessFileName(url, contentDisposition, mimetype)
-                        setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
+                        setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, URLUtil.guessFileName(url, contentDisposition, mimetype))
                     }
-                    val dm = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                    dm.enqueue(request)
+                    (getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager).enqueue(request)
                     Toast.makeText(this, "بدأ تنزيل الملف...", Toast.LENGTH_SHORT).show()
                 }
-            } catch (_: Exception) {
-                Toast.makeText(this, "تعذر تنزيل الملف", Toast.LENGTH_SHORT).show()
-            }
+            } catch (_: Exception) {}
         }
-    }
-
-    companion object {
-        const val EXTRA_TARGET_URL = "TARGET_URL"
-        const val EXTRA_LOCAL_HTML_PATH = "LOCAL_HTML_PATH"
-        const val EXTRA_APP_TITLE = "APP_TITLE"
     }
 }
