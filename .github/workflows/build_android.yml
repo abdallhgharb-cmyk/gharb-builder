@@ -45,17 +45,17 @@ jobs:
           gradle assembleRelease --no-daemon -Pandroid.injected.signing.store.file="$PWD/keystore/gharb-release.jks" -Pandroid.injected.signing.store.password="gharb@2026" -Pandroid.injected.signing.key.alias="gharb_release_key" -Pandroid.injected.signing.key.password="gharb@2026"
           mkdir -p release_out
           APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
-          cp "$APK_PATH" "release_out/com_gharb_myapp_v1.0.0.apk"
+          cp "$APK_PATH" "release_out/eshrahli_apk_v1.0.0.apk"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: gharb-built-apk
-          path: release_out/com_gharb_myapp_v1.0.0.apk
+          path: release_out/eshrahli_apk_v1.0.0.apk
 
       - name: Publish Direct APK Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="apk-${{ github.run_number }}"
-          gh release create "$TAG" "release_out/com_gharb_myapp_v1.0.0.apk" --title "Build $TAG (com_gharb_myapp_v1.0.0.apk)" --notes "Built automatically by gharb studi app." || true
+          gh release create "$TAG" "release_out/eshrahli_apk_v1.0.0.apk" --title "Build $TAG (eshrahli_apk_v1.0.0.apk)" --notes "Built automatically by gharb studi app." || true

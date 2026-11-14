@@ -1,4 +1,4 @@
-package com.gharb.myapp
+package eshrahli.apk
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -30,7 +30,7 @@ class WebAppContainerActivity : AppCompatActivity() {
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean = false
         }
-        val initialUrl = ""
+        val initialUrl = "https://eshrahli-academy.savorystork16.chatgpt.site/"
         if (initialUrl.isNotBlank()) {
             webView.loadUrl(initialUrl)
         } else {

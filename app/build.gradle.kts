@@ -3,10 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "com.gharb.myapp"
+    namespace = "eshrahli.apk"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.gharb.myapp"
+        applicationId = "eshrahli.apk"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
