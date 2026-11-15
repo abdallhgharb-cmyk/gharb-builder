@@ -1,15 +1,46 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>https://https://www.google.com/url?sa=E&q=https%3A%2F%2Fais-dev-25czqkejrbjbynm3tkb4bh-731978972581.europe-west1.run.app</title>
-  <style>
-    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #090D16; }
-    iframe { width: 100%; height: 100%; border: 0; display: block; }
-  </style>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آلة حاسبة - gharb studi</title>
+    <style>
+        body{margin:0;background:#0B1120;color:#F8FAFC;font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;}
+        .calc{background:#111827;border:1px solid #334155;border-radius:20px;padding:18px;width:90%;max-width:320px;}
+        #disp{background:#090D16;padding:14px;border-radius:12px;text-align:left;font-size:26px;font-family:monospace;color:#10B981;margin-bottom:12px;overflow-x:auto;}
+        .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+        button{padding:14px;border-radius:10px;border:none;background:#1E293B;color:#F8FAFC;font-size:16px;font-weight:bold;}
+        .eq{background:#10B981;color:#0B1120;grid-column:span 2;}
+        .clr{background:#EF4444;color:#FFF;}
+    </style>
+<style>/* اكتب تنسيقات CSS هنا */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 16px;
+}</style></head>
 <body>
-  <iframe src="https://https://www.google.com/url?sa=E&q=https%3A%2F%2Fais-dev-25czqkejrbjbynm3tkb4bh-731978972581.europe-west1.run.app" allow="camera; microphone; geolocation; fullscreen; clipboard-write" allowfullscreen></iframe>
-</body>
+    <div class="calc">
+        <div id="disp">0</div>
+        <div class="grid">
+            <button class="clr" onclick="clr()">C</button>
+            <button onclick="add('/')">÷</button>
+            <button onclick="add('*')">×</button>
+            <button onclick="back()">⌫</button>
+            <button onclick="add('7')">7</button><button onclick="add('8')">8</button><button onclick="add('9')">9</button><button onclick="add('-')">-</button>
+            <button onclick="add('4')">4</button><button onclick="add('5')">5</button><button onclick="add('6')">6</button><button onclick="add('+')">+</button>
+            <button onclick="add('1')">1</button><button onclick="add('2')">2</button><button onclick="add('3')">3</button><button onclick="add('.')">.</button>
+            <button onclick="add('0')">0</button><button class="eq" onclick="res()">=</button>
+        </div>
+    </div>
+    <script>
+        let v='0'; const d=document.getElementById('disp');
+        function u(){d.innerText=v;}
+        function add(x){v=(v==='0'&&x!=='.')?x:v+x;u();}
+        function clr(){v='0';u();}
+        function back(){v=v.length>1?v.slice(0,-1):'0';u();}
+        function res(){try{v=String(Function('return '+v)());}catch(e){v='خطأ';}u();}
+    </script>
+<script>// اكتب دوال JavaScript هنا
+console.log('gharb studi app ready');</script></body>
 </html>
