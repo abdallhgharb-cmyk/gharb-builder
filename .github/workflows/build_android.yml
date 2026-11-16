@@ -35,27 +35,60 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Generate Release Keystore
+      - name: Ensure Persistent Keystore
         run: |
           mkdir -p keystore
-          keytool -genkeypair -v -keystore keystore/gharb-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias "gharb_release_key" -storepass "gharb@2026" -keypass "gharb@2026" -dname "CN=Gharb Studi, OU=Mobile, O=GharbStudi, L=Cairo, S=EG, C=EG"
+          if [ ! -f keystore/gharb-release.p12 ]; then
+            keytool -genkeypair -v -keystore keystore/gharb-release.p12 -storetype PKCS12 -keyalg RSA -keysize 2048 -validity 10000 -alias "gharb_release_key" -storepass "gharb@2026" -keypass "gharb@2026" -dname "CN=Gharb Studi, OU=Mobile, O=GharbStudi, L=Cairo, S=EG, C=EG"
+          fi
+
+      - name: Verify Manifest, Signing & No Conflicting Resources
+        run: |
+          node -e '
+          const fs = require("fs");
+          const path = require("path");
+          const manifest = fs.readFileSync("app/src/main/AndroidManifest.xml", "utf8");
+          const gradle = fs.readFileSync("app/build.gradle.kts", "utf8");
+          if (!manifest.includes("@mipmap/ic_launcher")) throw new Error("AndroidManifest.xml must reference @mipmap/ic_launcher");
+          if (!gradle.includes("signingConfigs") || !gradle.includes("enableV1Signing = true")) throw new Error("Release signingConfigs missing v1/v2/v3 signing");
+          const resRoot = "app/src/main/res";
+          for (const dir of fs.readdirSync(resRoot)) {
+            const fullDir = path.join(resRoot, dir);
+            if (!fs.statSync(fullDir).isDirectory()) continue;
+            const seen = new Map();
+            for (const f of fs.readdirSync(fullDir)) {
+              const fp = path.join(fullDir, f);
+              const base = f.replace(/.[^.]+$/, "");
+              if (dir === "drawable" && base === "ic_launcher") throw new Error("Conflicting resource: " + fp);
+              if (seen.has(base)) throw new Error("Duplicate resource in " + dir + ": " + seen.get(base) + " vs " + f);
+              seen.set(base, f);
+              if (f.endsWith(".png")) {
+                const hdr = fs.readFileSync(fp).subarray(0, 8).toString("hex");
+                if (hdr !== "89504e470d0a1a0a") throw new Error("Invalid PNG signature in " + fp + ": " + hdr);
+              }
+            }
+          }
+          console.log("Pre-build check passed: AndroidManifest, signingConfigs, and icon resources verified with zero conflicts.");
+          '
 
       - name: Build Signed Release APK
         run: |
-          gradle assembleRelease --no-daemon -Pandroid.injected.signing.store.file="$PWD/keystore/gharb-release.jks" -Pandroid.injected.signing.store.password="gharb@2026" -Pandroid.injected.signing.key.alias="gharb_release_key" -Pandroid.injected.signing.key.password="gharb@2026"
+          gradle assembleRelease --no-daemon -PGHARB_KEYSTORE_PATH="$PWD/keystore/gharb-release.p12" -PGHARB_KEYSTORE_PASS="gharb@2026" -PGHARB_KEY_ALIAS="gharb_release_key" -PGHARB_KEY_PASS="gharb@2026"
           mkdir -p release_out
           APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
-          cp "$APK_PATH" "release_out/com_gharb_myapp_v1.0.0.apk"
+          cp "$APK_PATH" "release_out/com_gharb_studiapp_v1.2.5.apk"
+          "$ANDROID_HOME/build-tools/34.0.0/aapt2" dump badging "release_out/com_gharb_studiapp_v1.2.5.apk" | head -n 25
+          "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --verbose --print-certs "release_out/com_gharb_studiapp_v1.2.5.apk"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: gharb-built-apk
-          path: release_out/com_gharb_myapp_v1.0.0.apk
+          path: release_out/com_gharb_studiapp_v1.2.5.apk
 
       - name: Publish Direct APK Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="apk-${{ github.run_number }}"
-          gh release create "$TAG" "release_out/com_gharb_myapp_v1.0.0.apk" --title "Build $TAG (com_gharb_myapp_v1.0.0.apk)" --notes "Built automatically by gharb studi app." || true
+          gh release create "$TAG" "release_out/com_gharb_studiapp_v1.2.5.apk" --title "Build $TAG (com_gharb_studiapp_v1.2.5.apk)" --notes "Built automatically by gharb studi app Cloud Factory." || true
