@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Gharb Studio.app</string>
+    <string name="app_name">gharb studi app</string>
+    <string name="generated_app_name">تطبيقي الجديد</string>
+    <string name="offline_mode_label">وضع بدون نت</string>
+    <string name="online_mode_label">متصل</string>
 </resources>
