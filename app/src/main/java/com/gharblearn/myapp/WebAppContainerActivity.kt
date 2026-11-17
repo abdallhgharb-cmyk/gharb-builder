@@ -1,4 +1,4 @@
-package com.gharb.myapp
+package com.gharblearn.myapp
 
 import android.annotation.SuppressLint
 import android.app.Dialog

@@ -3,10 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "com.gharb.myapp"
+    namespace = "com.gharblearn.myapp"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.gharb.myapp"
+        applicationId = "com.gharblearn.myapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
