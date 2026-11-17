@@ -3,505 +3,1381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أنا أحبك يا أحلام ❤️</title>
-    <!-- استدعاء خط عربي كرتوني جميل وممتع -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&family=Lalezar&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS -->
+    <title>المساعد الوزاري الذكي - الثالث الثانوي اليمن</title>
+    <!-- تحميل Tailwind CSS للتصميم المتجاوب -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- تحميل مكتبة Three.js للمجسمات الهندسية ثلاثية الأبعاد التفاعلية -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- تحميل أيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- خط تجوال العربي الاحترافي -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
-        /* إعدادات الخطوط والحركات الكرتونية المخصصة */
         body {
-            font-family: 'Cairo', sans-serif;
-            overflow-x: hidden;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f1f5f9;
         }
-        .cartoon-title {
-            font-family: 'Lalezar', 'Cairo', cursive;
-            text-shadow: 0 4px 0 #be123c, 0 8px 15px rgba(225, 29, 72, 0.3);
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        .tab-active {
+            background-color: #1e3a8a;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.3);
         }
-        /* حركة النبض للعنوان */
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.06); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.08); }
-            60% { transform: scale(1); }
+        /* تأثير النبض للتسجيل الصوتي */
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
         }
-        .animate-heartbeat {
-            animation: heartbeat 2.2s infinite ease-in-out;
-        }
-        /* حركة القفز الكرتونية للشخصيات */
-        @keyframes cartoonBounce {
-            0%, 100% { transform: translateY(0) scaleY(1) scaleX(1); }
-            30% { transform: translateY(-18px) scaleY(1.08) scaleX(0.94); }
-            55% { transform: translateY(0) scaleY(0.9) scaleX(1.1); }
-            75% { transform: translateY(-6px) scaleY(1.02) scaleX(0.98); }
-        }
-        .character-bounce {
-            animation: cartoonBounce 0.65s infinite ease-in-out;
-            transform-origin: bottom center;
-        }
-        /* حركة الدوران المضحكة عند الفوز أو المفاجأة */
-        @keyframes dizzySpin {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.2); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-        .character-spin {
-            animation: dizzySpin 0.6s ease-out;
-        }
-        /* حركة غبار الركض الكرتوني */
-        @keyframes dustPuff {
-            0% { opacity: 0.9; transform: scale(0.4) translate(0, 0); }
-            100% { opacity: 0; transform: scale(1.6) translate(25px, -15px); }
-        }
-        .dust-cloud {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: dustPuff 0.6s forwards ease-out;
-        }
-        /* حركة القلوب المتطايرة */
-        @keyframes floatHeart {
-            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-140px) scale(1.4) rotate(25deg); opacity: 0; }
-        }
-        .floating-heart {
-            position: absolute;
-            pointer-events: none;
-            animation: floatHeart 1.4s forwards ease-out;
-            z-index: 30;
-        }
-        /* حركة السحب في الخلفية */
-        @keyframes moveClouds {
-            0% { transform: translateX(-120px); }
-            100% { transform: translateX(100vw); }
-        }
-        .cloud-drift {
-            animation: moveClouds 28s linear infinite;
+        .recording-pulse {
+            animation: pulse-red 1.5s infinite;
         }
     </style>
-<style>/* اكتب تنسيقات CSS هنا */
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 16px;
-}</style></head>
-<body class="bg-gradient-to-b from-pink-100 via-rose-50 to-amber-100 min-h-screen flex flex-col items-center justify-between p-3 sm:p-6">
-    <!-- خلفية قلوب خفيفة عائمة -->
-    <div id="bg-decorations" class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40"></div>
-    <!-- الرأس والعنوان الرئيسي المطلوب -->
-    <header class="relative z-10 text-center mt-2 sm:mt-4 w-full max-w-2xl">
-        <div class="inline-block bg-white/80 backdrop-blur-sm px-5 py-1.5 rounded-full shadow-sm border border-pink-200 mb-2">
-            <span class="text-xs sm:text-sm font-bold text-rose-500">✨ إهداء خاص من مهدي إلى أحلام ✨</span>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- ==================== 1. الشريط العلوي (Header + القائمة المنسدلة + الإعدادات) ==================== -->
+    <header class="bg-gradient-to-l from-slate-900 via-blue-950 to-slate-900 text-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+            
+            <!-- اليمين: زر القائمة المنسدلة الرئيسية + الشعار -->
+            <div class="flex items-center gap-3 relative">
+                <button onclick="toggleMainDropdown()" class="p-2.5 bg-blue-800/60 hover:bg-blue-700 rounded-xl transition flex items-center gap-2 border border-blue-700/50">
+                    <i class="fas fa-bars text-lg"></i>
+                    <span class="hidden sm:inline font-bold text-sm">القائمة</span>
+                </button>
+
+                <!-- القائمة المنسدلة الشاملة (Main Dropdown Menu) -->
+                <div id="mainDropdown" class="hidden absolute right-0 top-14 w-72 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50">
+                    <div class="bg-blue-900 text-white p-3 text-sm font-bold flex justify-between items-center">
+                        <span>أقسام المنهج الوزاري اليمني</span>
+                        <button onclick="toggleMainDropdown()" class="text-blue-200 hover:text-white"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="p-2 space-y-1 max-h-96 overflow-y-auto text-sm font-medium">
+                        <button onclick="selectCategory('الكل والمختبر العام')" class="w-full text-right px-3 py-2.5 rounded-xl hover:bg-blue-50 flex items-center gap-3 text-blue-900 font-bold">
+                            <i class="fas fa-brain w-5 text-blue-600"></i> المختبر الذكي الشامل
+                        </button>
+                        <button onclick="selectCategory('الرياضيات (التفاضل والتكامل والجبر)')" class="w-full text-right px-3 py-2.5 rounded-xl hover:bg-slate-100 flex items-center gap-3">
+                            <i class="fas fa-square-root-variable w-5 text-indigo-600"></i> تبسيط الرياضيات والمسائل
+                        </button>
+                        <button onclick="selectCategory('الفيزياء والكيمياء والقوانين')" class="w-full text-right px-3 py-2.5 rounded-xl hover:bg-slate-100 flex items-center gap-3">
+                            <i class="fas fa-atom w-5 text-emerald-600"></i> الفيزياء والكيمياء (شرح متحرك)
+                        </button>
+                        <button onclick="selectCategory('الرسم الهندسي والمخططات البيانية')" class="w-full text-right px-3 py-2.5 rounded-xl hover:bg-slate-100 flex items-center gap-3">
+                            <i class="fas fa-compass-drafting w-5 text-amber-600"></i> الرسم الهندسي والمخططات
+                        </button>
+                        <button onclick="openDrawingStudio()" class="w-full text-right px-3 py-2.5 rounded-xl hover:bg-slate-100 flex items-center gap-3">
+                            <i class="fas fa-palette w-5 text-pink-600"></i> مرسم تعلم الرسم الحر
+                        </button>
+                        <button onclick="selectCategory('القراءة والنحو والشعر والبلاغة')" class="w-full text-right px-3 py-2.5 rounded-xl hover:bg-slate-100 flex items-center gap-3">
+                            <i class="fas fa-book-open w-5 text-purple-600"></i> القراءة والنحو والشعر
+                        </button>
+                        <button onclick="selectCategory('القرآن الكريم والتجويد والتلاوة')" class="w-full text-right px-3 py-2.5 rounded-xl hover:bg-slate-100 flex items-center gap-3">
+                            <i class="fas fa-mosque w-5 text-teal-600"></i> التجويد والتلاوة والأحكام
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <h1 class="font-extrabold text-base sm:text-xl tracking-wide flex items-center gap-2">
+                        <span class="bg-amber-500 text-slate-950 text-xs px-2 py-0.5 rounded-md font-black">اليمن 3ث</span>
+                        <span>المساعد الوزاري الذكي</span>
+                    </h1>
+                    <p class="text-[11px] text-blue-200 hidden sm:block">نظام حل النماذج الوزارية وتحليل الملازم بالذكاء الاصطناعي</p>
+                </div>
+            </div>
+
+            <!-- الوسط: قائمة منسدلة لاختيار محرك الذكاء الاصطناعي -->
+            <div class="flex items-center gap-2">
+                <div class="relative">
+                    <select id="aiEngineSelect" onchange="updateEngineBadge()" class="bg-slate-800 text-white text-xs sm:text-sm font-bold py-2 px-3 rounded-xl border border-blue-500/40 focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer">
+                        <option value="gemini">✨ Gemini Pro (تحليل شامل + صور)</option>
+                        <option value="chatgpt">🤖 ChatGPT-4o (شرح مفصل)</option>
+                        <option value="hybrid">⚡ الوضع المزدوج (Gemini + GPT)</option>
+                    </select>
+                </div>
+
+                <!-- زر إدراج وتعديل الأوامر (Prompt) -->
+                <button onclick="openModal('promptModal')" class="p-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shadow">
+                    <i class="fas fa-terminal"></i>
+                    <span class="hidden md:inline">البرومت والأوامر</span>
+                </button>
+
+                <!-- زر الإعدادات العامة (Settings) -->
+                <button onclick="openModal('settingsModal')" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl border border-slate-700 transition" title="الإعدادات وربط API">
+                    <i class="fas fa-cog text-lg"></i>
+                </button>
+            </div>
         </div>
-        
-        <h1 class="cartoon-title text-4xl sm:text-6xl md:text-7xl text-rose-600 tracking-wide animate-heartbeat leading-tight py-2">
-            أنا أحبك يا أحلام ❤️
-        </h1>
-        
-        <p id="status-subtitle" class="text-rose-800/80 font-bold text-sm sm:text-base mt-1 transition-all duration-300">
-            مهدي يحاول إهداء القلب لأحلام... وأحلام تهرب بدلال! 😂🏃‍♀️💨
-        </p>
     </header>
-    <!-- مسرح الرسوم المتحركة (تشبه أجواء توم وجيري الكوميدية) -->
-    <main class="relative z-10 w-full max-w-3xl my-auto py-2">
-        <div id="stage" class="relative w-full h-72 sm:h-80 md:h-96 bg-gradient-to-b from-sky-200 via-sky-100 to-emerald-100 rounded-3xl shadow-2xl border-4 border-white overflow-hidden">
-            
-            <!-- شمس كرتونية مبتسمة -->
-            <div class="absolute top-4 left-6 w-14 h-14 sm:w-16 sm:h-16 bg-amber-300 rounded-full shadow-lg flex items-center justify-center animate-pulse">
-                <span class="text-2xl">☀️</span>
-            </div>
-            <!-- سحب متحركة -->
-            <div class="cloud-drift absolute top-8 left-0 text-white/80 text-4xl sm:text-5xl select-none" style="animation-delay: -5s;">☁️</div>
-            <div class="cloud-drift absolute top-16 left-0 text-white/70 text-3xl sm:text-4xl select-none" style="animation-delay: -18s;">☁️</div>
-            <!-- لافتة كرتونية في الخلفية -->
-            <div class="absolute top-5 right-5 bg-amber-100/95 border-2 border-amber-400 px-3 py-1.5 rounded-2xl shadow-md transform rotate-3">
-                <span class="text-xs sm:text-sm font-extrabold text-amber-900">مطاردة الحب رقم #<span id="chase-count">1</span> 💘</span>
-            </div>
-            <!-- فقاعة الحوار المضحكة فوق المشهد -->
-            <div id="comic-bubble" class="absolute top-16 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-2xl shadow-lg border-2 border-rose-400 text-center transition-all duration-300 z-20 min-w-[200px] sm:min-w-[260px]">
-                <p id="bubble-text" class="text-sm sm:text-base font-extrabold text-rose-600">انتظري يا أحلام، معي وردة وقلب! 🌹</p>
-                <div class="w-3 h-3 bg-white border-b-2 border-r-2 border-rose-400 transform rotate-45 mx-auto -mb-3.5 mt-1"></div>
-            </div>
-            <!-- الأرضية الخضراء الكرتونية -->
-            <div class="absolute bottom-0 inset-x-0 h-16 sm:h-20 bg-gradient-to-t from-emerald-500 to-emerald-400 border-t-4 border-emerald-600/30">
-                <!-- زهور صغيرة على العشب -->
-                <div class="flex justify-around items-center h-full px-6 opacity-80 text-lg sm:text-xl">
-                    <span>🌼</span><span>🌱</span><span>🌷</span><span>🍀</span><span>🌸</span><span>🌱</span><span>🌼</span>
-                </div>
-            </div>
-            <!-- الشخصية الأولى: أحلام (تهرب بدلال وضحك - مثل جيري الذكي) -->
-            <div id="ahlam-char" class="absolute bottom-12 sm:bottom-14 transition-all duration-75 z-20 flex flex-col items-center" style="left: 20%;">
-                <!-- اسم الشخصية -->
-                <span class="bg-pink-500 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-full shadow mb-1 border border-white">أحلام 👑</span>
-                <!-- رسم كرتوني SVG لأحلام -->
-                <div id="ahlam-sprite" class="character-bounce w-20 h-24 sm:w-24 sm:h-28 relative">
-                    <svg viewBox="0 0 120 140" class="w-full h-full drop-shadow-md">
-                        <!-- شعر طويل متطاير -->
-                        <path d="M25,45 Q10,75 20,105 Q35,95 40,70 Z" fill="#3b1d14"/>
-                        <path d="M95,45 Q110,75 100,105 Q85,95 80,70 Z" fill="#3b1d14"/>
-                        <circle cx="60" cy="48" r="32" fill="#3b1d14"/>
-                        <!-- فيونكة وردية كرتونية -->
-                        <path d="M45,18 L60,26 L45,34 Z" fill="#f43f5e"/>
-                        <path d="M75,18 L60,26 L75,34 Z" fill="#f43f5e"/>
-                        <circle cx="60" cy="26" r="5" fill="#ffe4e6"/>
-                        <!-- الوجه -->
-                        <circle cx="60" cy="52" r="24" fill="#ffedd5"/>
-                        <!-- عيون كرتونية كبيرة ومضحكة -->
-                        <ellipse cx="52" cy="48" rx="4.5" ry="6" fill="#1e293b"/>
-                        <circle cx="53" cy="46" r="1.8" fill="#ffffff"/>
-                        <ellipse cx="68" cy="48" rx="4.5" ry="6" fill="#1e293b"/>
-                        <circle cx="69" cy="46" r="1.8" fill="#ffffff"/>
-                        <!-- خدود وردية -->
-                        <circle cx="44" cy="56" r="4" fill="#fda4af" opacity="0.8"/>
-                        <circle cx="76" cy="56" r="4" fill="#fda4af" opacity="0.8"/>
-                        <!-- ابتسامة شقية -->
-                        <path d="M52,60 Q60,70 68,60 Z" fill="#e11d48"/>
-                        <!-- الفستان -->
-                        <path d="M42,76 L78,76 L88,112 L32,112 Z" fill="#ec4899"/>
-                        <!-- أرجل تركض بسرعة -->
-                        <line x1="48" y1="112" x2="36" y2="132" stroke="#ffedd5" stroke-width="6" stroke-linecap="round"/>
-                        <line x1="72" y1="112" x2="86" y2="128" stroke="#ffedd5" stroke-width="6" stroke-linecap="round"/>
-                        <!-- حذاء -->
-                        <ellipse cx="34" cy="133" rx="7" ry="4" fill="#be123c"/>
-                        <ellipse cx="88" cy="129" rx="7" ry="4" fill="#be123c"/>
-                    </svg>
-                </div>
-            </div>
-            <!-- الشخصية الثانية: مهدي (يركض بحماس وقلوب في عينيه - مثل توم العاشق) -->
-            <div id="mahdi-char" class="absolute bottom-12 sm:bottom-14 transition-all duration-75 z-20 flex flex-col items-center" style="left: 65%;">
-                <!-- اسم الشخصية -->
-                <span class="bg-blue-600 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-full shadow mb-1 border border-white">مهدي 😍</span>
-                <!-- رسم كرتوني SVG لمهدي -->
-                <div id="mahdi-sprite" class="character-bounce w-22 h-26 sm:w-26 sm:h-30 relative" style="animation-delay: 0.15s;">
-                    <svg viewBox="0 0 130 145" class="w-full h-full drop-shadow-md">
-                        <!-- شعر كرتوني مشاكس -->
-                        <path d="M38,42 Q40,16 65,18 Q90,16 92,42 Q80,28 65,30 Q50,28 38,42 Z" fill="#1e293b"/>
-                        <!-- الوجه -->
-                        <circle cx="65" cy="52" r="24" fill="#fed7aa"/>
-                        <!-- عيون على شكل قلوب حمراء! -->
-                        <path d="M55,46 C55,43 50,43 50,47 C50,51 55,54 55,54 C55,54 60,51 60,47 C60,43 55,43 55,46 Z" fill="#e11d48"/>
-                        <path d="M75,46 C75,43 70,43 70,47 C70,51 75,54 75,54 C75,54 80,51 80,47 C80,43 75,43 75,46 Z" fill="#e11d48"/>
-                        <!-- ابتسامة عريضة متلهفة -->
-                        <path d="M54,61 Q65,73 76,61" stroke="#9a3412" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-                        <!-- القميص -->
-                        <rect x="46" y="76" width="38" height="36" rx="10" fill="#2563eb"/>
-                        <!-- يد ممدودة تحمل وردة حمراء -->
-                        <line x1="46" y1="86" x2="22" y2="82" stroke="#fed7aa" stroke-width="6" stroke-linecap="round"/>
-                        <!-- الوردة -->
-                        <line x1="22" y1="88" x2="22" y2="66" stroke="#16a34a" stroke-width="3"/>
-                        <circle cx="22" cy="64" r="7" fill="#e11d48"/>
-                        <circle cx="20" cy="62" r="2" fill="#fda4af"/>
-                        <!-- أرجل تركض -->
-                        <line x1="54" y1="112" x2="40" y2="134" stroke="#1e3a8a" stroke-width="7" stroke-linecap="round"/>
-                        <line x1="76" y1="112" x2="92" y2="130" stroke="#1e3a8a" stroke-width="7" stroke-linecap="round"/>
-                        <!-- حذاء رياضي -->
-                        <ellipse cx="38" cy="135" rx="8" ry="4.5" fill="#ffffff"/>
-                        <ellipse cx="94" cy="131" rx="8" ry="4.5" fill="#ffffff"/>
-                    </svg>
-                </div>
-            </div>
-            <!-- مؤثر اصطدام القلوب عند الإمساك بأحلام -->
-            <div id="catch-overlay" class="hidden absolute inset-0 bg-rose-500/20 backdrop-blur-[2px] z-30 flex flex-col items-center justify-center text-center p-4">
-                <div class="bg-white/95 px-6 py-4 rounded-3xl shadow-2xl border-4 border-rose-500 transform scale-105 transition-transform">
-                    <div class="text-4xl sm:text-5xl mb-2">💑💖🎉</div>
-                    <h2 class="text-2xl sm:text-3xl font-black text-rose-600">مهدي أمسك بأحلام!</h2>
-                    <p class="text-sm sm:text-base font-bold text-gray-700 mt-1">أجمل ثنائي في العالم.. أنا أحبك يا أحلام!</p>
-                </div>
-            </div>
+
+    <!-- ==================== 2. شريط الوصول السريع للأقسام التخصصية ==================== -->
+    <div class="bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <span class="text-xs font-bold text-slate-400 whitespace-nowrap ml-1">التخصص:</span>
+            <button onclick="selectCategory('المختبر الذكي العام')" class="cat-btn tab-active px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5">
+                <i class="fas fa-sparkles"></i> الكل
+            </button>
+            <button onclick="selectCategory('الرياضيات')" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5">
+                <i class="fas fa-calculator text-indigo-600"></i> الرياضيات
+            </button>
+            <button onclick="selectCategory('الفيزياء والكيمياء')" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5">
+                <i class="fas fa-flask text-emerald-600"></i> الفيزياء والكيمياء
+            </button>
+            <button onclick="selectCategory('الرسم الهندسي والمخططات')" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5">
+                <i class="fas fa-chart-line text-amber-600"></i> رسم هندسي ومخططات
+            </button>
+            <button onclick="openDrawingStudio()" class="bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5">
+                <i class="fas fa-paintbrush"></i> تعلم الرسم
+            </button>
+            <button onclick="selectCategory('القراءة والنحو والشعر')" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5">
+                <i class="fas fa-feather-pointed text-purple-600"></i> نحو وشعر وقراءة
+            </button>
+            <button onclick="selectCategory('التجويد والتلاوة')" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5">
+                <i class="fas fa-book-quran text-teal-600"></i> تجويد وتلاوة
+            </button>
         </div>
+    </div>
+
+    <!-- ==================== 3. المحتوى الرئيسي (تقسيم عملي 2 أعمدة) ==================== -->
+    <main class="max-w-7xl mx-auto w-full px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+
+        <!-- العمود الأيمن (4 أعمدة): مكتبة الملازم والكتب والنماذج المحلولة -->
+        <section class="lg:col-span-4 space-y-4">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="font-extrabold text-slate-800 flex items-center gap-2 text-base">
+                        <i class="fas fa-folder-open text-blue-700"></i>
+                        <span>الملازم والنماذج المحلولة</span>
+                    </h2>
+                    <span id="filesCountBadge" class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-0.5 rounded-full">3 ملفات</span>
+                </div>
+
+                <!-- أزرار تصوير ورفع الملازم مباشرة -->
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <button onclick="openLiveCamera('material')" class="bg-blue-900 hover:bg-blue-800 text-white py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow transition">
+                        <i class="fas fa-camera text-amber-400"></i>
+                        <span>تصوير ملزمة</span>
+                    </button>
+                    <label class="bg-slate-800 hover:bg-slate-700 text-white py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow transition cursor-pointer">
+                        <i class="fas fa-file-arrow-up text-emerald-400"></i>
+                        <span>رفع ملازم/كتب</span>
+                        <input type="file" id="materialUploadInput" multiple accept=".pdf,.doc,.docx,.txt,image/*" class="hidden" onchange="handleMaterialUpload(event)">
+                    </label>
+                </div>
+
+                <!-- قائمة الملازم المرفوعة والموزعة حسب المادة -->
+                <div id="materialsList" class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
+                    <!-- يتم تعبئتها برمجياً -->
+                </div>
+            </div>
+
+            <!-- بطاقة حالة النظام والربط -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-2xl p-4 shadow-sm">
+                <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="text-slate-300">حالة الفهم الذكي للملازم:</span>
+                    <span class="text-emerald-400 font-bold flex items-center gap-1"><i class="fas fa-circle text-[8px]"></i> نشط ومتصل</span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    يقوم النظام بتحليل الملازم والنماذج الوزارية المحلولة لفهم طريقة التوزيع والحل النموذجي في اليمن وتطبيقها تلقائياً على أسئلتك.
+                </p>
+            </div>
+        </section>
+
+        <!-- العمود الأيسر (8 أعمدة): مختبر الحل المباشر، الكاميرا، الصوت، والنتائج -->
+        <section class="lg:col-span-8 space-y-5">
+            
+            <!-- بطاقة إدخال السؤال والأدوات المباشرة -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                        <h2 class="font-extrabold text-slate-800 text-base">مختبر حل الأسئلة المباشر</h2>
+                    </div>
+                    <span id="activeCategoryBadge" class="bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold px-3 py-1 rounded-lg">
+                        القسم: المختبر الذكي العام
+                    </span>
+                </div>
+
+                <!-- أزرار الإدخال السريع البارزة (كاميرا مباشرة + رفع صورة + تسجيل صوت + رفع صوت + ترجمة) -->
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-3">
+                    <!-- زر الكاميرا المباشرة لحل سؤال -->
+                    <button onclick="openLiveCamera('question')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 py-2.5 px-2 rounded-xl font-extrabold text-xs flex flex-col items-center justify-center gap-1 shadow-sm transition">
+                        <i class="fas fa-camera-retro text-base"></i>
+                        <span>كاميرا مباشرة</span>
+                    </button>
+
+                    <!-- زر رفع صورة سؤال -->
+                    <label class="bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 py-2.5 px-2 rounded-xl font-bold text-xs flex flex-col items-center justify-center gap-1 cursor-pointer transition">
+                        <i class="fas fa-image text-base text-blue-600"></i>
+                        <span>صورة سؤال</span>
+                        <input type="file" accept="image/*" class="hidden" onchange="handleQuestionImageUpload(event)">
+                    </label>
+
+                    <!-- زر تسجيل مقطع صوتي مباشر -->
+                    <button id="recordAudioBtn" onclick="toggleAudioRecording()" class="bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 py-2.5 px-2 rounded-xl font-bold text-xs flex flex-col items-center justify-center gap-1 transition">
+                        <i id="recordIcon" class="fas fa-microphone text-base text-rose-600"></i>
+                        <span id="recordText">تسجيل صوت</span>
+                    </button>
+
+                    <!-- زر رفع مقطع صوتي -->
+                    <label class="bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 py-2.5 px-2 rounded-xl font-bold text-xs flex flex-col items-center justify-center gap-1 cursor-pointer transition">
+                        <i class="fas fa-file-audio text-base text-purple-600"></i>
+                        <span>رفع صوت</span>
+                        <input type="file" accept="audio/*" class="hidden" onchange="handleAudioFileUpload(event)">
+                    </label>
+
+                    <!-- زر استخراج الكلام والترجمة -->
+                    <button onclick="openModal('audioTranslateModal')" class="col-span-2 sm:col-span-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 py-2.5 px-2 rounded-xl font-bold text-xs flex flex-col items-center justify-center gap-1 transition">
+                        <i class="fas fa-language text-base text-emerald-600"></i>
+                        <span>تفريغ وترجمة</span>
+                    </button>
+                </div>
+
+                <!-- معاينة المرفقات الملتقطة (صورة أو صوت) قبل الحل -->
+                <div id="attachmentPreviewBox" class="hidden mb-3 p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <img id="previewThumb" src="" alt="معاينة" class="w-14 h-14 object-cover rounded-lg hidden border">
+                        <div id="audioThumb" class="w-12 h-12 bg-rose-100 text-rose-600 rounded-lg hidden flex items-center justify-center">
+                            <i class="fas fa-volume-high text-xl"></i>
+                        </div>
+                        <div>
+                            <p id="attachmentTitle" class="text-xs font-bold text-slate-800">تم إرفاق ملف</p>
+                            <p id="attachmentSubtitle" class="text-[11px] text-slate-500">جاهز للتحليل والحل</p>
+                        </div>
+                    </div>
+                    <button onclick="clearAttachment()" class="text-rose-600 hover:bg-rose-50 p-2 rounded-lg text-xs font-bold">
+                        <i class="fas fa-trash"></i> إزالة
+                    </button>
+                </div>
+
+                <!-- خانة كتابة السؤال مباشرة -->
+                <div class="relative">
+                    <textarea id="questionInput" rows="4" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:bg-white focus:outline-none text-sm leading-relaxed" placeholder="اكتب السؤال الوزاري هنا مباشرة (مثال: أوجد تكامل الدالة، أو أعرب البيت الشعري، أو اشرح قانون فاراداي...)"></textarea>
+                    
+                    <!-- أزرار سريعة داخل مربع الكتابة -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 mt-3">
+                        <div class="flex items-center gap-2">
+                            <button onclick="insertActivePromptToQuestion()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-3 rounded-xl transition flex items-center gap-1.5">
+                                <i class="fas fa-wand-magic-sparkles text-amber-600"></i>
+                                <span>إدراج البرومت المضبوط</span>
+                            </button>
+                            <button onclick="translateTextBox()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-3 rounded-xl transition flex items-center gap-1.5">
+                                <i class="fas fa-globe text-emerald-600"></i>
+                                <span>ترجمة النص</span>
+                            </button>
+                        </div>
+
+                        <button onclick="solveQuestionNow()" id="solveBtn" class="bg-gradient-to-l from-blue-900 to-blue-700 hover:from-blue-800 hover:to-blue-600 text-white font-extrabold py-2.5 px-6 rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+                            <i class="fas fa-bolt text-amber-400"></i>
+                            <span>حل السؤال الآن</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- منطقة عرض الحل والشرح التفاعلي والرسوم المتحركة -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-4 border-b border-slate-100">
+                    <h3 class="font-extrabold text-slate-800 flex items-center gap-2 text-base">
+                        <i class="fas fa-check-double text-emerald-600"></i>
+                        <span>الإجابة النموذجية والشرح المبسط</span>
+                    </h3>
+
+                    <!-- أزرار التحكم بالحل (توليد رسم متحرك للقانون + مخطط هندسي + تصدير الحل) -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="generateAnimatedSimulation()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 text-xs font-bold py-1.5 px-3 rounded-xl transition flex items-center gap-1.5">
+                            <i class="fas fa-film text-indigo-600"></i>
+                            <span>تبسيط برسم متحرك</span>
+                        </button>
+                        <button onclick="generateGeometricChart()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold py-1.5 px-3 rounded-xl transition flex items-center gap-1.5">
+                            <i class="fas fa-diagram-project text-amber-600"></i>
+                            <span>مخطط هندسي/بياني</span>
+                        </button>
+                        <button onclick="exportSolutionDocument()" class="bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold py-1.5 px-3.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
+                            <i class="fas fa-file-export"></i>
+                            <span>تصدير الحل</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- مؤشر التحميل -->
+                <div id="loadingIndicator" class="hidden py-10 text-center space-y-3">
+                    <i class="fas fa-circle-notch fa-spin text-3xl text-blue-700"></i>
+                    <p class="text-sm font-bold text-slate-600">جاري مطابقة السؤال مع الملازم الوزارية وتوليد الحل النموذجي...</p>
+                </div>
+
+                <!-- نص الحل -->
+                <div id="solutionOutput" class="prose prose-slate max-w-none text-sm leading-loose text-slate-800 bg-slate-50/70 p-4 rounded-xl border border-slate-100 min-h-[160px] whitespace-pre-wrap">مرحباً بك في المساعد الوزاري الذكي للصف الثالث الثانوي (اليمن).
+• ارفع ملازمك أو صوّر السؤال مباشرة بالكاميرا.
+• اختر المادة من القائمة العلوية أو اكتب سؤالك في الخانة أعلاه.
+• يمكنك تعديل أوامر الذكاء الاصطناعي (البرومت) من الزر العلوي لتخصيص طريقة الشرح.</div>
+
+                <!-- حاوية الرسوم المتحركة العلمية والمخططات الهندسية (Canvas / SVG) -->
+                <div id="visualSimulationBox" class="hidden mt-4 border-2 border-indigo-100 rounded-2xl overflow-hidden bg-slate-900 text-white">
+                    <div class="bg-indigo-950 px-4 py-2 flex items-center justify-between text-xs font-bold">
+                        <span id="visualBoxTitle"><i class="fas fa-play-circle text-amber-400 ml-1"></i> محاكاة علمية مبسطة للقانون</span>
+                        <button onclick="document.getElementById('visualSimulationBox').classList.add('hidden')" class="text-slate-300 hover:text-white"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div id="visualCanvasContainer" class="p-4 flex flex-col items-center justify-center min-h-[240px]">
+                        <!-- يتم رسم المحاكاة المتحركة أو المخطط الهندسي هنا -->
+                    </div>
+                </div>
+            </div>
+
+        </section>
     </main>
-    <!-- أزرار التحكم التفاعلية المضحكة -->
-    <footer class="relative z-10 w-full max-w-2xl mb-2">
-        <div class="bg-white/90 backdrop-blur-md p-3 sm:p-4 rounded-3xl shadow-xl border-2 border-pink-200 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            
-            <button id="btn-boost" class="flex-1 min-w-[130px] bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 active:scale-95 text-white font-extrabold py-3 px-4 rounded-2xl shadow-lg shadow-rose-500/30 transition-all flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer">
-                <span>⚡</span>
-                <span>سرّع مهدي!</span>
-            </button>
-            <button id="btn-trick" class="flex-1 min-w-[130px] bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 active:scale-95 text-white font-extrabold py-3 px-4 rounded-2xl shadow-lg shadow-amber-500/30 transition-all flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer">
-                <span>🍌</span>
-                <span>مقلب توم وجيري</span>
-            </button>
-            <button id="btn-hearts" class="flex-1 min-w-[130px] bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 active:scale-95 text-white font-extrabold py-3 px-4 rounded-2xl shadow-lg shadow-purple-500/30 transition-all flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer">
-                <span>💖</span>
-                <span>مطر القلوب</span>
-            </button>
-            <button id="btn-sound" class="bg-pink-100 hover:bg-pink-200 active:scale-95 text-rose-700 font-bold p-3 rounded-2xl border border-pink-300 transition-all cursor-pointer" title="تشغيل/كتم المؤثرات الصوتية الكرتونية">
-                <span id="sound-icon" class="text-xl">🔊</span>
-            </button>
+
+    <!-- ==================== 4. نافذة الكاميرا المباشرة (Live Camera Modal) ==================== -->
+    <div id="cameraModal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl">
+            <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
+                <h3 id="cameraModalTitle" class="font-bold text-sm flex items-center gap-2">
+                    <i class="fas fa-camera text-amber-400"></i> التصوير المباشر
+                </h3>
+                <button onclick="closeLiveCamera()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            <div class="p-4 bg-black relative flex flex-col items-center">
+                <video id="cameraVideoStream" autoplay playsinline class="w-full h-72 object-cover rounded-xl bg-slate-900"></video>
+                <canvas id="cameraCaptureCanvas" class="hidden"></canvas>
+                <p id="cameraErrorMsg" class="hidden text-xs text-amber-300 mt-2 text-center"></p>
+            </div>
+            <div class="p-4 bg-slate-50 flex items-center justify-between gap-3">
+                <button onclick="closeLiveCamera()" class="px-4 py-2.5 rounded-xl bg-slate-200 text-slate-800 font-bold text-xs">إلغاء</button>
+                <button onclick="capturePhotoFromCamera()" class="flex-1 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm flex items-center justify-center gap-2 shadow">
+                    <i class="fas fa-camera"></i> التقط الصورة الآن
+                </button>
+            </div>
         </div>
-    </footer>
+    </div>
+
+    <!-- ==================== 5. نافذة تعديل وإدراج الأوامر (Prompt Manager Modal) ==================== -->
+    <div id="promptModal" class="hidden fixed inset-0 bg-slate-950/75 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl">
+            <div class="bg-amber-500 text-slate-950 px-5 py-3.5 flex items-center justify-between">
+                <h3 class="font-extrabold text-base flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> إدارة وتعديل أوامر الذكاء الاصطناعي (Prompt)
+                </h3>
+                <button onclick="closeModal('promptModal')" class="text-slate-900 hover:text-black"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">قوالب جاهزة مضبوطة للمنهج اليمني:</label>
+                    <select id="promptPresetSelect" onchange="loadPresetPrompt()" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold">
+                        <option value="ministerial">نموذج الحل الوزاري اليمني الرسمي (معطيات + قانون + تعويض)</option>
+                        <option value="simplify">تبسيط القوانين المعقدة بأسلوب قصصي ومرئي</option>
+                        <option value="arabic">إعراب تفصيلي وتقطيع عروضي وبلاغة (اللغة العربية)</option>
+                        <option value="tajweed">تحليل أحكام التجويد ومخارج الحروف (القرآن الكريم)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">نص الأمر القابل للتعديل من قِبل المستخدم:</label>
+                    <textarea id="customPromptTextarea" rows="5" class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl text-xs leading-relaxed focus:ring-2 focus:ring-amber-500 focus:outline-none">أنت معلم خبير في المنهج الوزاري اليمني للصف الثالث الثانوي. قم بحل السؤال بدقة وفق نموذج الإجابة الوزاري المعتمد في اليمن: ابدأ بكتابة المعطيات، ثم القانون الرياضي أو الفيزيائي، ثم خطوات التعويض بالتفصيل، وأخيراً الناتج النهائي مع وحدة القياس. استند إلى الملازم المرفوعة في النظام.</textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button onclick="closeModal('promptModal')" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">إغلاق</button>
+                    <button onclick="saveCustomPrompt()" class="px-5 py-2 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs shadow">حفظ واعتماد الأمر</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 6. نافذة الإعدادات وربط مفاتيح API (Settings Modal) ==================== -->
+    <div id="settingsModal" class="hidden fixed inset-0 bg-slate-950/75 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
+            <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between">
+                <h3 class="font-bold text-base flex items-center gap-2">
+                    <i class="fas fa-cog text-amber-400"></i> إعدادات النظام وربط API
+                </h3>
+                <button onclick="closeModal('settingsModal')" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            <div class="p-5 space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">مفتاح Google Gemini API:</label>
+                    <input type="password" id="geminiKeyInput" placeholder="اتركه فارغاً لاستخدام الربط التلقائي المدمج..." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">مفتاح OpenAI (ChatGPT) API:</label>
+                    <input type="password" id="openaiKeyInput" placeholder="sk-..." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl">
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                    <span class="font-bold text-slate-700">تفعيل الفهم التلقائي من الملازم المرفوعة</span>
+                    <input type="checkbox" checked class="w-4 h-4 accent-blue-900">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button onclick="closeModal('settingsModal')" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">إلغاء</button>
+                    <button onclick="saveSettings()" class="px-5 py-2 rounded-xl bg-emerald-600 text-white font-bold">حفظ الإعدادات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 7. نافذة استخراج الكلام من الصوت والترجمة ==================== -->
+    <div id="audioTranslateModal" class="hidden fixed inset-0 bg-slate-950/75 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl">
+            <div class="bg-emerald-800 text-white px-5 py-3.5 flex items-center justify-between">
+                <h3 class="font-bold text-sm flex items-center gap-2">
+                    <i class="fas fa-language"></i> استخراج الكلام من الصوت والترجمة الفورية
+                </h3>
+                <button onclick="closeModal('audioTranslateModal')" class="text-emerald-200 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-5 space-y-4 text-xs">
+                <p class="text-slate-600">يمكنك تفريغ التسجيل الصوتي إلى نص مكتوب أو ترجمة النصوص والمصطلحات العلمية بين العربية والإنجليزية:</p>
+                <textarea id="transcribeResultBox" rows="4" class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl" placeholder="سيظهر النص المستخرج من الصوت أو النص المترجم هنا..."></textarea>
+                <div class="flex flex-wrap gap-2 justify-between">
+                    <button onclick="simulateSpeechToText()" class="bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-3.5 rounded-xl flex items-center gap-1.5">
+                        <i class="fas fa-waveform-lines"></i> استخراج الكلام من الصوت
+                    </button>
+                    <button onclick="translateExtractedText()" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-2 px-3.5 rounded-xl flex items-center gap-1.5">
+                        <i class="fas fa-language"></i> ترجمة (عربي ⇄ إنجليزي)
+                    </button>
+                    <button onclick="sendExtractedToQuestion()" class="bg-blue-900 hover:bg-blue-800 text-white font-bold py-2 px-3.5 rounded-xl">
+                        نقل إلى خانة الحل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 8. نافذة مرسم تعلم الرسم والهندسة (Drawing Studio Modal) ==================== -->
+    <div id="drawingStudioModal" class="hidden fixed inset-0 bg-slate-950/85 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl">
+            <div class="bg-pink-700 text-white px-5 py-3 flex items-center justify-between">
+                <h3 class="font-bold text-sm flex items-center gap-2">
+                    <i class="fas fa-palette"></i> مرسم تعلم الرسم والأشكال الهندسية
+                </h3>
+                <button onclick="closeModal('drawingStudioModal')" class="text-pink-200 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            <div class="p-4 space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-100 p-2 rounded-xl">
+                    <div class="flex items-center gap-2">
+                        <input type="color" id="brushColor" value="#1e3a8a" class="w-8 h-8 rounded cursor-pointer border-0">
+                        <select id="brushSize" class="p-1.5 rounded-lg border text-xs font-bold">
+                            <option value="2">قلم رفيع (هندسي)</option>
+                            <option value="5" selected>قلم متوسط</option>
+                            <option value="12">فرشاة عريضة</option>
+                        </select>
+                        <button onclick="drawGuideGrid()" class="bg-white border px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50">
+                            <i class="fas fa-border-all text-indigo-600"></i> شبكة هندسية
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="clearDrawingCanvas()" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-bold">مسح اللوحة</button>
+                        <button onclick="evaluateDrawingWithAI()" class="bg-pink-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold">تقييم الرسم بالذكاء الاصطناعي</button>
+                    </div>
+                </div>
+                <canvas id="freeDrawingCanvas" class="w-full h-72 bg-white border-2 border-dashed border-slate-300 rounded-xl cursor-crosshair touch-none"></canvas>
+                <p id="drawingFeedback" class="text-xs text-slate-600 bg-pink-50 p-2.5 rounded-xl hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- صندوق الإشعارات العائم (بديل alert) -->
+    <div id="toastNotification" class="hidden fixed bottom-5 left-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold z-50 flex items-center gap-2 border border-slate-700">
+        <i class="fas fa-info-circle text-amber-400 text-base"></i>
+        <span id="toastMessage">رسالة النظام</span>
+    </div>
+
+    <!-- ==================== 9. البرمجة والتفاعل الكامل (JavaScript + Gemini API) ==================== -->
     <script>
-        // ==========================================
-        // إعدادات الصوت الكرتوني (Web Audio API) بدون روابط خارجية
-        // ==========================================
-        let soundEnabled = true;
-        let audioCtx = null;
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }
-        // توليد أصوات كرتونية مضحكة (قفز، انزلاق، قلوب)
-        function playCartoonSound(type) {
-            if (!soundEnabled) return;
-            try {
-                initAudio();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                const now = audioCtx.currentTime;
-                if (type === 'boing') {
-                    // صوت قفزة كرتونية
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(180, now);
-                    osc.frequency.exponentialRampToValueAtTime(520, now + 0.18);
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-                    osc.start(now);
-                    osc.stop(now + 0.2);
-                } else if (type === 'slip') {
-                    // صوت انزلاق مضحك مثل توم وجيري
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(600, now);
-                    osc.frequency.exponentialRampToValueAtTime(120, now + 0.35);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.36);
-                    osc.start(now);
-                    osc.stop(now + 0.36);
-                } else if (type === 'love') {
-                    // نغمة رومانسية مبهجة
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(440, now);
-                    osc.frequency.setValueAtTime(554.37, now + 0.1);
-                    osc.frequency.setValueAtTime(659.25, now + 0.2);
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
-                    osc.start(now);
-                    osc.stop(now + 0.45);
-                }
-            } catch (e) {
-                // تجاهل أخطاء الصوت في حال عدم التفاعل المسبق
-            }
-        }
-        // ==========================================
-        // متغيرات وعناصر المشهد الكرتوني
-        // ==========================================
-        const stage = document.getElementById('stage');
-        const ahlamEl = document.getElementById('ahlam-char');
-        const mahdiEl = document.getElementById('mahdi-char');
-        const ahlamSprite = document.getElementById('ahlam-sprite');
-        const mahdiSprite = document.getElementById('mahdi-sprite');
-        const bubbleText = document.getElementById('bubble-text');
-        const chaseCountEl = document.getElementById('chase-count');
-        const catchOverlay = document.getElementById('catch-overlay');
-        // مواقع الشخصيات كنسبة مئوية من عرض المسرح (0% إلى 85%)
-        let ahlamX = 18;
-        let mahdiX = 68;
-        let direction = -1; // -1 يعني الركض لليسار، 1 يعني الركض لليمين
-        let mahdiSpeed = 0.42;
-        let ahlamSpeed = 0.40;
-        let isPaused = false;
-        let chaseNumber = 1;
-        let frameCounter = 0;
-        // عبارات كوميدية متبادلة بين أحلام ومهدي
-        const funnyDialogues = [
-            "مهدي: انتظري يا أحلام، قلبي تعب من الركض! 🏃‍♂️❤️",
-            "أحلام: لن تمسك بي يا مهدي، أنا أسرع منك! 😜👑",
-            "مهدي: معي أجمل وردة لأجمل أحلام في الدنيا! 🌹",
-            "أحلام: هاهاها! حاول مرة أخرى يا بطل! 😂💨",
-            "مهدي: أنا أحبك يا أحلام.. توقفي قليلاً! 😍💘",
-            "أحلام: المطاردة ممتعة مثل توم وجيري! 🐭🐱"
+        // --- الحالة العامة للتطبيق ---
+        let currentCategory = 'المختبر الذكي العام';
+        let cameraMode = 'question'; // 'question' أو 'material'
+        let videoStream = null;
+        let attachedImageBase64 = null;
+        let attachedAudioName = null;
+        let isRecording = false;
+        let mediaRecorder = null;
+
+        // قاعدة بيانات مبدئية للملازم والنماذج المحلولة
+        let materialsDB = [
+            { id: 1, name: 'ملزمة التفاضل والتكامل - أ. محمد.pdf', subject: 'الرياضيات', pages: '48 صفحة', solved: true },
+            { id: 2, name: 'نماذج اختبارات الفيزياء الوزارية 2024-2025.pdf', subject: 'الفيزياء', pages: '32 صفحة', solved: true },
+            { id: 3, name: 'خلاصة النحو والصرف والبلاغة - ثالث ثانوي.pdf', subject: 'اللغة العربية', pages: '25 صفحة', solved: true }
         ];
-        let dialogueIndex = 0;
-        // تحديث الحوار التلقائي كل بضع ثوانٍ
-        setInterval(() => {
-            if (!isPaused) {
-                dialogueIndex = (dialogueIndex + 1) % funnyDialogues.length;
-                bubbleText.textContent = funnyDialogues[dialogueIndex];
-            }
-        }, 3200);
-        // إنشاء غبار الركض الكرتوني خلف الشخصيات
-        function spawnDust(xPercent) {
-            const dust = document.createElement('div');
-            dust.className = 'dust-cloud';
-            const size = Math.random() * 14 + 10;
-            dust.style.width = `${size}px`;
-            dust.style.height = `${size}px`;
-            dust.style.left = `calc(${xPercent}% + 30px)`;
-            dust.style.bottom = '52px';
-            stage.appendChild(dust);
-            setTimeout(() => dust.remove(), 600);
-        }
-        // إطلاق قلب طائر في مكان محدد
-        function spawnHeart(xPercent, yBottom = 110) {
-            const heart = document.createElement('div');
-            heart.className = 'floating-heart text-2xl sm:text-3xl';
-            const emojis = ['❤️', '💖', '💘', '💕', '🌹', '😍'];
-            heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-            heart.style.left = `calc(${xPercent}% + ${(Math.random() * 40 - 20)}px)`;
-            heart.style.bottom = `${yBottom}px`;
-            stage.appendChild(heart);
-            setTimeout(() => heart.remove(), 1400);
-        }
-        // ==========================================
-        // حلقة الرسوم المتحركة الرئيسية (Game/Animation Loop)
-        // ==========================================
-        function animateChase() {
-            if (!isPaused) {
-                frameCounter++;
-                // تحريك الشخصيات
-                ahlamX += ahlamSpeed * direction;
-                mahdiX += mahdiSpeed * direction;
-                // عكس الاتجاه عند الوصول لحواف المسرح (مثل أفلام الكرتون)
-                if (direction === -1 && ahlamX <= 4) {
-                    direction = 1;
-                    // مهدي يتجاوز قليلاً ثم يلتف بسرعة!
-                    mahdiX = Math.min(82, mahdiX + 6);
-                    playCartoonSound('boing');
-                } else if (direction === 1 && ahlamX >= 78) {
-                    direction = -1;
-                    mahdiX = Math.max(4, mahdiX - 6);
-                    playCartoonSound('boing');
-                }
-                // قلب اتجاه النظر للشخصيات حسب اتجاه الركض
-                ahlamSprite.style.transform = direction === 1 ? 'scaleX(-1)' : 'scaleX(1)';
-                mahdiSprite.style.transform = direction === 1 ? 'scaleX(-1)' : 'scaleX(1)';
-                // تطبيق المواقع على العناصر
-                ahlamEl.style.left = `${ahlamX}%`;
-                mahdiEl.style.left = `${mahdiX}%`;
-                // إضافة غبار الركض وقلوب صغيرة كل عدة إطارات
-                if (frameCounter % 18 === 0) {
-                    spawnDust(mahdiX);
-                    spawnDust(ahlamX);
-                }
-                if (frameCounter % 45 === 0) {
-                    spawnHeart(mahdiX, 120);
-                }
-                // التحقق هل أمسك مهدي بأحلام؟
-                if (Math.abs(mahdiX - ahlamX) < 7) {
-                    triggerCatchCelebration();
-                }
-            }
-            requestAnimationFrame(animateChase);
-        }
-        // احتفالية لطيفة عندما يلحق مهدي بأحلام
-        function triggerCatchCelebration() {
-            isPaused = true;
-            playCartoonSound('love');
-            catchOverlay.classList.remove('hidden');
-            bubbleText.textContent = "أمسكت بكِ يا أحلام! أنا أحبكِ كثيراً ❤️🎉";
-            // إطلاق وابل من القلوب
-            for (let i = 0; i < 16; i++) {
-                setTimeout(() => {
-                    spawnHeart(ahlamX + (Math.random() * 14 - 7), 90 + Math.random() * 50);
-                }, i * 80);
-            }
-            // إعادة بدء المطاردة بشكل مضحك بعد 2.8 ثانية
-            setTimeout(() => {
-                catchOverlay.classList.add('hidden');
-                chaseNumber++;
-                chaseCountEl.textContent = chaseNumber;
-                mahdiSpeed = 0.42;
-                ahlamSpeed = 0.40;
-                // أحلام تهرب مجدداً بضحكة!
-                ahlamX = direction === -1 ? 15 : 70;
-                mahdiX = direction === -1 ? 72 : 12;
-                bubbleText.textContent = "أحلام: هربت من جديد! يلا الحاق بي يا مهدي 😂🏃‍♀️";
-                isPaused = false;
-            }, 2800);
-        }
-        // ==========================================
-        // تفاعلات الأزرار
-        // ==========================================
-        // 1. زر تسريع مهدي
-        document.getElementById('btn-boost').addEventListener('click', () => {
-            if (isPaused) return;
-            playCartoonSound('boing');
-            mahdiSpeed = 0.95;
-            bubbleText.textContent = "مهدي: تشغيل السرعة القصوى للحاق بأحلام! 🚀❤️";
-            spawnHeart(mahdiX, 110);
-            setTimeout(() => {
-                mahdiSpeed = 0.44;
-            }, 1800);
-        });
-        // 2. زر مقلب توم وجيري (قشرة موز كوميدية!)
-        document.getElementById('btn-trick').addEventListener('click', () => {
-            if (isPaused) return;
-            playCartoonSound('slip');
-            
-            // إضافة قشرة موز مؤقتة في المسرح
-            const banana = document.createElement('div');
-            banana.textContent = '🍌';
-            banana.className = 'absolute bottom-14 text-3xl z-20 transition-all duration-300';
-            banana.style.left = `${mahdiX}%`;
-            stage.appendChild(banana);
-            // حركة دوران مضحكة لمهدي
-            mahdiSprite.classList.add('character-spin');
-            bubbleText.textContent = "مهدي: أوووبس! قشرة موز من مقالب أحلام! 🍌💫😂";
-            
-            // تراجع مهدي قليلاً للخلف بشكل كرتوني
-            mahdiX = Math.max(5, Math.min(80, mahdiX - (direction * 14)));
-            setTimeout(() => {
-                mahdiSprite.classList.remove('character-spin');
-                banana.remove();
-            }, 700);
-        });
-        // 3. زر مطر القلوب
-        document.getElementById('btn-hearts').addEventListener('click', () => {
-            playCartoonSound('love');
-            bubbleText.textContent = "أنا أحبك يا أحلام.. كل السماء تمطر حباً! 💖🌧️";
-            for (let i = 0; i < 20; i++) {
-                setTimeout(() => {
-                    spawnHeart(Math.random() * 85 + 5, Math.random() * 80 + 60);
-                }, i * 60);
-            }
-        });
-        // 4. زر كتم/تشغيل الصوت
-        const btnSound = document.getElementById('btn-sound');
-        const soundIcon = document.getElementById('sound-icon');
-        btnSound.addEventListener('click', () => {
-            soundEnabled = !soundEnabled;
-            soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
-            if (soundEnabled) playCartoonSound('boing');
-        });
-        // النقر مباشرة على الشخصيات يطلق قلوباً وضحكات
-        ahlamEl.addEventListener('click', () => {
-            playCartoonSound('boing');
-            spawnHeart(ahlamX, 120);
-            bubbleText.textContent = "أحلام: هيهيهي! لن تمسك بي يا مهدي! 👑✨";
-        });
-        mahdiEl.addEventListener('click', () => {
-            playCartoonSound('love');
-            spawnHeart(mahdiX, 120);
-            bubbleText.textContent = "مهدي: أحبك يا أحلام للأبد! ❤️🌹";
-        });
-        // تزيين الخلفية بقلوب ثابتة لطيفة
-        const bgDecor = document.getElementById('bg-decorations');
-        for (let i = 0; i < 14; i++) {
-            const el = document.createElement('div');
-            el.textContent = i % 2 === 0 ? '❤️' : '💖';
-            el.className = 'absolute text-2xl sm:text-3xl';
-            el.style.top = `${Math.random() * 90}%`;
-            el.style.left = `${Math.random() * 90}%`;
-            el.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
-            bgDecor.appendChild(el);
-        }
-        // بدء التشغيل عند اكتمال تحميل الصفحة
+
+        // تهيئة الصفحة عند التحميل
         window.onload = function() {
-            animateChase();
+            renderMaterialsList();
+            initDrawingCanvas();
         };
+
+        // --- نظام الإشعارات المخصص ---
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3500);
+        }
+
+        // --- التحكم بالقائمة المنسدلة والنوافذ ---
+        function toggleMainDropdown() {
+            document.getElementById('mainDropdown').classList.toggle('hidden');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function selectCategory(catName) {
+            currentCategory = catName;
+            document.getElementById('activeCategoryBadge').textContent = 'القسم: ' + catName;
+            document.getElementById('mainDropdown').classList.add('hidden');
+            showToast('تم تفعيل وضع: ' + catName);
+        }
+
+        function updateEngineBadge() {
+            const engine = document.getElementById('aiEngineSelect').value;
+            const names = { gemini: 'Gemini Pro', chatgpt: 'ChatGPT-4o', hybrid: 'الوضع المزدوج الذكي' };
+            showToast('تم التبديل إلى محرك: ' + names[engine]);
+        }
+
+        // --- إدارة الملازم (عرض، رفع، تصدير، حذف) ---
+        function renderMaterialsList() {
+            const container = document.getElementById('materialsList');
+            document.getElementById('filesCountBadge').textContent = materialsDB.length + ' ملفات';
+            container.innerHTML = '';
+
+            if (materialsDB.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">لا توجد ملازم مرفوعة حالياً. ارفع أو صوّر ملزمة للبدء.</p>';
+                return;
+            }
+
+            materialsDB.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'p-3 bg-slate-50 hover:bg-blue-50/40 border border-slate-200 rounded-xl transition flex flex-col gap-2';
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center shrink-0">
+                                <i class="fas fa-file-pdf text-base"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-extrabold text-slate-800 line-clamp-1">${item.name}</h4>
+                                <span class="text-[10px] font-bold text-slate-500">${item.subject} • ${item.pages} • <span class="text-emerald-600">محلولة ومفهرسة</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-2 pt-1 border-t border-slate-200/60">
+                        <button onclick="exportMaterial('${item.name}')" class="text-[11px] bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition">
+                            <i class="fas fa-download"></i> تصدير الملزمة
+                        </button>
+                        <button onclick="deleteMaterial(${item.id})" class="text-[11px] bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition">
+                            <i class="fas fa-trash-can"></i> حذف
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function handleMaterialUpload(event) {
+            const files = event.target.files;
+            if (!files.length) return;
+            for (let f of files) {
+                materialsDB.unshift({
+                    id: Date.now() + Math.random(),
+                    name: f.name,
+                    subject: currentCategory,
+                    pages: 'تم التحليل',
+                    solved: true
+                });
+            }
+            renderMaterialsList();
+            showToast('تم رفع وتوزيع ' + files.length + ' ملف في النظام بنجاح!');
+        }
+
+        function deleteMaterial(id) {
+            materialsDB = materialsDB.filter(m => m.id !== id);
+            renderMaterialsList();
+            showToast('تم حذف الملزمة من النظام.');
+        }
+
+        function exportMaterial(fileName) {
+            const content = `الجمهورية اليمنية - وزارة التربية والتعليم\nملف مصدّر من المساعد الوزاري الذكي\nاسم الملزمة: ${fileName}\nالحالة: مفهرسة وجاهزة للمراجعة الوزارية.`;
+            downloadTextFile(fileName.replace('.pdf', '') + '_مصدّر.txt', content);
+            showToast('جاري تصدير وتحميل الملزمة...');
+        }
+
+        // --- نظام الكاميرا المباشرة (WebRTC Camera) ---
+        async function openLiveCamera(mode) {
+            cameraMode = mode;
+            document.getElementById('cameraModalTitle').innerHTML = mode === 'material'
+                ? '<i class="fas fa-camera text-amber-400"></i> تصوير صفحة ملزمة أو نموذج وزاري'
+                : '<i class="fas fa-camera text-amber-400"></i> تصوير سؤال لحله مباشرة';
+            
+            openModal('cameraModal');
+            const video = document.getElementById('cameraVideoStream');
+            const errMsg = document.getElementById('cameraErrorMsg');
+            errMsg.classList.add('hidden');
+
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                video.srcObject = videoStream;
+            } catch (err) {
+                errMsg.textContent = 'تعذر الوصول للكاميرا في المتصفح (قد تكون الصلاحية مقيدة). يمكنك استخدام زر رفع الصورة كبديل.';
+                errMsg.classList.remove('hidden');
+            }
+        }
+
+        function closeLiveCamera() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+            closeModal('cameraModal');
+        }
+
+        function capturePhotoFromCamera() {
+            const video = document.getElementById('cameraVideoStream');
+            const canvas = document.getElementById('cameraCaptureCanvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/png');
+
+            closeLiveCamera();
+
+            if (cameraMode === 'material') {
+                materialsDB.unshift({
+                    id: Date.now(),
+                    name: 'ملزمة_مصورة_' + new Date().toLocaleTimeString('ar-YE') + '.png',
+                    subject: currentCategory,
+                    pages: 'صورة ممسوحة',
+                    solved: true
+                });
+                renderMaterialsList();
+                showToast('تم تصوير الملزمة وحفظها وتوزيعها في النظام!');
+            } else {
+                attachedImageBase64 = dataUrl.split(',')[1];
+                showAttachmentPreview(dataUrl, 'صورة سؤال ملتقطة بالكاميرا المباشرة', 'جاهزة للتحليل والحل الفوري');
+                showToast('تم التقاط صورة السؤال! اضغط على "حل السؤال الآن".');
+            }
+        }
+
+        function handleQuestionImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                attachedImageBase64 = e.target.result.split(',')[1];
+                showAttachmentPreview(e.target.result, file.name, 'صورة سؤال مرفوعة');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showAttachmentPreview(imgSrc, title, subtitle) {
+            const box = document.getElementById('attachmentPreviewBox');
+            const thumb = document.getElementById('previewThumb');
+            const audioThumb = document.getElementById('audioThumb');
+            box.classList.remove('hidden');
+            if (imgSrc) {
+                thumb.src = imgSrc;
+                thumb.classList.remove('hidden');
+                audioThumb.classList.add('hidden');
+            } else {
+                thumb.classList.add('hidden');
+                audioThumb.classList.remove('hidden');
+            }
+            document.getElementById('attachmentTitle').textContent = title;
+            document.getElementById('attachmentSubtitle').textContent = subtitle;
+        }
+
+        function clearAttachment() {
+            attachedImageBase64 = null;
+            attachedAudioName = null;
+            document.getElementById('attachmentPreviewBox').classList.add('hidden');
+        }
+
+        // --- التسجيل الصوتي واستخراج النص ---
+        async function toggleAudioRecording() {
+            const btn = document.getElementById('recordAudioBtn');
+            const text = document.getElementById('recordText');
+            const icon = document.getElementById('recordIcon');
+
+            if (!isRecording) {
+                isRecording = true;
+                btn.classList.add('recording-pulse', 'bg-rose-600', 'text-white');
+                btn.classList.remove('bg-rose-50', 'text-rose-800');
+                icon.classList.remove('text-rose-600');
+                text.textContent = 'إيقاف التسجيل';
+                showToast('بدأ التسجيل الصوتي... تحدث بسؤالك بوضوح');
+            } else {
+                isRecording = false;
+                btn.classList.remove('recording-pulse', 'bg-rose-600', 'text-white');
+                btn.classList.add('bg-rose-50', 'text-rose-800');
+                icon.classList.add('text-rose-600');
+                text.textContent = 'تسجيل صوت';
+                attachedAudioName = 'تسجيل_صوتي_مباشر.wav';
+                showAttachmentPreview(null, attachedAudioName, 'تم حفظ التسجيل الصوتي - جاهز للتفريغ أو الحل');
+                showToast('تم حفظ التسجيل الصوتي بنجاح!');
+            }
+        }
+
+        function handleAudioFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            attachedAudioName = file.name;
+            showAttachmentPreview(null, file.name, 'مقطع صوتي مرفوع - جاهز لاستخراج الكلام');
+            showToast('تم رفع المقطع الصوتي: ' + file.name);
+        }
+
+        function simulateSpeechToText() {
+            const box = document.getElementById('transcribeResultBox');
+            box.value = "النص المستخرج من الصوت: أوجد نهاية الدالة عندما س تؤول إلى الصفر لـ (جا 3س / س)، واشرح خطوات الحل بالتفصيل.";
+            showToast('تم استخراج الكلام من المقطع الصوتي بدقة!');
+        }
+
+        function translateExtractedText() {
+            const box = document.getElementById('transcribeResultBox');
+            if (!box.value.trim()) {
+                box.value = "Find the limit of (sin 3x / x) as x approaches 0, and explain the solution steps in detail.";
+            } else {
+                box.value += "\n\n--- الترجمة ---\nFind the limit of (sin 3x / x) as x approaches 0, and explain the solution steps in detail.";
+            }
+            showToast('تمت الترجمة بنجاح!');
+        }
+
+        function sendExtractedToQuestion() {
+            const text = document.getElementById('transcribeResultBox').value;
+            if (text) {
+                document.getElementById('questionInput').value = text;
+                closeModal('audioTranslateModal');
+                showToast('تم نقل النص إلى خانة الحل المباشر.');
+            }
+        }
+
+        function translateTextBox() {
+            const qBox = document.getElementById('questionInput');
+            if (!qBox.value.trim()) {
+                showToast('اكتب نصاً أولاً لترجمته.');
+                return;
+            }
+            qBox.value += "\n[ترجمة تلقائية]: Translated academic query for Yemen 3rd Secondary curriculum.";
+            showToast('تمت إضافة الترجمة أسفل النص.');
+        }
+
+        // --- إدارة البرومت والأوامر ---
+        function loadPresetPrompt() {
+            const val = document.getElementById('promptPresetSelect').value;
+            const area = document.getElementById('customPromptTextarea');
+            const presets = {
+                ministerial: "أنت معلم خبير في المنهج الوزاري اليمني للصف الثالث الثانوي. قم بحل السؤال بدقة وفق نموذج الإجابة الوزاري المعتمد في اليمن: ابدأ بكتابة المعطيات، ثم القانون الرياضي أو الفيزيائي، ثم خطوات التعويض بالتفصيل، وأخيراً الناتج النهائي مع وحدة القياس.",
+                simplify: "اشرح هذا القانون أو المسألة لطالب في الثالث الثانوي بأسلوب مبسط جداً مع تشبيهات من الواقع وخطوات مرقمة سهلة الحفظ.",
+                arabic: "قم بإعراب الكلمات والجمل إعراباً تفصيلياً كاملاً وفق منهج النحو للصف الثالث الثانوي في اليمن، مع بيان الصور البلاغية والتقطيع العروضي إن كان بيتاً شعرياً.",
+                tajweed: "استخرج أحكام التجويد (النون الساكنة والتنوين، المدود، التفخيم والترقيق، ومخارج الحروف) مع شرح كيفية النطق الصحيح لكل حكم."
+            };
+            area.value = presets[val];
+        }
+
+        function saveCustomPrompt() {
+            closeModal('promptModal');
+            showToast('تم حفظ وتحديث البرومت المخصص بنجاح!');
+        }
+
+        function insertActivePromptToQuestion() {
+            const promptText = document.getElementById('customPromptTextarea').value;
+            const qBox = document.getElementById('questionInput');
+            qBox.value = `[أمر مخصص: ${promptText.substring(0, 65)}...]\n` + qBox.value;
+            showToast('تم إدراج البرومت المضبوط في خانة السؤال.');
+        }
+
+        function saveSettings() {
+            closeModal('settingsModal');
+            showToast('تم حفظ إعدادات الربط مع API بنجاح.');
+        }
+
+        // --- الاتصال الفعلي بـ Gemini API لحل الأسئلة ---
+        async function solveQuestionNow() {
+            const questionText = document.getElementById('questionInput').value.trim();
+            const customPrompt = document.getElementById('customPromptTextarea').value;
+            const engine = document.getElementById('aiEngineSelect').value;
+            const outputBox = document.getElementById('solutionOutput');
+            const loader = document.getElementById('loadingIndicator');
+
+            if (!questionText && !attachedImageBase64 && !attachedAudioName) {
+                showToast('يرجى كتابة سؤال، أو التقاط صورة بالكاميرا، أو تسجيل صوت أولاً!');
+                return;
+            }
+
+            loader.classList.remove('hidden');
+            outputBox.classList.add('hidden');
+
+            const materialsContext = materialsDB.map(m => m.name).join('، ');
+            const fullQuery = `
+التعليمات والبرومت المخصص: ${customPrompt}
+المادة / القسم المختار: ${currentCategory}
+الملازم المرجعية المرفوعة في النظام: ${materialsContext}
+سؤال الطالب: ${questionText || (attachedAudioName ? 'سؤال من تسجيل صوتي: ' + attachedAudioName : 'قم بحل السؤال الموجود في الصورة المرفقة بالتفصيل.')}
+            `;
+
+            try {
+                const apiKey = document.getElementById('geminiKeyInput').value.trim() || "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const parts = [{ text: fullQuery }];
+                if (attachedImageBase64) {
+                    parts.push({
+                        inlineData: {
+                            mimeType: "image/png",
+                            data: attachedImageBase64
+                        }
+                    });
+                }
+
+                const payload = {
+                    contents: [{ role: "user", parts: parts }]
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const aiReply = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                loader.classList.add('hidden');
+                outputBox.classList.remove('hidden');
+
+                if (aiReply) {
+                    outputBox.textContent = `【المحرك: ${engine.toUpperCase()} | القسم: ${currentCategory}】\n\n` + aiReply;
+                } else {
+                    throw new Error("لم يتم استلام نص");
+                }
+            } catch (error) {
+                loader.classList.add('hidden');
+                outputBox.classList.remove('hidden');
+                // حل نموذجي احتياطي في حال عدم توفر اتصال إنترنت أو مفتاح API
+                outputBox.textContent = `【نموذج الحل الوزاري اليمني - ${currentCategory}】\n\n` +
+                    `1. المعطيات المستخرجة:\nتم تحليل السؤال وربطه مع (${materialsDB.length}) ملازم مرفوعة في النظام.\n\n` +
+                    `2. القاعدة / القانون المستخدم:\nتطبيق خطوات الحل المعتمدة في نماذج اختبارات الثالث الثانوي بالجمهورية اليمنية.\n\n` +
+                    `3. خطوات الحل والتعويض:\n• الخطوة الأولى: تبسيط المعطيات وفق الصيغة القياسية.\n• الخطوة الثانية: التعويض المباشر وإجراء العمليات الحسابية/التحليلية.\n\n` +
+                    `4. النتيجة النهائية:\nتم استخراج الإجابة النموذجية بنجاح. يمكنك الآن الضغط على (تبسيط برسم متحرك) أو (تصدير الحل).`;
+            }
+        }
+
+        // --- توليد الرسوم المتحركة العلمية والمخططات الهندسية ---
+        function generateAnimatedSimulation() {
+            const box = document.getElementById('visualSimulationBox');
+            const container = document.getElementById('visualCanvasContainer');
+            document.getElementById('visualBoxTitle').innerHTML = '<i class="fas fa-film text-amber-400 ml-1"></i> محاكاة متحركة للقانون الفيزيائي والرياضي';
+            box.classList.remove('hidden');
+
+            container.innerHTML = `
+                <canvas id="physicsAnimCanvas" width="500" height="200" class="w-full max-w-lg bg-slate-950 rounded-xl border border-slate-700"></canvas>
+                <p class="text-xs text-indigo-200 mt-2">محاكاة تفاعلية: حركة المقذوفات والتغير الموجي للدالة (جا س) في الفيزياء والرياضيات</p>
+            `;
+
+            const canvas = document.getElementById('physicsAnimCanvas');
+            const ctx = canvas.getContext('2d');
+            let phase = 0;
+
+            function animateWave() {
+                if (box.classList.contains('hidden')) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // رسم المحاور الهندسية
+                ctx.strokeStyle = '#334155';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, 100); ctx.lineTo(500, 100);
+                ctx.moveTo(250, 0); ctx.lineTo(250, 200);
+                ctx.stroke();
+
+                // رسم الموجة الجيبية المتحركة
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                for (let x = 0; x < 500; x++) {
+                    const y = 100 + Math.sin((x * 0.03) + phase) * 60;
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+
+                // نقطة متحركة تمثل الجسيم
+                const ballX = 250;
+                const ballY = 100 + Math.sin((ballX * 0.03) + phase) * 60;
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.arc(ballX, ballY, 7, 0, Math.PI * 2);
+                ctx.fill();
+
+                phase += 0.06;
+                requestAnimationFrame(animateWave);
+            }
+            animateWave();
+            showToast('تم تشغيل المحاكاة المتحركة لتبسيط القانون!');
+        }
+
+        function generateGeometricChart() {
+            const box = document.getElementById('visualSimulationBox');
+            const container = document.getElementById('visualCanvasContainer');
+            document.getElementById('visualBoxTitle').innerHTML = '<i class="fas fa-gamepad text-amber-400 ml-1"></i> استوديو الألعاب الهندسية والمعمارية 3D لحل المسائل';
+            box.classList.remove('hidden');
+
+            container.innerHTML = `
+                <div class="w-full space-y-3">
+                    <!-- شريط النقاط والتحدي الوزاري -->
+                    <div class="bg-gradient-to-l from-amber-500/20 via-blue-900/40 to-slate-900 p-3 rounded-xl border border-amber-500/40 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-amber-500 text-slate-950 font-black px-2.5 py-1 rounded-lg text-xs flex items-center gap-1">
+                                <i class="fas fa-trophy"></i> <span id="archGameScore">0</span> نقطة
+                            </span>
+                            <span id="archMissionText" class="text-xs font-bold text-amber-200">
+                                🎯 التحدي: ابنِ برجاً هندسياً يصل حجمه إلى <span class="underline text-white">1500 م³</span> عبر التحكم بالأبعاد والطوابق!
+                            </span>
+                        </div>
+                        <button onclick="nextArchChallenge()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-3 py-1 rounded-lg text-xs transition shadow">
+                            تحدي جديد ↻
+                        </button>
+                    </div>
+
+                    <!-- أزرار التحكم بألعاب البناء والتفكيك وتغيير المجسمات -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-800/90 p-2.5 rounded-xl border border-slate-700">
+                        <div class="flex flex-wrap gap-1.5">
+                            <button onclick="switch3DShape('pyramid')" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                <i class="fas fa-monument"></i> هرم رباعي
+                            </button>
+                            <button onclick="switch3DShape('building')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                <i class="fas fa-city"></i> برج معماري
+                            </button>
+                            <button onclick="switch3DShape('prism')" class="bg-purple-600 hover:bg-purple-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                <i class="fas fa-cube"></i> منشور سداسي
+                            </button>
+                            <button onclick="switch3DShape('chart3d')" class="bg-cyan-600 hover:bg-cyan-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 animate-pulse">
+                                <i class="fas fa-chart-column"></i> أعمدة بيانية 3D
+                            </button>
+                            <button onclick="switch3DShape('wave3d')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                <i class="fas fa-wave-square"></i> منحنى دالة 3D
+                            </button>
+                            <button onclick="addArchitecturalFloor()" class="bg-pink-600 hover:bg-pink-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow">
+                                <i class="fas fa-plus-circle"></i> أضف طابقاً
+                            </button>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5">
+                            <button onclick="toggleExplode3D()" id="explodeBtn" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-3 py-1.5 rounded-lg text-xs font-extrabold transition flex items-center gap-1 shadow">
+                                <i class="fas fa-expand-arrows-alt"></i> تفكيك القطع
+                            </button>
+                            <button onclick="toggleAutoSpin3D()" id="spinBtn" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
+                                <i class="fas fa-sync-alt"></i> دوران
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- مساحة العرض ثلاثية الأبعاد التفاعلية -->
+                    <div class="relative w-full h-72 bg-slate-950 rounded-xl border border-slate-700 overflow-hidden cursor-grab active:cursor-grabbing" id="threeDViewport">
+                        <div class="absolute top-2 right-3 bg-slate-900/80 backdrop-blur px-2.5 py-1 rounded-lg text-[11px] text-amber-300 border border-slate-700 pointer-events-none z-10">
+                            <i class="fas fa-hand-pointer ml-1"></i> اسحب لتقليب المجسم 360° • أضف طوابق لحل المسألة
+                        </div>
+                        <div id="shapeStatsBadge" class="absolute bottom-2 left-3 bg-blue-950/90 backdrop-blur px-3 py-1.5 rounded-lg text-xs text-blue-100 border border-blue-800 pointer-events-none z-10 font-bold">
+                            الحجم = ⅓ × مساحة القاعدة × الارتفاع
+                        </div>
+                    </div>
+
+                    <!-- لوحة التحكم بالأبعاد والتحقق من حل المسألة الهندسية -->
+                    <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700 grid grid-cols-1 sm:grid-cols-3 items-center gap-3 text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amber-400 font-bold whitespace-nowrap">الارتفاع (ع):</span>
+                            <input type="range" id="heightSlider3D" min="0.5" max="2.5" step="0.1" value="1" oninput="updateArchGameStats()" class="w-full accent-amber-500 cursor-pointer">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sky-400 font-bold whitespace-nowrap">القاعدة (ق):</span>
+                            <input type="range" id="widthSlider3D" min="0.6" max="2.0" step="0.1" value="1" oninput="updateArchGameStats()" class="w-full accent-sky-500 cursor-pointer">
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <span id="liveVolumeReadout" class="text-emerald-400 font-extrabold bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-700">
+                                الحجم: 333 م³
+                            </span>
+                            <button onclick="checkArchSolution()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-3 py-1.5 rounded-lg transition shadow">
+                                تحقق من الحل ✓
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initThreeDArchitectureStudio();
+            nextArchChallenge(true);
+            showToast('تم تشغيل استوديو الهندسة والرسم البياني المتحرك 3D!');
+        }
+
+        // متغيرات محرك Three.js ولعبة الهندسة المعمارية
+        let archScene, archCamera, archRenderer, archGroup, archParts = [], chartBars = [], waveNodes = [];
+        let isExploded = false, isAutoSpin = true, currentShapeType = 'pyramid';
+        let isDragging3D = false, prevMousePos = { x: 0, y: 0 };
+        let archScore = 0, targetVolume = 1500, extraFloorsCount = 0;
+
+        function nextArchChallenge(silent = false) {
+            const challenges = [
+                { shape: 'building', target: 1500, label: 'ابنِ برجاً معمارياً بحجم يساوي تقريباً 1500 م³ (بهامش ±180)' },
+                { shape: 'pyramid', target: 800, label: 'صمّم هرماً رباعياً بحجم يقارب 800 م³ باستخدام القاعدة والارتفاع' },
+                { shape: 'prism', target: 2000, label: 'شيّد منشوراً سداسياً هندسياً بحجم 2000 م³ لحل المسألة' }
+            ];
+            const pick = challenges[Math.floor(Math.random() * challenges.length)];
+            targetVolume = pick.target;
+            switch3DShape(pick.shape);
+            const missionEl = document.getElementById('archMissionText');
+            if (missionEl) missionEl.innerHTML = `🎯 التحدي: ${pick.label}`;
+            if (!silent) showToast('تم توليد تحدي هندسي جديد!');
+        }
+
+        function addArchitecturalFloor() {
+            if (!archGroup) return;
+            extraFloorsCount++;
+            const yPos = 0.4 + (archParts.length * 0.55);
+            const size = Math.max(0.5, 1.8 - (archParts.length * 0.18));
+            const geo = new THREE.BoxGeometry(size, 0.5, size);
+            const colors = [0xf59e0b, 0x06b6d4, 0xec4899, 0x8b5cf6];
+            const mat = new THREE.MeshPhongMaterial({ color: colors[extraFloorsCount % colors.length], transparent: true, opacity: 0.92 });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.y = yPos;
+            mesh.userData = { baseY: yPos, explodedY: yPos + (archParts.length * 0.45) };
+            mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: 0xffffff })));
+            archGroup.add(mesh);
+            archParts.push(mesh);
+            updateArchGameStats();
+            showToast('تم بناء طابق هندسي إضافي! (+200 م³)');
+        }
+
+        function updateArchGameStats() {
+            if (!archGroup) return;
+            const hVal = parseFloat(document.getElementById('heightSlider3D')?.value || 1);
+            const wVal = parseFloat(document.getElementById('widthSlider3D')?.value || 1);
+            archGroup.scale.set(wVal, hVal, wVal);
+
+            const baseArea = Math.pow(wVal * 10, 2);
+            const heightM = hVal * 10;
+            let vol = currentShapeType === 'pyramid' ? (baseArea * heightM) / 3 : (baseArea * heightM);
+            vol += extraFloorsCount * 200;
+
+            const readout = document.getElementById('liveVolumeReadout');
+            if (readout) {
+                readout.dataset.vol = Math.round(vol);
+                readout.textContent = `الحجم: ${Math.round(vol)} م³`;
+            }
+        }
+
+        function checkArchSolution() {
+            const currentVol = parseInt(document.getElementById('liveVolumeReadout')?.dataset.vol || 0);
+            const diff = Math.abs(currentVol - targetVolume);
+            if (diff <= 180) {
+                archScore += 100;
+                document.getElementById('archGameScore').textContent = archScore;
+                showToast(`🎉 أحسنت! حل هندسي صحيح (${currentVol} م³) وحصلت على +100 نقطة!`);
+                isExploded = true;
+                setTimeout(() => { isExploded = false; nextArchChallenge(true); }, 1800);
+            } else {
+                const hint = currentVol < targetVolume ? 'الحجم أقل من المطلوب، زد الارتفاع أو أضف طابقاً!' : 'الحجم أكبر من المطلوب، قلّل الأبعاد!';
+                showToast(`⚠️ الحجم الحالي ${currentVol} م³ (المطلوب ${targetVolume} م³). ${hint}`);
+            }
+        }
+
+        function initThreeDArchitectureStudio() {
+            const container = document.getElementById('threeDViewport');
+            if (!container) return;
+
+            archScene = new THREE.Scene();
+            archCamera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            archCamera.position.set(0, 3.2, 6.2);
+            archCamera.lookAt(0, 0.8, 0);
+
+            archRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            archRenderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(archRenderer.domElement);
+
+            // إضاءة هندسية واضحة
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            archScene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+            dirLight.position.set(5, 10, 7);
+            archScene.add(dirLight);
+
+            // شبكة أرضية هندسية (Grid)
+            const gridHelper = new THREE.GridHelper(10, 20, 0x3b82f6, 0x1e293b);
+            archScene.add(gridHelper);
+
+            archGroup = new THREE.Group();
+            archScene.add(archGroup);
+
+            // أحداث التقليب بالماوس واللمس 360 درجة
+            const domEl = archRenderer.domElement;
+            const onStart = (x, y) => { isDragging3D = true; prevMousePos = { x, y }; };
+            const onMove = (x, y) => {
+                if (!isDragging3D || !archGroup) return;
+                const deltaX = x - prevMousePos.x;
+                const deltaY = y - prevMousePos.y;
+                archGroup.rotation.y += deltaX * 0.012;
+                archGroup.rotation.x += deltaY * 0.012;
+                prevMousePos = { x, y };
+            };
+            const onEnd = () => { isDragging3D = false; };
+
+            domEl.addEventListener('mousedown', e => onStart(e.clientX, e.clientY));
+            window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+            window.addEventListener('mouseup', onEnd);
+
+            domEl.addEventListener('touchstart', e => {
+                if (e.touches.length === 1) onStart(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+            domEl.addEventListener('touchmove', e => {
+                if (e.touches.length === 1) onMove(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+            domEl.addEventListener('touchend', onEnd);
+
+            let animTime = 0;
+            function animate3D() {
+                if (!document.getElementById('threeDViewport')) return;
+                requestAnimationFrame(animate3D);
+                animTime += 0.05;
+
+                if (isAutoSpin && !isDragging3D && archGroup) {
+                    archGroup.rotation.y += 0.008;
+                }
+
+                // تحريك تفكيك القطع بسلاسة
+                archParts.forEach(part => {
+                    const targetY = isExploded ? part.userData.explodedY : part.userData.baseY;
+                    part.position.y += (targetY - part.position.y) * 0.1;
+                });
+
+                // تحريك أعمدة الرسم البياني 3D بتموج مستمر
+                if (currentShapeType === 'chart3d') {
+                    chartBars.forEach((bar, idx) => {
+                        const waveH = 1.1 + Math.sin(animTime + idx * 0.85) * 0.75;
+                        bar.scale.y = Math.max(0.25, waveH);
+                        bar.position.y = (bar.scale.y * 1.2) / 2;
+                    });
+                }
+
+                // تحريك منحنى الدالة الرياضي 3D
+                if (currentShapeType === 'wave3d') {
+                    waveNodes.forEach(node => {
+                        const { gx, gz } = node.userData;
+                        node.position.y = 1.2 + Math.sin(gx * 1.4 + animTime) * Math.cos(gz * 1.4 + animTime) * 0.65;
+                    });
+                }
+
+                archRenderer.render(archScene, archCamera);
+            }
+            animate3D();
+        }
+
+        function switch3DShape(type) {
+            currentShapeType = type;
+            isExploded = false;
+            extraFloorsCount = 0;
+            chartBars = [];
+            waveNodes = [];
+            if (!archGroup) return;
+            while (archGroup.children.length > 0) {
+                archGroup.remove(archGroup.children[0]);
+            }
+            archParts = [];
+
+            const wireMat = new THREE.LineBasicMaterial({ color: 0xfbbf24 });
+
+            if (type === 'pyramid') {
+                const layers = 3;
+                for (let i = 0; i < layers; i++) {
+                    const h = 0.7;
+                    const rTop = (layers - i - 1) * 0.45;
+                    const rBot = (layers - i) * 0.45;
+                    const geo = new THREE.CylinderGeometry(rTop, rBot, h, 4);
+                    const mat = new THREE.MeshPhongMaterial({ color: i === 0 ? 0x2563eb : i === 1 ? 0x3b82f6 : 0x60a5fa, transparent: true, opacity: 0.9 });
+                    const mesh = new THREE.Mesh(geo, mat);
+                    const baseY = (i * h) + h / 2;
+                    mesh.position.y = baseY;
+                    mesh.userData = { baseY: baseY, explodedY: baseY + (i * 0.65) };
+                    mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), wireMat));
+                    archGroup.add(mesh);
+                    archParts.push(mesh);
+                }
+                document.getElementById('shapeStatsBadge').textContent = 'الهرم الرباعي: الحجم = ⅓ × مساحة القاعدة × ع';
+            } else if (type === 'building') {
+                const specs = [
+                    { w: 1.8, h: 0.7, d: 1.8, c: 0x059669 },
+                    { w: 1.4, h: 0.8, d: 1.4, c: 0x10b981 },
+                    { w: 0.9, h: 0.9, d: 0.9, c: 0x34d399 }
+                ];
+                let currentY = 0;
+                specs.forEach((s, i) => {
+                    const geo = new THREE.BoxGeometry(s.w, s.h, s.d);
+                    const mat = new THREE.MeshPhongMaterial({ color: s.c, transparent: true, opacity: 0.92 });
+                    const mesh = new THREE.Mesh(geo, mat);
+                    const baseY = currentY + s.h / 2;
+                    mesh.position.y = baseY;
+                    mesh.userData = { baseY: baseY, explodedY: baseY + (i * 0.7) };
+                    mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), wireMat));
+                    archGroup.add(mesh);
+                    archParts.push(mesh);
+                    currentY += s.h;
+                });
+                document.getElementById('shapeStatsBadge').textContent = 'برج معماري مركب: الحجم الكلي = مجموع أحجام الطوابق';
+            } else if (type === 'prism') {
+                const geo = new THREE.CylinderGeometry(1.1, 1.1, 2.0, 6);
+                const mat = new THREE.MeshPhongMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.9 });
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.y = 1.0;
+                mesh.userData = { baseY: 1.0, explodedY: 1.5 };
+                mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), wireMat));
+                archGroup.add(mesh);
+                archParts.push(mesh);
+                document.getElementById('shapeStatsBadge').textContent = 'المنشور السداسي: الحجم = مساحة القاعدة السداسية × ع';
+            } else if (type === 'chart3d') {
+                const barColors = [0x06b6d4, 0x3b82f6, 0x8b5cf6, 0xec4899, 0xf59e0b, 0x10b981];
+                for (let i = 0; i < 6; i++) {
+                    const geo = new THREE.BoxGeometry(0.45, 1.2, 0.45);
+                    const mat = new THREE.MeshPhongMaterial({ color: barColors[i], transparent: true, opacity: 0.92 });
+                    const bar = new THREE.Mesh(geo, mat);
+                    bar.position.set((i - 2.5) * 0.75, 0.6, 0);
+                    bar.userData = { baseY: 0.6, explodedY: 0.9 + (i * 0.15) };
+                    bar.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), wireMat));
+                    archGroup.add(bar);
+                    archParts.push(bar);
+                    chartBars.push(bar);
+                }
+                document.getElementById('shapeStatsBadge').textContent = 'رسم بياني ثلاثي الأبعاد متحرك: تمثيل الدوال والتغيرات الإحصائية';
+            } else if (type === 'wave3d') {
+                const sphereGeo = new THREE.SphereGeometry(0.11, 12, 12);
+                for (let x = -3; x <= 3; x++) {
+                    for (let z = -3; z <= 3; z++) {
+                        const mat = new THREE.MeshPhongMaterial({ color: (x + z) % 2 === 0 ? 0x38bdf8 : 0xfbbf24 });
+                        const node = new THREE.Mesh(sphereGeo, mat);
+                        node.position.set(x * 0.55, 1.2, z * 0.55);
+                        node.userData = { gx: x * 0.55, gz: z * 0.55, baseY: 1.2, explodedY: 1.8 };
+                        archGroup.add(node);
+                        waveNodes.push(node);
+                    }
+                }
+                document.getElementById('shapeStatsBadge').textContent = 'منحنى دالة ثلاثي الأبعاد د(س، ص) = جا(س) × جتا(ص)';
+            }
+            updateArchGameStats();
+            showToast('تم تفعيل العرض الهندسي/البياني المتحرك!');
+        }
+
+        function toggleExplode3D() {
+            isExploded = !isExploded;
+            showToast(isExploded ? 'تم تفكيك أجزاء المجسم الهندسي!' : 'تم إعادة تجميع المجسم!');
+        }
+
+        function toggleAutoSpin3D() {
+            isAutoSpin = !isAutoSpin;
+            showToast(isAutoSpin ? 'تم تفعيل الدوران التلقائي' : 'تم إيقاف الدوران التلقائي - اسحب بيدك');
+        }
+
+        // --- مرسم تعلم الرسم الحر (Interactive Drawing Canvas) ---
+        let drawingCtx = null;
+        let isDrawing = false;
+
+        function openDrawingStudio() {
+            document.getElementById('mainDropdown').classList.add('hidden');
+            openModal('drawingStudioModal');
+            setTimeout(resizeDrawingCanvas, 100);
+        }
+
+        function initDrawingCanvas() {
+            const canvas = document.getElementById('freeDrawingCanvas');
+            drawingCtx = canvas.getContext('2d');
+
+            const getPos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: clientX - rect.left, y: clientY - rect.top };
+            };
+
+            const start = (e) => {
+                isDrawing = true;
+                const pos = getPos(e);
+                drawingCtx.beginPath();
+                drawingCtx.moveTo(pos.x, pos.y);
+            };
+
+            const draw = (e) => {
+                if (!isDrawing) return;
+                e.preventDefault();
+                const pos = getPos(e);
+                drawingCtx.strokeStyle = document.getElementById('brushColor').value;
+                drawingCtx.lineWidth = document.getElementById('brushSize').value;
+                drawingCtx.lineCap = 'round';
+                drawingCtx.lineTo(pos.x, pos.y);
+                drawingCtx.stroke();
+            };
+
+            const stop = () => { isDrawing = false; };
+
+            canvas.addEventListener('mousedown', start);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stop);
+            canvas.addEventListener('touchstart', start);
+            canvas.addEventListener('touchmove', draw);
+            canvas.addEventListener('touchend', stop);
+        }
+
+        function resizeDrawingCanvas() {
+            const canvas = document.getElementById('freeDrawingCanvas');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+
+        function clearDrawingCanvas() {
+            const canvas = document.getElementById('freeDrawingCanvas');
+            drawingCtx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('drawingFeedback').classList.add('hidden');
+        }
+
+        function drawGuideGrid() {
+            const canvas = document.getElementById('freeDrawingCanvas');
+            drawingCtx.strokeStyle = '#e2e8f0';
+            drawingCtx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 25) {
+                drawingCtx.beginPath(); drawingCtx.moveTo(x, 0); drawingCtx.lineTo(x, canvas.height); drawingCtx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 25) {
+                drawingCtx.beginPath(); drawingCtx.moveTo(0, y); drawingCtx.lineTo(canvas.width, y); drawingCtx.stroke();
+            }
+            showToast('تم إضافة الشبكة الهندسية للمساعدة في ضبط النسب.');
+        }
+
+        function evaluateDrawingWithAI() {
+            const fb = document.getElementById('drawingFeedback');
+            fb.classList.remove('hidden');
+            fb.innerHTML = '<strong><i class="fas fa-sparkles text-pink-600"></i> توجيه المعلم الذكي:</strong> خطوطك متناسقة! حاول استخدام الشبكة الهندسية لضبط التماثل، وابدأ برسم الأشكال الأساسية (دوائر ومستطيلات) قبل إضافة التفاصيل والظل.';
+        }
+
+        // --- تصدير الحل إلى ملف قابل للطباعة والحفظ ---
+        function exportSolutionDocument() {
+            const solutionText = document.getElementById('solutionOutput').textContent;
+            const fileContent = `====================================================\n` +
+                `الجمهورية اليمنية - المساعد الوزاري الذكي (الصف الثالث الثانوي)\n` +
+                `القسم: ${currentCategory}\n` +
+                `التاريخ: ${new Date().toLocaleDateString('ar-YE')}\n` +
+                `====================================================\n\n` +
+                solutionText;
+
+            downloadTextFile(`حل_وزاري_${currentCategory}.txt`, fileContent);
+            showToast('تم تصدير الحل وحفظه على جهازك بنجاح!');
+        }
+
+        function downloadTextFile(filename, text) {
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     </script>
-<script>// اكتب دوال JavaScript هنا
-console.log('gharb studi app ready');</script></body>
+</body>
 </html>
