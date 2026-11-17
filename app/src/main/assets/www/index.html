@@ -1,1 +1,507 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>غارب استوديو v1.2.5 (Offline First)</title></head><body style="background:#0B1120;color:#F8FAFC;font-family:system-ui;padding:24px;text-align:center;"><h1>غارب استوديو v1.2.5</h1><p>تطبيق أندرويد أصلي متكامل (Native APK ~5.7MB) مع دعم العمل بدون إنترنت من أول تشغيل (Offline-First).</p></body></html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أنا أحبك يا أحلام ❤️</title>
+    <!-- استدعاء خط عربي كرتوني جميل وممتع -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&family=Lalezar&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* إعدادات الخطوط والحركات الكرتونية المخصصة */
+        body {
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .cartoon-title {
+            font-family: 'Lalezar', 'Cairo', cursive;
+            text-shadow: 0 4px 0 #be123c, 0 8px 15px rgba(225, 29, 72, 0.3);
+        }
+        /* حركة النبض للعنوان */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.06); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.08); }
+            60% { transform: scale(1); }
+        }
+        .animate-heartbeat {
+            animation: heartbeat 2.2s infinite ease-in-out;
+        }
+        /* حركة القفز الكرتونية للشخصيات */
+        @keyframes cartoonBounce {
+            0%, 100% { transform: translateY(0) scaleY(1) scaleX(1); }
+            30% { transform: translateY(-18px) scaleY(1.08) scaleX(0.94); }
+            55% { transform: translateY(0) scaleY(0.9) scaleX(1.1); }
+            75% { transform: translateY(-6px) scaleY(1.02) scaleX(0.98); }
+        }
+        .character-bounce {
+            animation: cartoonBounce 0.65s infinite ease-in-out;
+            transform-origin: bottom center;
+        }
+        /* حركة الدوران المضحكة عند الفوز أو المفاجأة */
+        @keyframes dizzySpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        .character-spin {
+            animation: dizzySpin 0.6s ease-out;
+        }
+        /* حركة غبار الركض الكرتوني */
+        @keyframes dustPuff {
+            0% { opacity: 0.9; transform: scale(0.4) translate(0, 0); }
+            100% { opacity: 0; transform: scale(1.6) translate(25px, -15px); }
+        }
+        .dust-cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: dustPuff 0.6s forwards ease-out;
+        }
+        /* حركة القلوب المتطايرة */
+        @keyframes floatHeart {
+            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-140px) scale(1.4) rotate(25deg); opacity: 0; }
+        }
+        .floating-heart {
+            position: absolute;
+            pointer-events: none;
+            animation: floatHeart 1.4s forwards ease-out;
+            z-index: 30;
+        }
+        /* حركة السحب في الخلفية */
+        @keyframes moveClouds {
+            0% { transform: translateX(-120px); }
+            100% { transform: translateX(100vw); }
+        }
+        .cloud-drift {
+            animation: moveClouds 28s linear infinite;
+        }
+    </style>
+<style>/* اكتب تنسيقات CSS هنا */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 16px;
+}</style></head>
+<body class="bg-gradient-to-b from-pink-100 via-rose-50 to-amber-100 min-h-screen flex flex-col items-center justify-between p-3 sm:p-6">
+    <!-- خلفية قلوب خفيفة عائمة -->
+    <div id="bg-decorations" class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40"></div>
+    <!-- الرأس والعنوان الرئيسي المطلوب -->
+    <header class="relative z-10 text-center mt-2 sm:mt-4 w-full max-w-2xl">
+        <div class="inline-block bg-white/80 backdrop-blur-sm px-5 py-1.5 rounded-full shadow-sm border border-pink-200 mb-2">
+            <span class="text-xs sm:text-sm font-bold text-rose-500">✨ إهداء خاص من مهدي إلى أحلام ✨</span>
+        </div>
+        
+        <h1 class="cartoon-title text-4xl sm:text-6xl md:text-7xl text-rose-600 tracking-wide animate-heartbeat leading-tight py-2">
+            أنا أحبك يا أحلام ❤️
+        </h1>
+        
+        <p id="status-subtitle" class="text-rose-800/80 font-bold text-sm sm:text-base mt-1 transition-all duration-300">
+            مهدي يحاول إهداء القلب لأحلام... وأحلام تهرب بدلال! 😂🏃‍♀️💨
+        </p>
+    </header>
+    <!-- مسرح الرسوم المتحركة (تشبه أجواء توم وجيري الكوميدية) -->
+    <main class="relative z-10 w-full max-w-3xl my-auto py-2">
+        <div id="stage" class="relative w-full h-72 sm:h-80 md:h-96 bg-gradient-to-b from-sky-200 via-sky-100 to-emerald-100 rounded-3xl shadow-2xl border-4 border-white overflow-hidden">
+            
+            <!-- شمس كرتونية مبتسمة -->
+            <div class="absolute top-4 left-6 w-14 h-14 sm:w-16 sm:h-16 bg-amber-300 rounded-full shadow-lg flex items-center justify-center animate-pulse">
+                <span class="text-2xl">☀️</span>
+            </div>
+            <!-- سحب متحركة -->
+            <div class="cloud-drift absolute top-8 left-0 text-white/80 text-4xl sm:text-5xl select-none" style="animation-delay: -5s;">☁️</div>
+            <div class="cloud-drift absolute top-16 left-0 text-white/70 text-3xl sm:text-4xl select-none" style="animation-delay: -18s;">☁️</div>
+            <!-- لافتة كرتونية في الخلفية -->
+            <div class="absolute top-5 right-5 bg-amber-100/95 border-2 border-amber-400 px-3 py-1.5 rounded-2xl shadow-md transform rotate-3">
+                <span class="text-xs sm:text-sm font-extrabold text-amber-900">مطاردة الحب رقم #<span id="chase-count">1</span> 💘</span>
+            </div>
+            <!-- فقاعة الحوار المضحكة فوق المشهد -->
+            <div id="comic-bubble" class="absolute top-16 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-2xl shadow-lg border-2 border-rose-400 text-center transition-all duration-300 z-20 min-w-[200px] sm:min-w-[260px]">
+                <p id="bubble-text" class="text-sm sm:text-base font-extrabold text-rose-600">انتظري يا أحلام، معي وردة وقلب! 🌹</p>
+                <div class="w-3 h-3 bg-white border-b-2 border-r-2 border-rose-400 transform rotate-45 mx-auto -mb-3.5 mt-1"></div>
+            </div>
+            <!-- الأرضية الخضراء الكرتونية -->
+            <div class="absolute bottom-0 inset-x-0 h-16 sm:h-20 bg-gradient-to-t from-emerald-500 to-emerald-400 border-t-4 border-emerald-600/30">
+                <!-- زهور صغيرة على العشب -->
+                <div class="flex justify-around items-center h-full px-6 opacity-80 text-lg sm:text-xl">
+                    <span>🌼</span><span>🌱</span><span>🌷</span><span>🍀</span><span>🌸</span><span>🌱</span><span>🌼</span>
+                </div>
+            </div>
+            <!-- الشخصية الأولى: أحلام (تهرب بدلال وضحك - مثل جيري الذكي) -->
+            <div id="ahlam-char" class="absolute bottom-12 sm:bottom-14 transition-all duration-75 z-20 flex flex-col items-center" style="left: 20%;">
+                <!-- اسم الشخصية -->
+                <span class="bg-pink-500 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-full shadow mb-1 border border-white">أحلام 👑</span>
+                <!-- رسم كرتوني SVG لأحلام -->
+                <div id="ahlam-sprite" class="character-bounce w-20 h-24 sm:w-24 sm:h-28 relative">
+                    <svg viewBox="0 0 120 140" class="w-full h-full drop-shadow-md">
+                        <!-- شعر طويل متطاير -->
+                        <path d="M25,45 Q10,75 20,105 Q35,95 40,70 Z" fill="#3b1d14"/>
+                        <path d="M95,45 Q110,75 100,105 Q85,95 80,70 Z" fill="#3b1d14"/>
+                        <circle cx="60" cy="48" r="32" fill="#3b1d14"/>
+                        <!-- فيونكة وردية كرتونية -->
+                        <path d="M45,18 L60,26 L45,34 Z" fill="#f43f5e"/>
+                        <path d="M75,18 L60,26 L75,34 Z" fill="#f43f5e"/>
+                        <circle cx="60" cy="26" r="5" fill="#ffe4e6"/>
+                        <!-- الوجه -->
+                        <circle cx="60" cy="52" r="24" fill="#ffedd5"/>
+                        <!-- عيون كرتونية كبيرة ومضحكة -->
+                        <ellipse cx="52" cy="48" rx="4.5" ry="6" fill="#1e293b"/>
+                        <circle cx="53" cy="46" r="1.8" fill="#ffffff"/>
+                        <ellipse cx="68" cy="48" rx="4.5" ry="6" fill="#1e293b"/>
+                        <circle cx="69" cy="46" r="1.8" fill="#ffffff"/>
+                        <!-- خدود وردية -->
+                        <circle cx="44" cy="56" r="4" fill="#fda4af" opacity="0.8"/>
+                        <circle cx="76" cy="56" r="4" fill="#fda4af" opacity="0.8"/>
+                        <!-- ابتسامة شقية -->
+                        <path d="M52,60 Q60,70 68,60 Z" fill="#e11d48"/>
+                        <!-- الفستان -->
+                        <path d="M42,76 L78,76 L88,112 L32,112 Z" fill="#ec4899"/>
+                        <!-- أرجل تركض بسرعة -->
+                        <line x1="48" y1="112" x2="36" y2="132" stroke="#ffedd5" stroke-width="6" stroke-linecap="round"/>
+                        <line x1="72" y1="112" x2="86" y2="128" stroke="#ffedd5" stroke-width="6" stroke-linecap="round"/>
+                        <!-- حذاء -->
+                        <ellipse cx="34" cy="133" rx="7" ry="4" fill="#be123c"/>
+                        <ellipse cx="88" cy="129" rx="7" ry="4" fill="#be123c"/>
+                    </svg>
+                </div>
+            </div>
+            <!-- الشخصية الثانية: مهدي (يركض بحماس وقلوب في عينيه - مثل توم العاشق) -->
+            <div id="mahdi-char" class="absolute bottom-12 sm:bottom-14 transition-all duration-75 z-20 flex flex-col items-center" style="left: 65%;">
+                <!-- اسم الشخصية -->
+                <span class="bg-blue-600 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-full shadow mb-1 border border-white">مهدي 😍</span>
+                <!-- رسم كرتوني SVG لمهدي -->
+                <div id="mahdi-sprite" class="character-bounce w-22 h-26 sm:w-26 sm:h-30 relative" style="animation-delay: 0.15s;">
+                    <svg viewBox="0 0 130 145" class="w-full h-full drop-shadow-md">
+                        <!-- شعر كرتوني مشاكس -->
+                        <path d="M38,42 Q40,16 65,18 Q90,16 92,42 Q80,28 65,30 Q50,28 38,42 Z" fill="#1e293b"/>
+                        <!-- الوجه -->
+                        <circle cx="65" cy="52" r="24" fill="#fed7aa"/>
+                        <!-- عيون على شكل قلوب حمراء! -->
+                        <path d="M55,46 C55,43 50,43 50,47 C50,51 55,54 55,54 C55,54 60,51 60,47 C60,43 55,43 55,46 Z" fill="#e11d48"/>
+                        <path d="M75,46 C75,43 70,43 70,47 C70,51 75,54 75,54 C75,54 80,51 80,47 C80,43 75,43 75,46 Z" fill="#e11d48"/>
+                        <!-- ابتسامة عريضة متلهفة -->
+                        <path d="M54,61 Q65,73 76,61" stroke="#9a3412" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                        <!-- القميص -->
+                        <rect x="46" y="76" width="38" height="36" rx="10" fill="#2563eb"/>
+                        <!-- يد ممدودة تحمل وردة حمراء -->
+                        <line x1="46" y1="86" x2="22" y2="82" stroke="#fed7aa" stroke-width="6" stroke-linecap="round"/>
+                        <!-- الوردة -->
+                        <line x1="22" y1="88" x2="22" y2="66" stroke="#16a34a" stroke-width="3"/>
+                        <circle cx="22" cy="64" r="7" fill="#e11d48"/>
+                        <circle cx="20" cy="62" r="2" fill="#fda4af"/>
+                        <!-- أرجل تركض -->
+                        <line x1="54" y1="112" x2="40" y2="134" stroke="#1e3a8a" stroke-width="7" stroke-linecap="round"/>
+                        <line x1="76" y1="112" x2="92" y2="130" stroke="#1e3a8a" stroke-width="7" stroke-linecap="round"/>
+                        <!-- حذاء رياضي -->
+                        <ellipse cx="38" cy="135" rx="8" ry="4.5" fill="#ffffff"/>
+                        <ellipse cx="94" cy="131" rx="8" ry="4.5" fill="#ffffff"/>
+                    </svg>
+                </div>
+            </div>
+            <!-- مؤثر اصطدام القلوب عند الإمساك بأحلام -->
+            <div id="catch-overlay" class="hidden absolute inset-0 bg-rose-500/20 backdrop-blur-[2px] z-30 flex flex-col items-center justify-center text-center p-4">
+                <div class="bg-white/95 px-6 py-4 rounded-3xl shadow-2xl border-4 border-rose-500 transform scale-105 transition-transform">
+                    <div class="text-4xl sm:text-5xl mb-2">💑💖🎉</div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-rose-600">مهدي أمسك بأحلام!</h2>
+                    <p class="text-sm sm:text-base font-bold text-gray-700 mt-1">أجمل ثنائي في العالم.. أنا أحبك يا أحلام!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- أزرار التحكم التفاعلية المضحكة -->
+    <footer class="relative z-10 w-full max-w-2xl mb-2">
+        <div class="bg-white/90 backdrop-blur-md p-3 sm:p-4 rounded-3xl shadow-xl border-2 border-pink-200 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            
+            <button id="btn-boost" class="flex-1 min-w-[130px] bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 active:scale-95 text-white font-extrabold py-3 px-4 rounded-2xl shadow-lg shadow-rose-500/30 transition-all flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer">
+                <span>⚡</span>
+                <span>سرّع مهدي!</span>
+            </button>
+            <button id="btn-trick" class="flex-1 min-w-[130px] bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 active:scale-95 text-white font-extrabold py-3 px-4 rounded-2xl shadow-lg shadow-amber-500/30 transition-all flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer">
+                <span>🍌</span>
+                <span>مقلب توم وجيري</span>
+            </button>
+            <button id="btn-hearts" class="flex-1 min-w-[130px] bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 active:scale-95 text-white font-extrabold py-3 px-4 rounded-2xl shadow-lg shadow-purple-500/30 transition-all flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer">
+                <span>💖</span>
+                <span>مطر القلوب</span>
+            </button>
+            <button id="btn-sound" class="bg-pink-100 hover:bg-pink-200 active:scale-95 text-rose-700 font-bold p-3 rounded-2xl border border-pink-300 transition-all cursor-pointer" title="تشغيل/كتم المؤثرات الصوتية الكرتونية">
+                <span id="sound-icon" class="text-xl">🔊</span>
+            </button>
+        </div>
+    </footer>
+    <script>
+        // ==========================================
+        // إعدادات الصوت الكرتوني (Web Audio API) بدون روابط خارجية
+        // ==========================================
+        let soundEnabled = true;
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+        // توليد أصوات كرتونية مضحكة (قفز، انزلاق، قلوب)
+        function playCartoonSound(type) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+                if (type === 'boing') {
+                    // صوت قفزة كرتونية
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.exponentialRampToValueAtTime(520, now + 0.18);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'slip') {
+                    // صوت انزلاق مضحك مثل توم وجيري
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(120, now + 0.35);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.36);
+                    osc.start(now);
+                    osc.stop(now + 0.36);
+                } else if (type === 'love') {
+                    // نغمة رومانسية مبهجة
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.1);
+                    osc.frequency.setValueAtTime(659.25, now + 0.2);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+                    osc.start(now);
+                    osc.stop(now + 0.45);
+                }
+            } catch (e) {
+                // تجاهل أخطاء الصوت في حال عدم التفاعل المسبق
+            }
+        }
+        // ==========================================
+        // متغيرات وعناصر المشهد الكرتوني
+        // ==========================================
+        const stage = document.getElementById('stage');
+        const ahlamEl = document.getElementById('ahlam-char');
+        const mahdiEl = document.getElementById('mahdi-char');
+        const ahlamSprite = document.getElementById('ahlam-sprite');
+        const mahdiSprite = document.getElementById('mahdi-sprite');
+        const bubbleText = document.getElementById('bubble-text');
+        const chaseCountEl = document.getElementById('chase-count');
+        const catchOverlay = document.getElementById('catch-overlay');
+        // مواقع الشخصيات كنسبة مئوية من عرض المسرح (0% إلى 85%)
+        let ahlamX = 18;
+        let mahdiX = 68;
+        let direction = -1; // -1 يعني الركض لليسار، 1 يعني الركض لليمين
+        let mahdiSpeed = 0.42;
+        let ahlamSpeed = 0.40;
+        let isPaused = false;
+        let chaseNumber = 1;
+        let frameCounter = 0;
+        // عبارات كوميدية متبادلة بين أحلام ومهدي
+        const funnyDialogues = [
+            "مهدي: انتظري يا أحلام، قلبي تعب من الركض! 🏃‍♂️❤️",
+            "أحلام: لن تمسك بي يا مهدي، أنا أسرع منك! 😜👑",
+            "مهدي: معي أجمل وردة لأجمل أحلام في الدنيا! 🌹",
+            "أحلام: هاهاها! حاول مرة أخرى يا بطل! 😂💨",
+            "مهدي: أنا أحبك يا أحلام.. توقفي قليلاً! 😍💘",
+            "أحلام: المطاردة ممتعة مثل توم وجيري! 🐭🐱"
+        ];
+        let dialogueIndex = 0;
+        // تحديث الحوار التلقائي كل بضع ثوانٍ
+        setInterval(() => {
+            if (!isPaused) {
+                dialogueIndex = (dialogueIndex + 1) % funnyDialogues.length;
+                bubbleText.textContent = funnyDialogues[dialogueIndex];
+            }
+        }, 3200);
+        // إنشاء غبار الركض الكرتوني خلف الشخصيات
+        function spawnDust(xPercent) {
+            const dust = document.createElement('div');
+            dust.className = 'dust-cloud';
+            const size = Math.random() * 14 + 10;
+            dust.style.width = `${size}px`;
+            dust.style.height = `${size}px`;
+            dust.style.left = `calc(${xPercent}% + 30px)`;
+            dust.style.bottom = '52px';
+            stage.appendChild(dust);
+            setTimeout(() => dust.remove(), 600);
+        }
+        // إطلاق قلب طائر في مكان محدد
+        function spawnHeart(xPercent, yBottom = 110) {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart text-2xl sm:text-3xl';
+            const emojis = ['❤️', '💖', '💘', '💕', '🌹', '😍'];
+            heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            heart.style.left = `calc(${xPercent}% + ${(Math.random() * 40 - 20)}px)`;
+            heart.style.bottom = `${yBottom}px`;
+            stage.appendChild(heart);
+            setTimeout(() => heart.remove(), 1400);
+        }
+        // ==========================================
+        // حلقة الرسوم المتحركة الرئيسية (Game/Animation Loop)
+        // ==========================================
+        function animateChase() {
+            if (!isPaused) {
+                frameCounter++;
+                // تحريك الشخصيات
+                ahlamX += ahlamSpeed * direction;
+                mahdiX += mahdiSpeed * direction;
+                // عكس الاتجاه عند الوصول لحواف المسرح (مثل أفلام الكرتون)
+                if (direction === -1 && ahlamX <= 4) {
+                    direction = 1;
+                    // مهدي يتجاوز قليلاً ثم يلتف بسرعة!
+                    mahdiX = Math.min(82, mahdiX + 6);
+                    playCartoonSound('boing');
+                } else if (direction === 1 && ahlamX >= 78) {
+                    direction = -1;
+                    mahdiX = Math.max(4, mahdiX - 6);
+                    playCartoonSound('boing');
+                }
+                // قلب اتجاه النظر للشخصيات حسب اتجاه الركض
+                ahlamSprite.style.transform = direction === 1 ? 'scaleX(-1)' : 'scaleX(1)';
+                mahdiSprite.style.transform = direction === 1 ? 'scaleX(-1)' : 'scaleX(1)';
+                // تطبيق المواقع على العناصر
+                ahlamEl.style.left = `${ahlamX}%`;
+                mahdiEl.style.left = `${mahdiX}%`;
+                // إضافة غبار الركض وقلوب صغيرة كل عدة إطارات
+                if (frameCounter % 18 === 0) {
+                    spawnDust(mahdiX);
+                    spawnDust(ahlamX);
+                }
+                if (frameCounter % 45 === 0) {
+                    spawnHeart(mahdiX, 120);
+                }
+                // التحقق هل أمسك مهدي بأحلام؟
+                if (Math.abs(mahdiX - ahlamX) < 7) {
+                    triggerCatchCelebration();
+                }
+            }
+            requestAnimationFrame(animateChase);
+        }
+        // احتفالية لطيفة عندما يلحق مهدي بأحلام
+        function triggerCatchCelebration() {
+            isPaused = true;
+            playCartoonSound('love');
+            catchOverlay.classList.remove('hidden');
+            bubbleText.textContent = "أمسكت بكِ يا أحلام! أنا أحبكِ كثيراً ❤️🎉";
+            // إطلاق وابل من القلوب
+            for (let i = 0; i < 16; i++) {
+                setTimeout(() => {
+                    spawnHeart(ahlamX + (Math.random() * 14 - 7), 90 + Math.random() * 50);
+                }, i * 80);
+            }
+            // إعادة بدء المطاردة بشكل مضحك بعد 2.8 ثانية
+            setTimeout(() => {
+                catchOverlay.classList.add('hidden');
+                chaseNumber++;
+                chaseCountEl.textContent = chaseNumber;
+                mahdiSpeed = 0.42;
+                ahlamSpeed = 0.40;
+                // أحلام تهرب مجدداً بضحكة!
+                ahlamX = direction === -1 ? 15 : 70;
+                mahdiX = direction === -1 ? 72 : 12;
+                bubbleText.textContent = "أحلام: هربت من جديد! يلا الحاق بي يا مهدي 😂🏃‍♀️";
+                isPaused = false;
+            }, 2800);
+        }
+        // ==========================================
+        // تفاعلات الأزرار
+        // ==========================================
+        // 1. زر تسريع مهدي
+        document.getElementById('btn-boost').addEventListener('click', () => {
+            if (isPaused) return;
+            playCartoonSound('boing');
+            mahdiSpeed = 0.95;
+            bubbleText.textContent = "مهدي: تشغيل السرعة القصوى للحاق بأحلام! 🚀❤️";
+            spawnHeart(mahdiX, 110);
+            setTimeout(() => {
+                mahdiSpeed = 0.44;
+            }, 1800);
+        });
+        // 2. زر مقلب توم وجيري (قشرة موز كوميدية!)
+        document.getElementById('btn-trick').addEventListener('click', () => {
+            if (isPaused) return;
+            playCartoonSound('slip');
+            
+            // إضافة قشرة موز مؤقتة في المسرح
+            const banana = document.createElement('div');
+            banana.textContent = '🍌';
+            banana.className = 'absolute bottom-14 text-3xl z-20 transition-all duration-300';
+            banana.style.left = `${mahdiX}%`;
+            stage.appendChild(banana);
+            // حركة دوران مضحكة لمهدي
+            mahdiSprite.classList.add('character-spin');
+            bubbleText.textContent = "مهدي: أوووبس! قشرة موز من مقالب أحلام! 🍌💫😂";
+            
+            // تراجع مهدي قليلاً للخلف بشكل كرتوني
+            mahdiX = Math.max(5, Math.min(80, mahdiX - (direction * 14)));
+            setTimeout(() => {
+                mahdiSprite.classList.remove('character-spin');
+                banana.remove();
+            }, 700);
+        });
+        // 3. زر مطر القلوب
+        document.getElementById('btn-hearts').addEventListener('click', () => {
+            playCartoonSound('love');
+            bubbleText.textContent = "أنا أحبك يا أحلام.. كل السماء تمطر حباً! 💖🌧️";
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    spawnHeart(Math.random() * 85 + 5, Math.random() * 80 + 60);
+                }, i * 60);
+            }
+        });
+        // 4. زر كتم/تشغيل الصوت
+        const btnSound = document.getElementById('btn-sound');
+        const soundIcon = document.getElementById('sound-icon');
+        btnSound.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
+            if (soundEnabled) playCartoonSound('boing');
+        });
+        // النقر مباشرة على الشخصيات يطلق قلوباً وضحكات
+        ahlamEl.addEventListener('click', () => {
+            playCartoonSound('boing');
+            spawnHeart(ahlamX, 120);
+            bubbleText.textContent = "أحلام: هيهيهي! لن تمسك بي يا مهدي! 👑✨";
+        });
+        mahdiEl.addEventListener('click', () => {
+            playCartoonSound('love');
+            spawnHeart(mahdiX, 120);
+            bubbleText.textContent = "مهدي: أحبك يا أحلام للأبد! ❤️🌹";
+        });
+        // تزيين الخلفية بقلوب ثابتة لطيفة
+        const bgDecor = document.getElementById('bg-decorations');
+        for (let i = 0; i < 14; i++) {
+            const el = document.createElement('div');
+            el.textContent = i % 2 === 0 ? '❤️' : '💖';
+            el.className = 'absolute text-2xl sm:text-3xl';
+            el.style.top = `${Math.random() * 90}%`;
+            el.style.left = `${Math.random() * 90}%`;
+            el.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
+            bgDecor.appendChild(el);
+        }
+        // بدء التشغيل عند اكتمال تحميل الصفحة
+        window.onload = function() {
+            animateChase();
+        };
+    </script>
+<script>// اكتب دوال JavaScript هنا
+console.log('gharb studi app ready');</script></body>
+</html>

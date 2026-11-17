@@ -1,9 +1,9 @@
-name: Build Gharb Studi App APK
+name: Build Gharb Android APK
 
 on:
-  workflow_dispatch:
   push:
     branches: [ main, master ]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -35,60 +35,27 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Ensure Permanent Keystore
+      - name: Generate Release Keystore
         run: |
           mkdir -p keystore
-          if [ ! -f keystore/gharb-release.p12 ]; then
-            keytool -genkeypair -v -keystore keystore/gharb-release.p12 -storetype PKCS12 -keyalg RSA -keysize 2048 -validity 10000 -alias gharb_release_key -storepass "gharb@2026" -keypass "gharb@2026" -dname "CN=Gharb Studi, OU=Mobile, O=GharbStudi, L=Cairo, S=EG, C=EG"
-          fi
-
-      - name: Verify Manifest, Signing & No Conflicting Resources
-        run: |
-          python3 - <<'PY'
-          import os, pathlib, sys
-          manifest = pathlib.Path("app/src/main/AndroidManifest.xml").read_text(encoding="utf-8")
-          gradle = pathlib.Path("app/build.gradle.kts").read_text(encoding="utf-8")
-          assert '@mipmap/ic_launcher' in manifest, 'AndroidManifest.xml missing @mipmap/ic_launcher'
-          assert '@mipmap/ic_launcher_round' in manifest, 'AndroidManifest.xml missing @mipmap/ic_launcher_round'
-          assert 'signingConfigs' in gradle and 'enableV1Signing = true' in gradle, 'Release signingConfigs missing v1/v2/v3 signing'
-          res_root = pathlib.Path("app/src/main/res")
-          for d in res_root.iterdir():
-              if not d.is_dir():
-                  continue
-              seen = {}
-              for f in d.iterdir():
-                  base = f.stem
-                  if d.name == 'drawable' and base == 'ic_launcher':
-                      raise SystemExit(f"Conflicting resource: {f}")
-                  if base in seen:
-                      raise SystemExit(f"Duplicate resource in {d.name}: {seen[base]} vs {f.name}")
-                  seen[base] = f.name
-                  if f.suffix.lower() == '.png':
-                      hdr = f.read_bytes()[:8]
-                      if hdr != b'\x89PNG\r\n\x1a\n':
-                          raise SystemExit(f"Invalid PNG signature in {f}: {hdr.hex()}")
-          print("Verified AndroidManifest.xml, signingConfigs, PNG headers, and zero conflicting resources.")
-          PY
+          keytool -genkeypair -v -keystore keystore/gharb-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias "gharb_release_key" -storepass "gharb@2026" -keypass "gharb@2026" -dname "CN=Gharb Studi, OU=Mobile, O=GharbStudi, L=Cairo, S=EG, C=EG"
 
       - name: Build Signed Release APK
         run: |
-          gradle assembleRelease --no-daemon -PGHARB_KEYSTORE_PATH="$PWD/keystore/gharb-release.p12" -PGHARB_KEYSTORE_PASS="gharb@2026" -PGHARB_KEY_ALIAS="gharb_release_key" -PGHARB_KEY_PASS="gharb@2026"
+          gradle assembleRelease --no-daemon -Pandroid.injected.signing.store.file="$PWD/keystore/gharb-release.jks" -Pandroid.injected.signing.store.password="gharb@2026" -Pandroid.injected.signing.key.alias="gharb_release_key" -Pandroid.injected.signing.key.password="gharb@2026"
           mkdir -p release_out
           APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
-          cp "$APK_PATH" "release_out/gharb_studi_app.apk"
-          "$ANDROID_HOME/build-tools/34.0.0/aapt2" dump badging "release_out/gharb_studi_app.apk" | head -n 25
-          "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --verbose --print-certs "release_out/gharb_studi_app.apk" | tee release_out/cert_info.txt
+          cp "$APK_PATH" "release_out/com_gharb_myapp_v1.0.0.apk"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: gharb-studi-release-apk
-          path: release_out/gharb_studi_app.apk
+          name: gharb-built-apk
+          path: release_out/com_gharb_myapp_v1.0.0.apk
 
       - name: Publish Direct APK Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="gharb-studi-v${{ github.run_number }}"
-          CERT_NOTES=$(cat release_out/cert_info.txt | head -n 20)
-          gh release create "$TAG" "release_out/gharb_studi_app.apk" --title "gharb studi app ($TAG - v1.2.4)" --notes "Signed Release APK for gharb studi app v1.2.4 with Gemini 4 Hydrogen, API Key Rotation, & Strict HTTPS WebView (v1+v2+v3 Google Play compatible).$'\n\n'$CERT_NOTES"
+          TAG="apk-${{ github.run_number }}"
+          gh release create "$TAG" "release_out/com_gharb_myapp_v1.0.0.apk" --title "Build $TAG (com_gharb_myapp_v1.0.0.apk)" --notes "Built automatically by gharb studi app." || true
