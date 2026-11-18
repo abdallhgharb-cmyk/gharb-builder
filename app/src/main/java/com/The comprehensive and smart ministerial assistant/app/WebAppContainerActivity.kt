@@ -1,4 +1,4 @@
-package com.The comprehensive and smart ministerial assistant.myapp
+package com.The comprehensive and smart ministerial assistant.app
 
 import android.annotation.SuppressLint
 import android.os.Bundle
