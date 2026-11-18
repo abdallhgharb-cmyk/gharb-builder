@@ -1,4 +1,4 @@
-package com.Comprehensive Ministerial Assistant.app
+package com.ComprehensiveMinisterialAssistant.app
 
 import android.annotation.SuppressLint
 import android.app.Dialog
