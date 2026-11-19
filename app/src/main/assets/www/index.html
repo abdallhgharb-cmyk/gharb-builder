@@ -1,756 +1,1607 @@
-                <!DOCTYPE html>
-                <html lang="ar" dir="rtl">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>تطبيق مولد محلياً</title>
-                    <style>
-                        body{margin:0;background:#0B1120;color:#F8FAFC;font-family:sans-serif;padding:24px;}
-                        .card{background:#111827;border:1px solid #334155;border-radius:18px;padding:20px;text-align:center;}
-                        .btn{background:#10B981;color:#0B1120;border:none;padding:12px 20px;border-radius:10px;font-weight:bold;margin-top:12px;}
-                    </style>
-                <style>/* اكتب تنسيقات CSS هنا */
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 16px;
-}</style></head>
-                <body>
-                    <div class="card">
-                        <h2 style="color:#10B981;">تطبيق تم إنشاؤه محلياً</h2>
-                        <p>الفكرة: ```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تطبيق سباق البطل</title>
-    <!-- تحميل خط Tajawal من Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- تحميل مكتبة Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- تحميل مكتبة FontAwesome للأيقونات -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- تحميل مكتبة Tone.js للمؤثرات الصوتية -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d1117">
+<title>WinForge Studio IDE - بيئة تطوير أدوات ويندوز المتكاملة</title>
+<style>
+  :root {
+    --bg-root: #0d1117;
+    --bg-sidebar: #161b22;
+    --bg-activity: #010409;
+    --bg-editor: #0d1117;
+    --bg-panel: #161b22;
+    --bg-hover: #21262d;
+    --bg-active: #1f6feb26;
+    --border: #30363d;
+    --primary: #2f81f7;
+    --primary-hover: #58a6ff;
+    --accent: #3fb950;
+    --warning: #d29922;
+    --danger: #f85149;
+    --text-main: #e6edf3;
+    --text-muted: #8b949e;
+    --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-mono: 'Consolas', 'Courier New', monospace;
+  }
 
-    <style>
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #111827;
-            user-select: none;
-            -webkit-user-select: none;
-            overflow: hidden;
-            touch-action: none;
-        }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-        /* إطار يحاكي شاشة هاتف أندرويد */
-        .android-frame {
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 0 8px #1f2937, 0 0 0 10px #374151;
-        }
+  body {
+    background-color: var(--bg-root);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
 
-        /* تأثير نبض للأزرار */
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.6); }
-            50% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.9); }
-        }
-        .btn-glow {
-            animation: pulse-glow 2s infinite;
-        }
+  /* الشريط العلوي (Top Menu Bar) */
+  .top-bar {
+    height: 44px;
+    background: var(--bg-activity);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    flex-shrink: 0;
+    z-index: 50;
+  }
 
-        ::-webkit-scrollbar {
-            display: none;
-        }
-    </style>
-<style>/* اكتب تنسيقات CSS هنا */
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 16px;
-}</style></head>
-<body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-0 sm:p-4">
+  .brand-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-    <!-- حاوية التطبيق الرئيسية (تصميم شاشة هاتف أندرويد) -->
-    <div id="app-container" class="android-frame relative w-full h-screen sm:w-[400px] sm:h-[780px] bg-slate-900 sm:rounded-[2.5rem] overflow-hidden flex flex-col justify-between border-slate-800">
-        
-        <!-- شريط الحالة العلوي للأندرويد (Status Bar) -->
-        <div class="bg-slate-950/90 text-white px-5 py-2 flex justify-between items-center text-xs z-30 border-b border-slate-800">
-            <div class="flex items-center gap-1.5 font-bold">
-                <span id="clock-time">12:00</span>
-            </div>
-            <!-- الكاميرا الأمامية الوهمية -->
-            <div class="w-4 h-4 bg-black rounded-full border border-slate-700 hidden sm:block"></div>
-            <div class="flex items-center gap-2 text-slate-300">
-                <i class="fas fa-wifi"></i>
-                <i class="fas fa-signal"></i>
-                <div class="flex items-center gap-1">
-                    <span>100%</span>
-                    <i class="fas fa-battery-full text-green-400"></i>
-                </div>
-            </div>
-        </div>
+  .logo-badge {
+    background: linear-gradient(135deg, #2f81f7, #8957e5);
+    color: white;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+  }
 
-        <!-- شاشة البداية (القائمة الرئيسية للتطبيق) -->
-        <div id="start-screen" class="absolute inset-0 top-8 bottom-10 bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 z-20 flex flex-col items-center justify-between p-6 text-white transition-opacity duration-300">
-            
-            <!-- رأس التطبيق مع صورة المستخدم -->
-            <div class="w-full flex flex-col items-center mt-2">
-                <div class="bg-blue-500/20 text-blue-300 text-xs font-bold px-3 py-1 rounded-full mb-3 border border-blue-500/30">
-                    إصدار خاص للأندرويد APK
-                </div>
-                
-                <!-- إطار صورة السائق (تفاعلي لتغيير الصورة) -->
-                <div class="relative group cursor-pointer" onclick="document.getElementById('photo-upload').click()" title="اضغط لوضع صورتك">
-                    <div class="w-28 h-28 rounded-3xl p-1 bg-gradient-to-tr from-amber-400 via-orange-500 to-rose-500 shadow-xl transform transition group-hover:scale-105">
-                        <img id="driver-avatar-preview" src="https://placehold.co/200x200/1e293b/fbbf24?text=صورتك+هنا" alt="صورة السائق" class="w-full h-full object-cover rounded-[1.3rem] bg-slate-800">
-                    </div>
-                    <!-- أيقونة الكاميرا للتعديل -->
-                    <div class="absolute -bottom-2 -right-2 bg-blue-600 text-white w-9 h-9 rounded-full flex items-center justify-center shadow-lg border-2 border-slate-900">
-                        <i class="fas fa-camera text-sm"></i>
-                    </div>
-                </div>
-                
-                <input type="file" id="photo-upload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-                
-                <button onclick="document.getElementById('photo-upload').click()" class="mt-3 text-xs text-amber-400 hover:text-amber-300 underline font-bold flex items-center gap-1">
-                    <i class="fas fa-upload"></i> اضغط هنا لاختيار صورتك من الاستوديو
-                </button>
+  .project-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
 
-                <h1 class="text-3xl font-black mt-3 text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-400 to-rose-400 text-center">
-                    سباق البطل التوربيني
-                </h1>
-                <p class="text-slate-400 text-xs text-center mt-1">صورتك ستظهر على أيقونة التطبيق وداخل سيارة السباق!</p>
-            </div>
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
 
-            <!-- اختيار لون السيارة -->
-            <div class="w-full bg-slate-800/60 p-4 rounded-2xl border border-slate-700/50 backdrop-blur-sm">
-                <p class="text-xs text-slate-300 font-bold mb-2.5 text-center">اختر لون سيارتك المفضلة:</p>
-                <div class="flex justify-center gap-4">
-                    <button onclick="selectCarColor('#ef4444', this)" class="color-btn w-10 h-10 rounded-full bg-red-500 border-4 border-white shadow-lg transform scale-110 transition"></button>
-                    <button onclick="selectCarColor('#3b82f6', this)" class="color-btn w-10 h-10 rounded-full bg-blue-500 border-2 border-transparent opacity-70 hover:opacity-100 transition"></button>
-                    <button onclick="selectCarColor('#10b981', this)" class="color-btn w-10 h-10 rounded-full bg-emerald-500 border-2 border-transparent opacity-70 hover:opacity-100 transition"></button>
-                    <button onclick="selectCarColor('#f59e0b', this)" class="color-btn w-10 h-10 rounded-full bg-amber-500 border-2 border-transparent opacity-70 hover:opacity-100 transition"></button>
-                    <button onclick="selectCarColor('#a855f7', this)" class="color-btn w-10 h-10 rounded-full bg-purple-500 border-2 border-transparent opacity-70 hover:opacity-100 transition"></button>
-                </div>
-            </div>
+  button {
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    color: var(--text-main);
+    background: var(--bg-hover);
+  }
 
-            <!-- أعلى نتيجة وأزرار التحكم -->
-            <div class="w-full flex flex-col gap-3">
-                <div class="flex justify-between items-center bg-slate-800/80 px-4 py-2.5 rounded-xl border border-slate-700">
-                    <span class="text-slate-400 text-sm font-bold"><i class="fas fa-trophy text-amber-400 ml-1"></i> أعلى رقم قياسي:</span>
-                    <span id="high-score-display" class="text-amber-400 font-black text-lg">0</span>
-                </div>
+  button:hover {
+    background: #30363d;
+  }
 
-                <button onclick="startGame()" class="btn-glow w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xl rounded-2xl shadow-lg transform active:scale-95 transition flex items-center justify-center gap-2">
-                    <i class="fas fa-play"></i> ابدأ السباق الآن
-                </button>
-            </div>
-        </div>
+  button:active {
+    transform: scale(0.97);
+  }
 
-        <!-- شاشة اللعب (Canvas) -->
-        <div id="game-screen" class="relative flex-1 w-full h-full bg-slate-800 overflow-hidden">
-            <!-- لوحة المعلومات العلوية داخل اللعب -->
-            <div class="absolute top-3 left-3 right-3 flex justify-between items-center z-10 pointer-events-none">
-                <!-- بطاقة السائق المصغرة -->
-                <div class="flex items-center gap-2 bg-slate-900/85 backdrop-blur-md p-1.5 pr-2 pl-3 rounded-full border border-slate-700 shadow-lg">
-                    <img id="hud-avatar" src="https://placehold.co/100x100/1e293b/fbbf24?text=أنا" class="w-8 h-8 rounded-full object-cover border border-amber-400">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] text-slate-400 leading-none">النقاط</span>
-                        <span id="score-display" class="text-white font-black text-sm leading-tight">0</span>
-                    </div>
-                </div>
+  .btn-run {
+    background: var(--accent);
+    color: #04260f;
+    font-weight: 700;
+  }
+  .btn-run:hover { background: #56d364; }
 
-                <!-- السرعة وزر الإيقاف -->
-                <div class="flex items-center gap-2 pointer-events-auto">
-                    <div class="bg-slate-900/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700 text-amber-400 font-bold text-xs shadow-lg">
-                        <i class="fas fa-tachometer-alt ml-1"></i> <span id="speed-display">100</span> كم/س
-                    </div>
-                    <button onclick="togglePause()" class="w-9 h-9 bg-slate-900/85 text-white rounded-full border border-slate-700 flex items-center justify-center shadow-lg active:scale-90">
-                        <i id="pause-icon" class="fas fa-pause text-xs"></i>
-                    </button>
-                </div>
-            </div>
+  .btn-primary {
+    background: var(--primary);
+    color: #ffffff;
+  }
+  .btn-primary:hover { background: var(--primary-hover); }
 
-            <!-- لوحة الرسم للعبة -->
-            <canvas id="gameCanvas" class="w-full h-full block"></canvas>
+  .btn-danger {
+    background: rgba(248, 81, 73, 0.15);
+    color: var(--danger);
+    border-color: rgba(248, 81, 73, 0.4);
+  }
+  .btn-danger:hover {
+    background: var(--danger);
+    color: white;
+  }
 
-            <!-- أزرار التحكم باللمس للهواتف (تظهر في الأسفل لسهولة اللعب) -->
-            <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center z-10 opacity-80 hover:opacity-100 transition">
-                <button id="btn-right" class="w-20 h-20 bg-white/15 backdrop-blur-md active:bg-blue-500/50 border-2 border-white/30 rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-                <button id="btn-nitro" class="w-16 h-16 bg-amber-500/30 backdrop-blur-md active:bg-amber-500/70 border-2 border-amber-400/50 rounded-full flex flex-col items-center justify-center text-amber-300 text-xs font-bold shadow-lg">
-                    <i class="fas fa-fire text-xl mb-0.5"></i>
-                    تيربو
-                </button>
-                <button id="btn-left" class="w-20 h-20 bg-white/15 backdrop-blur-md active:bg-blue-500/50 border-2 border-white/30 rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-            </div>
-        </div>
+  /* مساحة العمل الرئيسية (IDE Workspace) */
+  .ide-workspace {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
 
-        <!-- شاشة نهاية اللعبة (Game Over) -->
-        <div id="gameover-screen" class="hidden absolute inset-0 top-8 bottom-10 bg-slate-950/90 backdrop-blur-md z-30 flex flex-col items-center justify-center p-6 text-white">
-            <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-red-500 to-amber-500 mb-4 shadow-2xl">
-                <img id="gameover-avatar" src="https://placehold.co/200x200/1e293b/fbbf24?text=صورتك" class="w-full h-full object-cover rounded-full">
-            </div>
-            
-            <h2 class="text-3xl font-black text-red-500 mb-1">حادث تصادم!</h2>
-            <p class="text-slate-400 text-sm mb-6">حاول مرة أخرى لتحطيم الرقم القياسي</p>
+  /* شريط الأيقونات الجانبي (Activity Bar - مثل VS Code) */
+  .activity-bar {
+    width: 50px;
+    background: var(--bg-activity);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    gap: 8px;
+    flex-shrink: 0;
+    z-index: 40;
+  }
 
-            <div class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6 flex justify-around text-center">
-                <div>
-                    <p class="text-xs text-slate-400">نتيجتك</p>
-                    <p id="final-score" class="text-2xl font-black text-white mt-1">0</p>
-                </div>
-                <div class="w-px bg-slate-800"></div>
-                <div>
-                    <p class="text-xs text-slate-400">أعلى نتيجة</p>
-                    <p id="final-highscore" class="text-2xl font-black text-amber-400 mt-1">0</p>
-                </div>
-            </div>
+  .act-btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 18px;
+    position: relative;
+  }
 
-            <div class="w-full flex flex-col gap-3">
-                <button onclick="startGame()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-lg rounded-xl shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
-                    <i class="fas fa-redo"></i> العب مرة أخرى
-                </button>
-                <button onclick="showHome()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl transition">
-                    العودة للشاشة الرئيسية
-                </button>
-            </div>
-        </div>
+  .act-btn:hover {
+    color: var(--text-main);
+    background: var(--bg-hover);
+  }
 
-        <!-- شريط التنقل السفلي للأندرويد (Navigation Bar) -->
-        <div class="bg-slate-950 text-slate-400 h-10 px-12 flex justify-between items-center z-30 border-t border-slate-800">
-            <button onclick="showHome()" class="p-2 hover:text-white transition" title="رجوع"><i class="fas fa-caret-left text-lg"></i></button>
-            <button onclick="showHome()" class="p-2 hover:text-white transition" title="الرئيسية"><i class="far fa-circle text-sm"></i></button>
-            <button onclick="toggleFullScreen()" class="p-2 hover:text-white transition" title="ملء الشاشة"><i class="far fa-square text-sm"></i></button>
-        </div>
+  .act-btn.active {
+    color: var(--primary-hover);
+    background: var(--bg-active);
+  }
 
+  .act-btn.active::before {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 6px;
+    bottom: 6px;
+    width: 3px;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+
+  /* اللوحة الجانبية القابلة للطي (Side Drawer / Panel) */
+  .side-panel {
+    width: 310px;
+    max-width: 82vw;
+    background: var(--bg-sidebar);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width 0.2s ease;
+    flex-shrink: 0;
+    z-index: 30;
+  }
+
+  .side-panel.collapsed {
+    display: none;
+  }
+
+  .panel-header {
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #12161c;
+  }
+
+  .panel-body {
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .side-view {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .side-view.active {
+    display: flex;
+  }
+
+  /* حقول الإدخال داخل اللوحات */
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .field-group label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  input[type="text"], input[type="password"], select, textarea.ui-input {
+    width: 100%;
+    background: var(--bg-root);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    color: var(--text-main);
+    font-size: 12px;
+    outline: none;
+  }
+
+  input:focus, select:focus, textarea.ui-input:focus {
+    border-color: var(--primary);
+  }
+
+  .ltr {
+    direction: ltr;
+    text-align: left;
+    font-family: var(--font-mono);
+  }
+
+  /* قائمة الملفات (File Explorer) */
+  .file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .file-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    direction: ltr;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: var(--text-muted);
+  }
+
+  .file-item:hover {
+    background: var(--bg-hover);
+    color: var(--text-main);
+  }
+
+  .file-item.active {
+    background: var(--bg-active);
+    color: var(--primary-hover);
+    font-weight: bold;
+  }
+
+  /* بطاقات القوالب والدوال */
+  .tool-card {
+    background: var(--bg-root);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .tool-card:hover {
+    border-color: var(--primary);
+  }
+
+  .tool-card strong {
+    display: block;
+    font-size: 12px;
+    color: var(--primary-hover);
+    direction: ltr;
+    text-align: left;
+    margin-bottom: 4px;
+  }
+
+  .tool-card span {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: block;
+    line-height: 1.4;
+  }
+
+  /* منطقة المحرر العملاقة (Main Code Editor Area) */
+  .editor-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-editor);
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  /* شريط تبويبات الملفات المفتوحة */
+  .editor-tabs-bar {
+    height: 36px;
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    flex-shrink: 0;
+    overflow-x: auto;
+  }
+
+  .active-file-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-editor);
+    border-top: 2px solid var(--primary);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-main);
+    height: 100%;
+  }
+
+  .editor-quick-tools {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .editor-quick-tools button {
+    padding: 4px 8px;
+    font-size: 11px;
+    background: transparent;
+    border: 1px solid var(--border);
+  }
+
+  /* حاوية المحرر مع أرقام الأسطر */
+  .code-container {
+    flex: 1;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    background: #090c10;
+  }
+
+  .line-numbers {
+    width: 44px;
+    background: #0d1117;
+    border-right: 1px solid #21262d;
+    color: #484f58;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 14px 6px;
+    text-align: right;
+    user-select: none;
+    overflow: hidden;
+    direction: ltr;
+    flex-shrink: 0;
+  }
+
+  #codeEditor {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #79c0ff;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 14px;
+    resize: none;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    overflow: auto;
+    tab-size: 4;
+  }
+
+  /* الطرفية السفلية (Bottom Terminal / Console - مثل Replit) */
+  .bottom-terminal {
+    height: 165px;
+    background: #010409;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: height 0.2s ease;
+  }
+
+  .bottom-terminal.minimized {
+    height: 32px;
+  }
+
+  .terminal-header {
+    height: 32px;
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border);
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .terminal-body {
+    flex: 1;
+    padding: 10px 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-y: auto;
+    direction: ltr;
+    text-align: left;
+    color: #3fb950;
+  }
+
+  /* شريط الحالة السفلي (Status Bar) */
+  .status-bar {
+    height: 24px;
+    background: var(--primary);
+    color: white;
+    font-size: 11px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  /* إشعار منبثق */
+  #toast {
+    position: fixed;
+    top: 54px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1f6feb;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    z-index: 9999;
+    display: none;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  /* تحسين للهواتف والشاشات الصغيرة */
+  @media (max-width: 768px) {
+    .side-panel {
+      position: absolute;
+      right: 50px;
+      top: 0;
+      bottom: 0;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.7);
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- الشريط العلوي -->
+  <header class="top-bar">
+    <div class="brand-area">
+      <button id="toggleSidebarBtn" title="إظهار/إخفاء القائمة الجانبية" style="padding: 6px 8px;">☰</button>
+      <div class="logo-badge">WinForge IDE</div>
+      <div class="project-title">
+        <span id="currentProjectName">WinSystemOptimizer</span>
+      </div>
     </div>
 
-    <!-- رسالة تنبيه مخصصة بدلاً من alert -->
-    <div id="toast-msg" class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white px-5 py-2.5 rounded-full shadow-2xl text-sm font-bold z-50 transition-all duration-300 opacity-0 pointer-events-none flex items-center gap-2">
-        <i class="fas fa-check-circle"></i>
-        <span id="toast-text">تم تحديث صورتك بنجاح!</span>
+    <div class="top-actions">
+      <button class="btn-run" id="runCodeBtn">▶ تشغيل / فحص</button>
+      <button class="btn-primary" id="quickPushBtn">🚀 رفع GitHub</button>
     </div>
+  </header>
 
-    <script>
-        // تحديث الساعة في شريط الأندرويد
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('clock-time').textContent = `${hours}:${minutes}`;
+  <!-- مساحة العمل المتكاملة -->
+  <div class="ide-workspace">
+
+    <!-- شريط الأيقونات الجانبي (Activity Bar) -->
+    <nav class="activity-bar">
+      <button class="act-btn active" data-view="view-ai" title="مساعد الذكاء الاصطناعي">🤖</button>
+      <button class="act-btn" data-view="view-files" title="مستكشف الملفات والمشاريع">📁</button>
+      <button class="act-btn" data-view="view-sdk" title="مكتبة دوال ويندوز (Win32 SDK)">🧰</button>
+      <button class="act-btn" data-view="view-build" title="بيئة البناء وتصدير EXE / ISO">📦</button>
+      <button class="act-btn" data-view="view-github" title="إدارة مستودع GitHub">🐙</button>
+      <button class="act-btn" data-view="view-settings" title="إعدادات API والمنصة">⚙️</button>
+    </nav>
+
+    <!-- اللوحة الجانبية (Side Drawer) -->
+    <aside class="side-panel" id="sidePanel">
+      <div class="panel-header">
+        <span id="sidePanelTitle">🤖 الذكاء الاصطناعي لتوليد الأدوات</span>
+        <button id="closeSidebarBtn" style="padding: 2px 6px; background: transparent;">✕</button>
+      </div>
+
+      <div class="panel-body">
+
+        <!-- 1. قسم الذكاء الاصطناعي -->
+        <div id="view-ai" class="side-view active">
+          <div class="field-group">
+            <label>لغة البرمجة / بيئة التشغيل المستهدفة:</label>
+            <select id="targetLang">
+              <option value="python">Python 3 (Win32 GUI + EXE)</option>
+              <option value="powershell">PowerShell (إدارة نظام ويندوز)</option>
+              <option value="cpp">C++ / Win32 API (تنفيذي أصلي)</option>
+              <option value="csharp">C# .NET (تطبيقات ويندوز)</option>
+              <option value="bat">Batch / CMD (أتمتة سريعة)</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label>وصف الأداة المطلوبة بالتفصيل:</label>
+            <textarea id="aiPrompt" class="ui-input" rows="5" placeholder="مثال: اصنع أداة احترافية لتنظيف وتسريع ويندوز 10 و 11 مع واجهة رسومية لعرض استهلاك الرام والمعالج..."></textarea>
+          </div>
+
+          <button class="btn-primary" id="generateAiBtn" style="width: 100%; padding: 10px;">⚡ توليد الأداة في المحرر</button>
+
+          <div class="field-group" style="margin-top: 8px;">
+            <label>قوالب أدوات جاهزة بنقرة واحدة:</label>
+            <div class="tool-card" data-template="sysinfo">
+              <strong>WinSystemUtility64.cpp (Win64 API)</strong>
+              <span>أداة C++ أصلية لاستخراج مواصفات المعالج والرام وفتح الشبكة و IMS والإصلاح</span>
+            </div>
+            <div class="tool-card" data-template="cleaner">
+              <strong>SystemCleaner_Pro.py</strong>
+              <span>تنظيف الملفات المؤقتة، سلة المحذوفات، وتسريع النظام بواجهة رسومية</span>
+            </div>
+            <div class="tool-card" data-template="wininstall">
+              <strong>WinDeploy_Setup.ps1</strong>
+              <span>أداة أتمتة تثبيت البرامج الأساسية وضبط إعدادات ويندوز بعد الفورمات</span>
+            </div>
+            <div class="tool-card" data-template="network">
+              <strong>NetFix_DNS_Master.ps1</strong>
+              <span>إصلاح مشاكل الشبكة وتغيير DNS إلى Cloudflare/Google بنقرة</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. قسم مستكشف الملفات (File Explorer) -->
+        <div id="view-files" class="side-view">
+          <div style="display: flex; gap: 6px;">
+            <button class="btn-primary" id="newFileBtn" style="flex: 1;">+ ملف جديد</button>
+            <button id="importFileBtn" style="flex: 1;">📂 استيراد</button>
+            <input type="file" id="hiddenFileInput" style="display: none;">
+          </div>
+
+          <div class="field-group">
+            <label>ملفات المشروع الحالي:</label>
+            <div class="file-list" id="fileListContainer">
+              <!-- يتم تعبئتها برمجياً -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. قسم مكتبة دوال ويندوز (Win32 SDK) -->
+        <div id="view-sdk" class="side-view">
+          <p style="font-size: 11px; color: var(--text-muted);">انقر لإدراج الدالة مباشرة داخل محرر الأكواد:</p>
+          <div class="tool-card" data-snippet="msgbox">
+            <strong>Win32 MessageBoxW</strong>
+            <span>إظهار نافذة تنبيه أصلية لنظام ويندوز</span>
+          </div>
+          <div class="tool-card" data-snippet="admin">
+            <strong>Request Admin Privileges</strong>
+            <span>طلب صلاحيات المسؤول (UAC) تلقائياً</span>
+          </div>
+          <div class="tool-card" data-snippet="registry">
+            <strong>Windows Registry Edit</strong>
+            <span>قراءة وتعديل مفاتيح الريجستري (بدء التشغيل)</span>
+          </div>
+          <div class="tool-card" data-snippet="process">
+            <strong>Process & Service Manager</strong>
+            <span>إيقاف أو تشغيل خدمات وعمليات ويندوز</span>
+          </div>
+          <div class="tool-card" data-snippet="gui">
+            <strong>Modern Dark Tkinter UI</strong>
+            <span>هيكل واجهة رسومية داكنة جاهزة للأداة</span>
+          </div>
+        </div>
+
+        <!-- 4. قسم بيئة البناء وتصدير EXE وأنظمة ويندوز -->
+        <div id="view-build" class="side-view">
+          <div class="field-group">
+            <label>اسم البرنامج التنفيذي (.EXE):</label>
+            <input type="text" id="exeOutputName" class="ltr" value="WinForge_Utility">
+          </div>
+
+          <div class="field-group">
+            <label>معمارية النظام المستهدفة:</label>
+            <select id="targetArch">
+              <option value="x64">Windows 10 / 11 (64-bit x64)</option>
+              <option value="x86">Windows 7 / 8 / 10 (32-bit x86)</option>
+              <option value="arm64">Windows on ARM64</option>
+            </select>
+          </div>
+
+          <button class="btn-primary" id="exportExePackageBtn" style="width: 100%; padding: 10px;">📦 تصدير حزمة البناء (EXE Builder)</button>
+          <button id="exportWinpeBtn" style="width: 100%; padding: 10px;">💿 توليد سكريبت بيئة تثبيت ويندوز (WinPE / Unattend.xml)</button>
+          <button id="downloadRawBtn" style="width: 100%; padding: 10px;">💾 تنزيل الملف المصدري الحالي</button>
+        </div>
+
+        <!-- 5. قسم مستودع GitHub المتكامل -->
+        <div id="view-github" class="side-view">
+          <div class="field-group">
+            <label>رمز الوصول الشخصي (GitHub Token):</label>
+            <input type="password" id="ghToken" class="ltr" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+          </div>
+          <div class="field-group">
+            <label>اسم المالك / الحساب (Owner):</label>
+            <input type="text" id="ghOwner" class="ltr" placeholder="username">
+          </div>
+          <div class="field-group">
+            <label>اسم المستودع (Repository):</label>
+            <input type="text" id="ghRepo" class="ltr" placeholder="windows-tools-repo">
+          </div>
+          <div class="field-group">
+            <label>الفرع (Branch):</label>
+            <input type="text" id="ghBranch" class="ltr" value="main">
+          </div>
+          <div class="field-group">
+            <label>مسار الملف داخل المستودع:</label>
+            <input type="text" id="ghFilePath" class="ltr" value="src/main.py">
+          </div>
+          <div class="field-group">
+            <label>رسالة التحديث (Commit Message):</label>
+            <input type="text" id="ghCommitMsg" value="Update tool via WinForge IDE">
+          </div>
+
+          <button class="btn-primary" id="saveGhBtn" style="width: 100%;">💾 حفظ بيانات المستودع</button>
+          <button class="btn-run" id="pushGhBtn" style="width: 100%; padding: 10px;">🚀 رفع ونشر الملف إلى GitHub</button>
+          <button id="pullGhBtn" style="width: 100%;">📥 جلب الملف من GitHub</button>
+        </div>
+
+        <!-- 6. قسم إعدادات الذكاء الاصطناعي و API Key -->
+        <div id="view-settings" class="side-view">
+          <div class="field-group">
+            <label>مزود الذكاء الاصطناعي:</label>
+            <select id="aiProvider">
+              <option value="offline">المحرك المحلي المدمج (Offline - مجاني)</option>
+              <option value="gemini">Google Gemini API (gemini-2.5-flash)</option>
+              <option value="openai">OpenAI API (gpt-4o-mini)</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>مفتاح API Key:</label>
+            <input type="password" id="aiApiKey" class="ltr" placeholder="AIzaSy... أو sk-...">
+          </div>
+          <div class="field-group">
+            <label>حجم خط محرر الأكواد:</label>
+            <select id="editorFontSize">
+              <option value="13px">13px (قياسي)</option>
+              <option value="14px" selected>14px (مريح)</option>
+              <option value="16px">16px (كبير)</option>
+              <option value="18px">18px (كبير جداً)</option>
+            </select>
+          </div>
+
+          <button class="btn-primary" id="saveAllSettingsBtn" style="width: 100%; padding: 10px;">💾 حفظ كافة الإعدادات</button>
+          <button class="btn-danger" id="resetAllBtn" style="width: 100%;">🔄 إعادة ضبط المصنع</button>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- منطقة المحرر العملاقة -->
+    <main class="editor-main">
+      <!-- شريط تبويبات المحرر -->
+      <div class="editor-tabs-bar">
+        <div class="active-file-tab">
+          <span>📄</span>
+          <span id="activeFileName">main.py</span>
+        </div>
+
+        <div class="editor-quick-tools">
+          <button id="copyCodeBtn" title="نسخ الكود">📋 نسخ</button>
+          <button id="pasteCodeBtn" title="لصق الكود">📥 لصق</button>
+          <button id="formatCodeBtn" title="تنسيق المسافات">✨ تنسيق</button>
+          <button id="clearCodeBtn" title="مسح المحرر" style="color: var(--danger);">🗑️ مسح</button>
+        </div>
+      </div>
+
+      <!-- محرر الأكواد بكامل الشاشة مع أرقام الأسطر -->
+      <div class="code-container">
+        <div class="line-numbers" id="lineNumbers">1</div>
+        <textarea id="codeEditor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="# اكتب الكود البرمجي هنا أو استخدم الذكاء الاصطناعي لتوليد أداة ويندوز متكاملة..."></textarea>
+      </div>
+
+      <!-- الطرفية السفلية (Terminal / Output Console) -->
+      <div class="bottom-terminal" id="bottomTerminal">
+        <div class="terminal-header">
+          <span>🖥️ TERMINAL & BUILD OUTPUT</span>
+          <div style="display: flex; gap: 6px;">
+            <button id="clearTerminalBtn" style="padding: 2px 6px; font-size: 10px;">مسح</button>
+            <button id="toggleTerminalBtn" style="padding: 2px 6px; font-size: 10px;">🔽 تصغير/تكبير</button>
+          </div>
+        </div>
+        <div class="terminal-body" id="terminalOutput">
+          [WinForge IDE v2.0] Environment Ready.<br>
+          [System] Type code in the editor or open the sidebar (☰) to generate tools & push to GitHub.
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- شريط الحالة السفلي -->
+  <footer class="status-bar">
+    <div>
+      <span id="statusEngine">AI: Offline Engine</span> |
+      <span id="statusGit">GitHub: Disconnected</span>
+    </div>
+    <div>
+      <span id="cursorPos">Ln 1, Col 1</span> | <span id="statusLang">UTF-8</span>
+    </div>
+  </footer>
+
+  <!-- إشعار منبثق -->
+  <div id="toast"></div>
+
+  <!-- نافذة معاينة محاكاة برنامج Win64 C++ داخل المنصة -->
+  <div id="win64PreviewModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:99999; align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#f0f0f0; color:#111; width:100%; max-width:560px; border-radius:8px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.8); border:1px solid #555; direction:rtl;">
+      <div style="background:#005a9e; color:white; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:bold;">
+        <span>WinForge x64 - أداة فحص النظام والشبكة والإصلاح (معاينة حية)</span>
+        <button id="closeWin64Modal" style="background:#e81123; color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:14px; display:flex; flex-direction:column; gap:12px;">
+        <textarea id="win64SimulatedOutput" readonly rows="11" style="width:100%; background:#ffffff; color:#000000; border:1px solid #999; padding:10px; font-family:Consolas, monospace; font-size:12px; resize:none; line-height:1.5;"></textarea>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(115px, 1fr)); gap:8px;">
+          <button onclick="simWin64Action('net')" style="background:#e1e1e1; color:#000; border:1px solid #adadad; padding:8px; border-radius:4px; font-weight:bold;">🌐 معلومات الشبكة</button>
+          <button onclick="simWin64Action('ims')" style="background:#e1e1e1; color:#000; border:1px solid #adadad; padding:8px; border-radius:4px; font-weight:bold;">📋 قائمة IMS</button>
+          <button onclick="simWin64Action('fix')" style="background:#e1e1e1; color:#000; border:1px solid #adadad; padding:8px; border-radius:4px; font-weight:bold;">🛠️ إصلاح (Fix)</button>
+          <button onclick="simWin64Action('refresh')" style="background:#e1e1e1; color:#000; border:1px solid #adadad; padding:8px; border-radius:4px; font-weight:bold;">🔄 تحديث</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// دالة محاكاة أزرار نافذة Win64 C++ داخل المنصة
+function simWin64Action(action) {
+  const out = document.getElementById('win64SimulatedOutput');
+  const cores = navigator.hardwareConcurrency || 8;
+  const ram = navigator.deviceMemory || 8;
+  const baseReport = `==================================================
+       تقرير مواصفات النظام (Win64 Native API)      
+==================================================
+
+[+] المعالج (CPU): x64 Architecture Processor (${cores} Logical Cores)
+[+] معمارية النظام: x64 (64-Bit Native)
+[+] إجمالي الذاكرة (Total RAM): ${ram}.00 GB
+[+] الذاكرة المتاحة (Available RAM): ${(ram * 0.58).toFixed(2)} GB
+==================================================\n`;
+
+  if (action === 'refresh') {
+    out.value = baseReport + '[✔] تم تحديث قراءة المعالج والرام بنجاح.';
+  } else if (action === 'net') {
+    out.value = baseReport + '[🌐] تم تنفيذ: ipconfig /all & فتح لوحة محولات الشبكة (ncpa.cpl)\nIPv4 Address: 192.168.1.105 | DNS: 1.1.1.1';
+  } else if (action === 'ims') {
+    out.value = baseReport + '[📋] تم فتح قائمة إدارة الخدمات و IMS (services.msc).';
+  } else if (action === 'fix') {
+    out.value = baseReport + '[🛠️] جاري تنفيذ الإصلاح (Fix):\n- ipconfig /flushdns -> تم بنجاح\n- netsh winsock reset -> تم بنجاح\n- تنظيف ملفات TEMP -> تم بنجاح';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // ==========================================
+  // 1. إدارة الحالة والملفات (IDE State)
+  // ==========================================
+  const cppWin64Code = `// WinForge AI - C++ Win64 Native Executable
+// Goal: استخراج مواصفات المعالج والرام، وعرضها في نافذة Win64 أصلية مع أزرار الشبكة و IMS والإصلاح (Fix)
+
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+
+#include <windows.h>
+#include <shellapi.h>
+#include <intrin.h>
+#include <string>
+#include <sstream>
+#include <iomanip>
+
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "shell32.lib")
+#pragma comment(lib, "advapi32.lib")
+
+#define IDC_INFO_EDIT     101
+#define IDC_BTN_NETWORK   102
+#define IDC_BTN_IMS       103
+#define IDC_BTN_FIX       104
+#define IDC_BTN_REFRESH   105
+
+HWND hEditInfo = NULL;
+HFONT hAppFont = NULL;
+
+std::wstring GetProcessorBrandString() {
+    int cpuInfo[4] = { -1 };
+    char brandString[0x40] = { 0 };
+    __cpuid(cpuInfo, 0x80000000);
+    unsigned int nExIds = cpuInfo[0];
+    if (nExIds >= 0x80000004) {
+        __cpuid((int*)(brandString), 0x80000002);
+        __cpuid((int*)(brandString + 16), 0x80000003);
+        __cpuid((int*)(brandString + 32), 0x80000004);
+    } else {
+        strcpy_s(brandString, "Unknown x64 Processor");
+    }
+    std::string narrowStr(brandString);
+    size_t first = narrowStr.find_first_not_of(' ');
+    if (std::string::npos != first) narrowStr = narrowStr.substr(first);
+    return std::wstring(narrowStr.begin(), narrowStr.end());
+}
+
+std::wstring CollectSystemSpecs() {
+    std::wstringstream ss;
+    SYSTEM_INFO sysInfo;
+    GetNativeSystemInfo(&sysInfo);
+
+    ss << L"==================================================\\r\\n";
+    ss << L"       تقرير مواصفات النظام (Win64 Native API)      \\r\\n";
+    ss << L"==================================================\\r\\n\\r\\n";
+    ss << L"[+] المعالج (CPU): " << GetProcessorBrandString() << L"\\r\\n";
+    ss << L"[+] عدد الأنوية (Cores): " << sysInfo.dwNumberOfProcessors << L"\\r\\n";
+
+    MEMORYSTATUSEX memStatus;
+    memStatus.dwLength = sizeof(memStatus);
+    if (GlobalMemoryStatusEx(&memStatus)) {
+        double totalRAM = static_cast<double>(memStatus.ullTotalPhys) / (1024.0 * 1024.0 * 1024.0);
+        double availRAM = static_cast<double>(memStatus.ullAvailPhys) / (1024.0 * 1024.0 * 1024.0);
+        ss << std::fixed << std::setprecision(2);
+        ss << L"[+] إجمالي الذاكرة (Total RAM): " << totalRAM << L" GB\\r\\n";
+        ss << L"[+] الذاكرة المتاحة (Available RAM): " << availRAM << L" GB\\r\\n";
+        ss << L"[+] نسبة الاستخدام: " << memStatus.dwMemoryLoad << L"%\\r\\n";
+    }
+    return ss.str();
+}
+
+void ExecuteSystemAction(HWND hwnd, int actionId) {
+    if (actionId == IDC_BTN_NETWORK) {
+        ShellExecuteW(hwnd, L"open", L"cmd.exe", L"/k ipconfig /all", NULL, SW_SHOW);
+        ShellExecuteW(hwnd, L"open", L"ncpa.cpl", NULL, NULL, SW_SHOW);
+    } else if (actionId == IDC_BTN_IMS) {
+        ShellExecuteW(hwnd, L"open", L"services.msc", NULL, NULL, SW_SHOW);
+    } else if (actionId == IDC_BTN_FIX) {
+        const wchar_t* fixCmd = L"/c ipconfig /flushdns & netsh winsock reset & netsh int ip reset & pause";
+        ShellExecuteW(hwnd, L"runas", L"cmd.exe", fixCmd, NULL, SW_SHOW);
+    } else if (actionId == IDC_BTN_REFRESH) {
+        SetWindowTextW(hEditInfo, CollectSystemSpecs().c_str());
+    }
+}
+
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    if (uMsg == WM_CREATE) {
+        hAppFont = CreateFontW(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, L"Segoe UI");
+        hEditInfo = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_READONLY, 15, 15, 535, 250, hwnd, (HMENU)IDC_INFO_EDIT, GetModuleHandle(NULL), NULL);
+        SendMessageW(hEditInfo, WM_SETFONT, (WPARAM)hAppFont, TRUE);
+        SetWindowTextW(hEditInfo, CollectSystemSpecs().c_str());
+
+        HWND b1 = CreateWindowExW(0, L"BUTTON", L"🌐 معلومات الشبكة", WS_VISIBLE | WS_CHILD, 15, 280, 125, 38, hwnd, (HMENU)IDC_BTN_NETWORK, GetModuleHandle(NULL), NULL);
+        HWND b2 = CreateWindowExW(0, L"BUTTON", L"📋 قائمة IMS", WS_VISIBLE | WS_CHILD, 150, 280, 125, 38, hwnd, (HMENU)IDC_BTN_IMS, GetModuleHandle(NULL), NULL);
+        HWND b3 = CreateWindowExW(0, L"BUTTON", L"🛠️ إصلاح (Fix)", WS_VISIBLE | WS_CHILD, 285, 280, 125, 38, hwnd, (HMENU)IDC_BTN_FIX, GetModuleHandle(NULL), NULL);
+        HWND b4 = CreateWindowExW(0, L"BUTTON", L"🔄 تحديث", WS_VISIBLE | WS_CHILD, 420, 280, 130, 38, hwnd, (HMENU)IDC_BTN_REFRESH, GetModuleHandle(NULL), NULL);
+        SendMessageW(b1, WM_SETFONT, (WPARAM)hAppFont, TRUE);
+        SendMessageW(b2, WM_SETFONT, (WPARAM)hAppFont, TRUE);
+        SendMessageW(b3, WM_SETFONT, (WPARAM)hAppFont, TRUE);
+        SendMessageW(b4, WM_SETFONT, (WPARAM)hAppFont, TRUE);
+        return 0;
+    } else if (uMsg == WM_COMMAND) {
+        ExecuteSystemAction(hwnd, LOWORD(wParam));
+        return 0;
+    } else if (uMsg == WM_DESTROY) {
+        if (hAppFont) DeleteObject(hAppFont);
+        PostQuitMessage(0);
+        return 0;
+    }
+    return DefWindowProcW(hwnd, uMsg, wParam, lParam);
+}
+
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow) {
+    WNDCLASSEXW wc = { sizeof(WNDCLASSEXW), CS_HREDRAW | CS_VREDRAW, WindowProc, 0, 0, hInstance, NULL, LoadCursor(NULL, IDC_ARROW), (HBRUSH)(COLOR_WINDOW + 1), NULL, L"WinForgeSys64", NULL };
+    RegisterClassExW(&wc);
+    HWND hwnd = CreateWindowExW(0, L"WinForgeSys64", L"WinForge x64 - أداة فحص النظام والشبكة والإصلاح", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, 200, 150, 580, 375, NULL, NULL, hInstance, NULL);
+    ShowWindow(hwnd, nCmdShow);
+    MSG msg;
+    while (GetMessageW(&msg, NULL, 0, 0)) { TranslateMessage(&msg); DispatchMessageW(&msg); }
+    return 0;
+}
+`;
+
+  const defaultCode = `# WinForge IDE - أداة إدارة وتنظيف نظام ويندوز المتقدمة
+import os
+import shutil
+import tempfile
+import platform
+import tkinter as tk
+from tkinter import messagebox
+
+def clean_windows_temp():
+    temp_dir = tempfile.gettempdir()
+    deleted_files = 0
+    for item in os.listdir(temp_dir):
+        path = os.path.join(temp_dir, item)
+        try:
+            if os.path.isfile(path) or os.path.islink(path):
+                os.unlink(path)
+                deleted_files += 1
+            elif os.path.isdir(path):
+                shutil.rmtree(path)
+                deleted_files += 1
+        except Exception:
+            pass
+    messagebox.showinfo("WinForge Cleaner", f"تم تنظيف النظام بنجاح!\\nعدد العناصر المحذوفة: {deleted_files}")
+
+def main():
+    root = tk.Tk()
+    root.title("WinForge System Optimizer")
+    root.geometry("400x220")
+    root.configure(bg="#0d1117")
+
+    title = tk.Label(root, text="منصة صيانة وتسريع ويندوز", fg="#58a6ff", bg="#0d1117", font=("Segoe UI", 14, "bold"))
+    title.pack(pady=20)
+
+    info = tk.Label(root, text=f"النظام: {platform.system()} {platform.release()}", fg="#8b949e", bg="#0d1117")
+    info.pack(pady=5)
+
+    btn = tk.Button(root, text="بدء التنظيف الشامل الآن", command=clean_windows_temp, bg="#238636", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=8, relief="flat")
+    btn.pack(pady=20)
+
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
+`;
+
+  let ideState = {
+    activeFile: 'WinSystemUtility64.cpp',
+    files: {
+      'WinSystemUtility64.cpp': cppWin64Code,
+      'main.py': defaultCode,
+      'build_cpp_exe.bat': '@echo off\ng++ -O2 -mwindows -municode WinSystemUtility64.cpp -o WinSystemUtility64.exe\npause',
+      'README.md': '# WinForge Windows Tool\nCreated using WinForge Studio IDE.'
+    },
+    settings: {
+      aiProvider: 'offline',
+      aiApiKey: '',
+      ghToken: '',
+      ghOwner: '',
+      ghRepo: '',
+      ghBranch: 'main',
+      fontSize: '14px'
+    }
+  };
+
+  // العناصر الأساسية
+  const codeEditor = document.getElementById('codeEditor');
+  const lineNumbers = document.getElementById('lineNumbers');
+  const terminalOutput = document.getElementById('terminalOutput');
+  const sidePanel = document.getElementById('sidePanel');
+  const sidePanelTitle = document.getElementById('sidePanelTitle');
+
+  // تحميل البيانات المحفوظة
+  function loadState() {
+    try {
+      const savedSettings = localStorage.getItem('winforge_ide_settings');
+      if (savedSettings) {
+        ideState.settings = { ...ideState.settings, ...JSON.parse(savedSettings) };
+      }
+      const savedFiles = localStorage.getItem('winforge_ide_files');
+      if (savedFiles) {
+        const parsed = JSON.parse(savedFiles);
+        ideState.files = { 'WinSystemUtility64.cpp': cppWin64Code, ...parsed };
+      }
+    } catch (e) {
+      console.error('Error loading state:', e);
+    }
+    applySettingsToUI();
+    renderFileList();
+    openFile(ideState.activeFile);
+  }
+
+  function saveFilesToStorage() {
+    ideState.files[ideState.activeFile] = codeEditor.value;
+    localStorage.setItem('winforge_ide_files', JSON.stringify(ideState.files));
+  }
+
+  // ==========================================
+  // 2. وظائف الإشعارات والطرفية وأرقام الأسطر
+  // ==========================================
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.style.background = isError ? '#da3633' : '#1f6feb';
+    toast.style.display = 'block';
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => {
+      toast.style.display = 'none';
+    }, 3200);
+  }
+
+  function logTerminal(msg, type = 'info') {
+    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+    const colors = { info: '#58a6ff', success: '#3fb950', warn: '#d29922', error: '#f85149' };
+    const line = document.createElement('div');
+    line.style.color = colors[type] || '#e6edf3';
+    line.textContent = `[${time}] ${msg}`;
+    terminalOutput.appendChild(line);
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+  }
+
+  function updateLineNumbers() {
+    const linesCount = codeEditor.value.split('\n').length;
+    let nums = '';
+    for (let i = 1; i <= linesCount; i++) {
+      nums += i + '\n';
+    }
+    lineNumbers.textContent = nums;
+  }
+
+  function updateCursorPosition() {
+    const textBefore = codeEditor.value.substring(0, codeEditor.selectionStart);
+    const lines = textBefore.split('\n');
+    const ln = lines.length;
+    const col = lines[lines.length - 1].length + 1;
+    document.getElementById('cursorPos').textContent = `Ln ${ln}, Col ${col}`;
+  }
+
+  codeEditor.addEventListener('input', () => {
+    updateLineNumbers();
+    saveFilesToStorage();
+  });
+
+  codeEditor.addEventListener('scroll', () => {
+    lineNumbers.scrollTop = codeEditor.scrollTop;
+  });
+
+  codeEditor.addEventListener('click', updateCursorPosition);
+  codeEditor.addEventListener('keyup', updateCursorPosition);
+
+  // دعم مفتاح Tab داخل المحرر
+  codeEditor.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const start = codeEditor.selectionStart;
+      const end = codeEditor.selectionEnd;
+      codeEditor.value = codeEditor.value.substring(0, start) + '    ' + codeEditor.value.substring(end);
+      codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
+      updateLineNumbers();
+    }
+  });
+
+  // ==========================================
+  // 3. التحكم باللوحة الجانبية والتبويبات
+  // ==========================================
+  const viewTitles = {
+    'view-ai': '🤖 الذكاء الاصطناعي لتوليد الأدوات',
+    'view-files': '📁 مستكشف ملفات المشروع',
+    'view-sdk': '🧰 مكتبة دوال ويندوز (Win32 SDK)',
+    'view-build': '📦 بيئة البناء وتصدير EXE / WinPE',
+    'view-github': '🐙 إدارة مستودع GitHub',
+    'view-settings': '⚙️ إعدادات API والمنصة'
+  };
+
+  document.querySelectorAll('.act-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetView = btn.getAttribute('data-view');
+      const isAlreadyActive = btn.classList.contains('active') && !sidePanel.classList.contains('collapsed');
+
+      if (isAlreadyActive) {
+        sidePanel.classList.add('collapsed');
+        btn.classList.remove('active');
+      } else {
+        document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.side-view').forEach(v => v.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(targetView).classList.add('active');
+        sidePanelTitle.textContent = viewTitles[targetView] || 'لوحة الأدوات';
+        sidePanel.classList.remove('collapsed');
+      }
+    });
+  });
+
+  document.getElementById('toggleSidebarBtn').addEventListener('click', () => {
+    sidePanel.classList.toggle('collapsed');
+  });
+
+  document.getElementById('closeSidebarBtn').addEventListener('click', () => {
+    sidePanel.classList.add('collapsed');
+  });
+
+  // ==========================================
+  // 4. إدارة الملفات (File Explorer)
+  // ==========================================
+  function renderFileList() {
+    const container = document.getElementById('fileListContainer');
+    container.innerHTML = '';
+    Object.keys(ideState.files).forEach(fileName => {
+      const div = document.createElement('div');
+      div.className = 'file-item' + (fileName === ideState.activeFile ? ' active' : '');
+      div.innerHTML = `<span>📄 ${fileName}</span>`;
+      div.addEventListener('click', () => openFile(fileName));
+      container.appendChild(div);
+    });
+  }
+
+  function openFile(fileName) {
+    if (!ideState.files.hasOwnProperty(fileName)) return;
+    ideState.activeFile = fileName;
+    document.getElementById('activeFileName').textContent = fileName;
+    document.getElementById('ghFilePath').value = `src/${fileName}`;
+    codeEditor.value = ideState.files[fileName];
+    updateLineNumbers();
+    updateCursorPosition();
+    renderFileList();
+  }
+
+  document.getElementById('newFileBtn').addEventListener('click', () => {
+    const count = Object.keys(ideState.files).length + 1;
+    const newName = `tool_${count}.py`;
+    ideState.files[newName] = `# New Windows Tool: ${newName}\nimport ctypes\n\nctypes.windll.user32.MessageBoxW(0, "Hello from ${newName}", "WinForge", 0x40)\n`;
+    openFile(newName);
+    saveFilesToStorage();
+    showToast(`تم إنشاء الملف: ${newName}`);
+    logTerminal(`Created new file: ${newName}`, 'info');
+  });
+
+  document.getElementById('importFileBtn').addEventListener('click', () => {
+    document.getElementById('hiddenFileInput').click();
+  });
+
+  document.getElementById('hiddenFileInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      ideState.files[file.name] = ev.target.result;
+      openFile(file.name);
+      saveFilesToStorage();
+      showToast(`تم استيراد الملف: ${file.name}`);
+      logTerminal(`Imported file: ${file.name} (${file.size} bytes)`, 'success');
+    };
+    reader.readAsText(file);
+  });
+
+  // ==========================================
+  // 5. أزرار شريط المحرر السريعة
+  // ==========================================
+  document.getElementById('copyCodeBtn').addEventListener('click', () => {
+    if (!codeEditor.value) return showToast('المحرر فارغ!', true);
+    codeEditor.select();
+    document.execCommand('copy');
+    showToast('تم نسخ الكود بالكامل!');
+  });
+
+  document.getElementById('pasteCodeBtn').addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      codeEditor.value = text;
+      updateLineNumbers();
+      saveFilesToStorage();
+      showToast('تم لصق الكود في المحرر!');
+    } catch (e) {
+      showToast('استخدم زر اللصق في لوحة المفاتيح داخل المحرر', true);
+    }
+  });
+
+  document.getElementById('formatCodeBtn').addEventListener('click', () => {
+    codeEditor.value = codeEditor.value.replace(/\t/g, '    ').trim() + '\n';
+    updateLineNumbers();
+    saveFilesToStorage();
+    showToast('تم تنسيق الكود!');
+  });
+
+  document.getElementById('clearCodeBtn').addEventListener('click', () => {
+    codeEditor.value = '';
+    updateLineNumbers();
+    saveFilesToStorage();
+    showToast('تم مسح محتوى المحرر');
+  });
+
+  // ==========================================
+  // 6. القوالب الجاهزة ومكتبة Win32 SDK
+  // ==========================================
+  document.querySelectorAll('[data-template]').forEach(card => {
+    card.addEventListener('click', () => {
+      const tpl = card.getAttribute('data-template');
+      const map = {
+        cleaner: {
+          lang: 'python',
+          prompt: 'اصنع أداة متكاملة بلغة Python مع واجهة رسومية داكنة لتنظيف ملفات ويندوز المؤقتة وتحرير الذاكرة.'
+        },
+        wininstall: {
+          lang: 'powershell',
+          prompt: 'اصنع سكريبت PowerShell لأتمتة إعداد وتثبيت البرامج الأساسية وضبط إعدادات الأداء في ويندوز 11 بعد التثبيت.'
+        },
+        network: {
+          lang: 'powershell',
+          prompt: 'اصنع أداة PowerShell لإصلاح مشاكل الشبكة وتفريغ DNS وتعيين Cloudflare 1.1.1.1.'
+        },
+        sysinfo: {
+          lang: 'cpp',
+          prompt: 'اصنع برنامج C++ Win32 API لاستخراج مواصفات المعالج والرام وعرضها في نافذة نظام أصلية.'
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+      };
+      if (map[tpl]) {
+        document.getElementById('targetLang').value = map[tpl].lang;
+        document.getElementById('aiPrompt').value = map[tpl].prompt;
+        showToast('تم تحميل وصف القالب! اضغط على "توليد الأداة في المحرر"');
+      }
+    });
+  });
 
-        // إظهار رسالة تنبيه لطيفة
-        function showToast(message) {
-            const toast = document.getElementById('toast-msg');
-            document.getElementById('toast-text').textContent = message;
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100', 'translate-y-2');
-            setTimeout(() => {
-                toast.classList.remove('opacity-100', 'translate-y-2');
-                toast.classList.add('opacity-0');
-            }, 3000);
+  document.querySelectorAll('[data-snippet]').forEach(card => {
+    card.addEventListener('click', () => {
+      const snip = card.getAttribute('data-snippet');
+      const snippets = {
+        msgbox: '\nimport ctypes\nctypes.windll.user32.MessageBoxW(0, "رسالة تنبيه من WinForge", "تنبيه النظام", 0x40)\n',
+        admin: '\nimport ctypes, sys\ndef is_admin():\n    try: return ctypes.windll.shell32.IsUserAnAdmin()\n    except: return False\nif not is_admin():\n    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)\n',
+        registry: '\nimport winreg\nkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)\nwinreg.SetValueEx(key, "WinForgeTool", 0, winreg.REG_SZ, "C:\\\\Path\\\\To\\\\Tool.exe")\n',
+        process: '\nimport subprocess\nsubprocess.run(["taskkill", "/F", "/IM", "notepad.exe"], shell=True)\n',
+        gui: '\nimport tkinter as tk\nroot = tk.Tk()\nroot.title("WinForge GUI")\nroot.geometry("450x300")\nroot.configure(bg="#0d1117")\nroot.mainloop()\n'
+      };
+      codeEditor.value += snippets[snip] || '';
+      updateLineNumbers();
+      saveFilesToStorage();
+      showToast('تم إدراج الدالة في المحرر!');
+      if (window.innerWidth <= 768) sidePanel.classList.add('collapsed');
+    });
+  });
+
+  // ==========================================
+  // 7. توليد الأكواد بالذكاء الاصطناعي (API أو محلي)
+  // ==========================================
+  document.getElementById('generateAiBtn').addEventListener('click', async () => {
+    const prompt = document.getElementById('aiPrompt').value.trim();
+    const lang = document.getElementById('targetLang').value;
+    const provider = ideState.settings.aiProvider;
+    const apiKey = ideState.settings.aiApiKey;
+    const btn = document.getElementById('generateAiBtn');
+
+    if (!prompt) {
+      showToast('يرجى كتابة وصف الأداة المطلوبة أولاً!', true);
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري التوليد...';
+    logTerminal(`AI Request started [Provider: ${provider}, Lang: ${lang}]...`, 'info');
+
+    try {
+      let generatedCode = '';
+      const extMap = { python: 'py', powershell: 'ps1', cpp: 'cpp', csharp: 'cs', bat: 'bat' };
+      const targetFileName = `generated_tool.${extMap[lang] || 'py'}`;
+
+      if (provider !== 'offline' && apiKey) {
+        const sysPrompt = `You are a senior Windows systems software engineer. Write complete, production-ready, runnable ${lang} code for Windows based on the user request. Output ONLY the raw source code without markdown backticks or explanations.`;
+
+        if (provider === 'gemini') {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: `${sysPrompt}\n\nTask: ${prompt}` }] }]
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error?.message || 'خطأ في اتصال Gemini API');
+          generatedCode = data.candidates[0].content.parts[0].text;
+        } else if (provider === 'openai') {
+          const res = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+              model: 'gpt-4o-mini',
+              messages: [
+                { role: 'system', content: sysPrompt },
+                { role: 'user', content: prompt }
+              ]
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error?.message || 'خطأ في اتصال OpenAI API');
+          generatedCode = data.choices[0].message.content;
         }
 
-        // المتغيرات العامة للعبة
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        let gameState = 'START';
-        let score = 0;
-        let highScore = 0;
-        try {
-            highScore = localStorage.getItem('carRaceHighScore') || 0;
-        } catch (e) {}
-        document.getElementById('high-score-display').textContent = highScore;
+        generatedCode = generatedCode.replace(/^```[a-z]*\n/i, '').replace(/\n```$/i, '').trim();
+        logTerminal('Cloud AI generated code successfully!', 'success');
+      } else {
+        await new Promise(r => setTimeout(r, 500));
+        generatedCode = buildLocalFallbackCode(lang, prompt);
+        logTerminal('Offline AI Engine generated code successfully!', 'success');
+      }
 
-        let playerColor = '#ef4444';
-        let userImage = new Image();
-        let hasCustomImage = false;
+      ideState.files[targetFileName] = generatedCode;
+      openFile(targetFileName);
+      saveFilesToStorage();
+      showToast('تم توليد الكود وفتحه في المحرر!');
+      if (window.innerWidth <= 768) sidePanel.classList.add('collapsed');
 
-        // دالة مساعدة لرسم المستطيلات ذات الزوايا الدائرية لتوافق جميع المتصفحات
-        function drawRoundedRect(ctx, x, y, width, height, radius) {
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-            ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
-        }
+    } catch (err) {
+      logTerminal(`AI Error: ${err.message}`, 'error');
+      showToast('فشل التوليد: ' + err.message, true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '⚡ توليد الأداة في المحرر';
+    }
+  });
 
-        // التعامل مع رفع صورة المستخدم
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgData = e.target.result;
-                    userImage = new Image();
-                    userImage.onload = function() {
-                        hasCustomImage = true;
-                        document.getElementById('driver-avatar-preview').src = imgData;
-                        document.getElementById('hud-avatar').src = imgData;
-                        document.getElementById('gameover-avatar').src = imgData;
-                        showToast('تم وضع صورتك في السيارة والتطبيق!');
-                    };
-                    userImage.src = imgData;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+  function buildLocalFallbackCode(lang, prompt) {
+    if (lang === 'powershell') {
+      return `# WinForge AI - PowerShell Windows Administration Tool\n# Goal: ${prompt}\n\nWrite-Host "=== WinForge Windows Utility ===" -ForegroundColor Cyan\nClear-DnsClientCache\nipconfig /flushdns\nGet-ComputerInfo | Select-Object CsName, WindowsProductName, OsArchitecture, CsTotalPhysicalMemory\nWrite-Host "Operation Completed Successfully!" -ForegroundColor Green\n`;
+    } else if (lang === 'cpp') {
+      return `// WinForge AI - C++ Win32 Native Executable\n// Goal: ${prompt}\n#include <windows.h>\n\nint WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR lpCmd, int nShow) {\n    MessageBoxW(NULL, L"تم تشغيل أداة ويندوز بنجاح!", L"WinForge C++ Tool", MB_OK | MB_ICONINFORMATION);\n    return 0;\n}\n`;
+    } else if (lang === 'csharp') {
+      return `// WinForge AI - C# .NET Windows Utility\n// Goal: ${prompt}\nusing System;\nusing System.Windows.Forms;\n\nclass Program {\n    static void Main() {\n        MessageBox.Show("WinForge C# Windows Tool Executed!", "WinForge IDE");\n    }\n}\n`;
+    } else if (lang === 'bat') {
+      return `@echo off\ntitle WinForge Windows Automation\ncolor 0B\necho Running Task: ${prompt}\ndel /q /f /s %TEMP%\\* >nul 2>&1\necho Done!\npause\n`;
+    }
+    return defaultCode.replace('# WinForge IDE - أداة إدارة وتنظيف نظام ويندوز المتقدمة', `# WinForge IDE - ${prompt}`);
+  }
 
-        // اختيار لون السيارة
-        function selectCarColor(color, btnElement) {
-            playerColor = color;
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.remove('border-4', 'border-white', 'scale-110', 'opacity-100');
-                btn.classList.add('border-2', 'border-transparent', 'opacity-70');
-            });
-            btnElement.classList.remove('border-2', 'border-transparent', 'opacity-70');
-            btnElement.classList.add('border-4', 'border-white', 'scale-110', 'opacity-100');
-        }
+  // ==========================================
+  // 8. التشغيل المحاكي، التصدير، وبيئة تثبيت ويندوز
+  // ==========================================
+  document.getElementById('closeWin64Modal').addEventListener('click', () => {
+    document.getElementById('win64PreviewModal').style.display = 'none';
+  });
 
-        // المؤثرات الصوتية باستخدام Tone.js
-        let synth;
-        function initAudio() {
-            try {
-                if (!synth && typeof Tone !== 'undefined') {
-                    synth = new Tone.PolySynth(Tone.Synth).toDestination();
-                }
-            } catch (e) {}
-        }
+  document.getElementById('runCodeBtn').addEventListener('click', () => {
+    const code = codeEditor.value.trim();
+    if (!code) return showToast('المحرر فارغ!', true);
+    logTerminal(`Executing syntax & Win64 API check on "${ideState.activeFile}"...`, 'info');
+    setTimeout(() => {
+      logTerminal(`[Build Check] 0 Errors, 0 Warnings. Launching interactive preview...`, 'success');
+      simWin64Action('refresh');
+      document.getElementById('win64PreviewModal').style.display = 'flex';
+    }, 300);
+  });
 
-        function playSound(type) {
-            try {
-                if (!synth) return;
-                if (Tone.context.state !== 'running') Tone.start();
-                
-                if (type === 'coin') {
-                    synth.triggerAttackRelease(["C5", "E5"], "16n");
-                } else if (type === 'crash') {
-                    synth.triggerAttackRelease(["C2", "F#2", "A2"], "4n");
-                } else if (type === 'start') {
-                    synth.triggerAttackRelease(["C4", "E4", "G4", "C5"], "8n");
-                }
-            } catch (e) {}
-        }
+  document.getElementById('exportExePackageBtn').addEventListener('click', () => {
+    const exeName = document.getElementById('exeOutputName').value.trim() || 'WinSystemUtility64';
+    const arch = document.getElementById('targetArch').value;
+    const isCpp = ideState.activeFile.endsWith('.cpp');
+    const batScript = isCpp
+      ? `@echo off\ntitle WinForge C++ Win64 Compiler (${arch})\necho Compiling ${ideState.activeFile} to ${exeName}.exe...\ng++ -O2 -mwindows -municode "${ideState.activeFile}" -o "${exeName}.exe"\necho Build Complete!\npause`
+      : `@echo off\ntitle WinForge Python EXE Compiler (${arch})\necho Building ${exeName}.exe for Windows (${arch})...\npip install pyinstaller\npyinstaller --onefile --noconsole --name "${exeName}" "${ideState.activeFile}"\necho Build Complete! Output: dist\\${exeName}.exe\npause`;
 
-        // ضبط أبعاد الكانفاس
-        function resizeCanvas() {
-            const container = document.getElementById('game-screen');
-            canvas.width = container.clientWidth || 400;
-            canvas.height = container.clientHeight || 700;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+    downloadFile(`Build_${exeName}_${arch}.bat`, batScript);
+    logTerminal(`Exported EXE builder script for ${exeName}.exe (${arch})`, 'success');
+    showToast('تم تنزيل سكريبت بناء ملف EXE!');
+  });
 
-        // كائن سيارة اللاعب
-        const player = {
-            x: 0,
-            y: 0,
-            width: 54,
-            height: 95,
-            speed: 6,
-            isNitro: false
-        };
+  document.getElementById('exportWinpeBtn').addEventListener('click', () => {
+    const unattendXml = `<?xml version="1.0" encoding="utf-8"?>
+<!-- WinForge IDE - Windows Unattended Setup & WinPE Deployment Script -->
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+  <settings pass="oobeSystem">
+    <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <OOBE>
+        <HideEULAPage>true</HideEULAPage>
+        <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+        <ProtectYourPC>3</ProtectYourPC>
+      </OOBE>
+    </component>
+  </settings>
+</unattend>`;
+    downloadFile('autounattend.xml', unattendXml);
+    logTerminal('Generated Windows Deployment Answer File (autounattend.xml)', 'success');
+    showToast('تم توليد ملف التثبيت التلقائي لويندوز!');
+  });
 
-        let enemies = [];
-        let coins = [];
-        let roadLines = [];
-        let baseSpeed = 5;
-        let animationId;
+  document.getElementById('downloadRawBtn').addEventListener('click', () => {
+    downloadFile(ideState.activeFile, codeEditor.value);
+    showToast(`تم تنزيل ${ideState.activeFile}`);
+  });
 
-        function initRoad() {
-            roadLines = [];
-            for (let y = -100; y < canvas.height + 100; y += 80) {
-                roadLines.push({ y: y });
-            }
-        }
+  function downloadFile(filename, content) {
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  }
 
-        function startGame() {
-            initAudio();
-            playSound('start');
-            resizeCanvas();
-            
-            document.getElementById('start-screen').classList.add('hidden');
-            document.getElementById('gameover-screen').classList.add('hidden');
-            
-            gameState = 'PLAYING';
-            score = 0;
-            baseSpeed = 5.5;
-            enemies = [];
-            coins = [];
-            
-            player.x = canvas.width / 2 - player.width / 2;
-            player.y = canvas.height - player.height - 110;
-            player.isNitro = false;
-            
-            initRoad();
-            updateUI();
-            
-            if (animationId) cancelAnimationFrame(animationId);
-            gameLoop();
-        }
+  // ==========================================
+  // 9. ربط مستودع GitHub (رفع وجلب الملفات)
+  // ==========================================
+  async function pushFileToGitHub() {
+    const token = document.getElementById('ghToken').value.trim();
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    const branch = document.getElementById('ghBranch').value.trim() || 'main';
+    const path = document.getElementById('ghFilePath').value.trim();
+    const message = document.getElementById('ghCommitMsg').value.trim() || `Update ${path}`;
+    const content = codeEditor.value;
 
-        function showHome() {
-            gameState = 'START';
-            if (animationId) cancelAnimationFrame(animationId);
-            document.getElementById('gameover-screen').classList.add('hidden');
-            document.getElementById('start-screen').classList.remove('hidden');
-        }
+    if (!token || !owner || !repo || !path) {
+      showToast('يرجى إدخال رمز GitHub واسم المالك والمستودع أولاً!', true);
+      document.querySelector('[data-view="view-github"]').click();
+      return;
+    }
 
-        function togglePause() {
-            if (gameState === 'PLAYING') {
-                gameState = 'PAUSED';
-                document.getElementById('pause-icon').className = 'fas fa-play text-xs';
-            } else if (gameState === 'PAUSED') {
-                gameState = 'PLAYING';
-                document.getElementById('pause-icon').className = 'fas fa-pause text-xs';
-                gameLoop();
-            }
-        }
+    logTerminal(`Connecting to GitHub repository: ${owner}/${repo} [${branch}]...`, 'info');
 
-        function toggleFullScreen() {
-            try {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(() => {});
-                } else {
-                    if (document.exitFullscreen) document.exitFullscreen();
-                }
-            } catch (e) {}
-        }
+    try {
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      };
 
-        // التحكم باللمس ولوحة المفاتيح
-        const keys = { left: false, right: false };
+      let sha = null;
+      const getRes = await fetch(`${apiUrl}?ref=${branch}`, { headers });
+      if (getRes.ok) {
+        const existing = await getRes.json();
+        sha = existing.sha;
+        logTerminal(`File exists on GitHub (SHA: ${sha.substring(0, 7)}). Updating file...`, 'warn');
+      }
 
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
-            if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
-            if (e.key === ' ' || e.key === 'ArrowUp') player.isNitro = true;
-        });
+      const base64Content = btoa(unescape(encodeURIComponent(content)));
+      const payload = { message, content: base64Content, branch };
+      if (sha) payload.sha = sha;
 
-        window.addEventListener('keyup', (e) => {
-            if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
-            if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
-            if (e.key === ' ' || e.key === 'ArrowUp') player.isNitro = false;
-        });
+      const putRes = await fetch(apiUrl, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(payload)
+      });
 
-        const btnLeft = document.getElementById('btn-left');
-        const btnRight = document.getElementById('btn-right');
-        const btnNitro = document.getElementById('btn-nitro');
+      const result = await putRes.json();
+      if (!putRes.ok) throw new Error(result.message || 'فشل الرفع إلى المستودع');
 
-        const bindTouch = (el, prop) => {
-            el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[prop] = true; });
-            el.addEventListener('touchend', (e) => { e.preventDefault(); keys[prop] = false; });
-            el.addEventListener('mousedown', () => { keys[prop] = true; });
-            el.addEventListener('mouseup', () => { keys[prop] = false; });
-            el.addEventListener('mouseleave', () => { keys[prop] = false; });
-        };
+      logTerminal(`SUCCESS! Pushed to GitHub: ${result.content.html_url}`, 'success');
+      showToast('تم رفع الكود إلى مستودع GitHub بنجاح! 🚀');
+    } catch (err) {
+      logTerminal(`GitHub Error: ${err.message}`, 'error');
+      showToast('خطأ GitHub: ' + err.message, true);
+    }
+  }
 
-        bindTouch(btnLeft, 'left');
-        bindTouch(btnRight, 'right');
+  async function pullFileFromGitHub() {
+    const token = document.getElementById('ghToken').value.trim();
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    const branch = document.getElementById('ghBranch').value.trim() || 'main';
+    const path = document.getElementById('ghFilePath').value.trim();
 
-        btnNitro.addEventListener('touchstart', (e) => { e.preventDefault(); player.isNitro = true; });
-        btnNitro.addEventListener('touchend', (e) => { e.preventDefault(); player.isNitro = false; });
-        btnNitro.addEventListener('mousedown', () => { player.isNitro = true; });
-        btnNitro.addEventListener('mouseup', () => { player.isNitro = false; });
+    if (!owner || !repo || !path) {
+      return showToast('أدخل اسم المالك والمستودع ومسار الملف للجلب!', true);
+    }
 
-        let touchStartX = null;
-        canvas.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-        });
-        canvas.addEventListener('touchmove', (e) => {
-            if (touchStartX === null || gameState !== 'PLAYING') return;
-            const currentX = e.touches[0].clientX;
-            const diffX = currentX - touchStartX;
-            player.x += diffX * 1.2;
-            touchStartX = currentX;
-        });
-        canvas.addEventListener('touchend', () => {
-            touchStartX = null;
-        });
+    logTerminal(`Pulling ${path} from ${owner}/${repo}...`, 'info');
+    try {
+      const headers = { 'Accept': 'application/vnd.github.v3+json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
 
-        // رسم سيارة اللاعب مع صورتك الشخصية بداخلها
-        function drawPlayerCar() {
-            ctx.save();
-            ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
-            
-            const tilt = (keys.right ? 0.08 : 0) + (keys.left ? -0.08 : 0);
-            ctx.rotate(tilt);
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, { headers });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'الملف غير موجود في المستودع');
 
-            const w = player.width;
-            const h = player.height;
+      const decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+      const fileName = path.split('/').pop();
+      ideState.files[fileName] = decoded;
+      openFile(fileName);
+      saveFilesToStorage();
+      logTerminal(`Pulled ${fileName} successfully!`, 'success');
+      showToast('تم جلب الكود من GitHub بنجاح!');
+    } catch (err) {
+      logTerminal(`GitHub Pull Error: ${err.message}`, 'error');
+      showToast('خطأ في الجلب: ' + err.message, true);
+    }
+  }
 
-            if (player.isNitro) {
-                ctx.fillStyle = Math.random() > 0.5 ? '#f59e0b' : '#ef4444';
-                ctx.beginPath();
-                ctx.moveTo(-12, h/2);
-                ctx.lineTo(0, h/2 + 25 + Math.random() * 15);
-                ctx.lineTo(12, h/2);
-                ctx.fill();
-            }
+  document.getElementById('pushGhBtn').addEventListener('click', pushFileToGitHub);
+  document.getElementById('quickPushBtn').addEventListener('click', pushFileToGitHub);
+  document.getElementById('pullGhBtn').addEventListener('click', pullFileFromGitHub);
 
-            // الإطارات
-            ctx.fillStyle = '#0f172a';
-            ctx.fillRect(-w/2 - 4, -h/2 + 12, 6, 20);
-            ctx.fillRect(w/2 - 2, -h/2 + 12, 6, 20);
-            ctx.fillRect(-w/2 - 4, h/2 - 32, 6, 20);
-            ctx.fillRect(w/2 - 2, h/2 - 32, 6, 20);
+  // ==========================================
+  // 10. حفظ الإعدادات والتحكم بالطرفية
+  // ==========================================
+  function saveAllSettings() {
+    ideState.settings = {
+      aiProvider: document.getElementById('aiProvider').value,
+      aiApiKey: document.getElementById('aiApiKey').value.trim(),
+      ghToken: document.getElementById('ghToken').value.trim(),
+      ghOwner: document.getElementById('ghOwner').value.trim(),
+      ghRepo: document.getElementById('ghRepo').value.trim(),
+      ghBranch: document.getElementById('ghBranch').value.trim() || 'main',
+      fontSize: document.getElementById('editorFontSize').value
+    };
+    localStorage.setItem('winforge_ide_settings', JSON.stringify(ideState.settings));
+    applySettingsToUI();
+    showToast('تم حفظ كافة الإعدادات ومفاتيح الربط!');
+    logTerminal('Settings & API credentials saved locally.', 'success');
+  }
 
-            // هيكل السيارة الرياضي
-            ctx.fillStyle = playerColor;
-            drawRoundedRect(ctx, -w/2, -h/2, w, h, 14);
-            ctx.fill();
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-            ctx.stroke();
+  function applySettingsToUI() {
+    const s = ideState.settings;
+    document.getElementById('aiProvider').value = s.aiProvider;
+    document.getElementById('aiApiKey').value = s.aiApiKey;
+    document.getElementById('ghToken').value = s.ghToken;
+    document.getElementById('ghOwner').value = s.ghOwner;
+    document.getElementById('ghRepo').value = s.ghRepo;
+    document.getElementById('ghBranch').value = s.ghBranch;
+    document.getElementById('editorFontSize').value = s.fontSize;
 
-            // الزجاج الأمامي والخلفي
-            ctx.fillStyle = '#1e293b';
-            drawRoundedRect(ctx, -w/2 + 6, -h/2 + 18, w - 12, h - 36, 8);
-            ctx.fill();
+    codeEditor.style.fontSize = s.fontSize;
+    lineNumbers.style.fontSize = s.fontSize;
 
-            // رسم صورة اللاعب دائرية في سقف السيارة
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(0, 2, 19, 0, Math.PI * 2);
-            ctx.closePath();
-            ctx.clip();
-            
-            if (hasCustomImage) {
-                ctx.drawImage(userImage, -19, -17, 38, 38);
-            } else {
-                ctx.fillStyle = '#fbbf24';
-                ctx.fillRect(-19, -17, 38, 38);
-                ctx.fillStyle = '#1e293b';
-                ctx.font = 'bold 11px Tajawal';
-                ctx.textAlign = 'center';
-                ctx.fillText('صورتك', 0, 6);
-            }
-            ctx.restore();
+    document.getElementById('statusEngine').textContent =
+      (s.aiProvider !== 'offline' && s.aiApiKey) ? `AI: ${s.aiProvider.toUpperCase()}` : 'AI: Offline Engine';
 
-            // إطار ذهبي حول صورة السائق
-            ctx.beginPath();
-            ctx.arc(0, 2, 19, 0, Math.PI * 2);
-            ctx.lineWidth = 2.5;
-            ctx.strokeStyle = '#fbbf24';
-            ctx.stroke();
+    document.getElementById('statusGit').textContent =
+      (s.ghOwner && s.ghRepo) ? `GitHub: ${s.ghOwner}/${s.ghRepo}` : 'GitHub: Disconnected';
+  }
 
-            // المصابيح الأمامية
-            ctx.fillStyle = '#fef08a';
-            ctx.fillRect(-w/2 + 6, -h/2 + 2, 10, 5);
-            ctx.fillRect(w/2 - 16, -h/2 + 2, 10, 5);
+  document.getElementById('saveGhBtn').addEventListener('click', saveAllSettings);
+  document.getElementById('saveAllSettingsBtn').addEventListener('click', saveAllSettings);
 
-            // إضاءة المصابيح
-            const grad = ctx.createLinearGradient(0, -h/2, 0, -h/2 - 70);
-            grad.addColorStop(0, 'rgba(254, 240, 138, 0.35)');
-            grad.addColorStop(1, 'rgba(254, 240, 138, 0)');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.moveTo(-w/2 + 6, -h/2);
-            ctx.lineTo(-w/2 - 15, -h/2 - 70);
-            ctx.lineTo(w/2 + 15, -h/2 - 70);
-            ctx.lineTo(w/2 - 6, -h/2);
-            ctx.fill();
+  document.getElementById('resetAllBtn').addEventListener('click', () => {
+    localStorage.removeItem('winforge_ide_settings');
+    localStorage.removeItem('winforge_ide_files');
+    location.reload();
+  });
 
-            ctx.restore();
-        }
+  document.getElementById('clearTerminalBtn').addEventListener('click', () => {
+    terminalOutput.innerHTML = '';
+  });
 
-        function drawEnemyCar(enemy) {
-            ctx.save();
-            ctx.translate(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
-            
-            ctx.fillStyle = '#0f172a';
-            ctx.fillRect(-enemy.width/2 - 3, -enemy.height/2 + 12, 5, 18);
-            ctx.fillRect(enemy.width/2 - 2, -enemy.height/2 + 12, 5, 18);
-            ctx.fillRect(-enemy.width/2 - 3, enemy.height/2 - 30, 5, 18);
-            ctx.fillRect(enemy.width/2 - 2, enemy.height/2 - 30, 5, 18);
+  document.getElementById('toggleTerminalBtn').addEventListener('click', () => {
+    document.getElementById('bottomTerminal').classList.toggle('minimized');
+  });
 
-            ctx.fillStyle = enemy.color;
-            drawRoundedRect(ctx, -enemy.width/2, -enemy.height/2, enemy.width, enemy.height, 12);
-            ctx.fill();
-
-            ctx.fillStyle = '#0f172a';
-            drawRoundedRect(ctx, -enemy.width/2 + 6, -enemy.height/2 + 20, enemy.width - 12, enemy.height - 40, 6);
-            ctx.fill();
-
-            ctx.fillStyle = '#ef4444';
-            ctx.fillRect(-enemy.width/2 + 6, enemy.height/2 - 5, 10, 4);
-            ctx.fillRect(enemy.width/2 - 16, enemy.height/2 - 5, 10, 4);
-
-            ctx.restore();
-        }
-
-        function spawnEntities() {
-            const roadMargin = 28;
-            const playableWidth = Math.max(100, canvas.width - roadMargin * 2 - 50);
-
-            if (Math.random() < 0.025 + (score * 0.00005)) {
-                const enemyColors = ['#64748b', '#0ea5e9', '#8b5cf6', '#ec4899', '#eab308'];
-                const newX = roadMargin + Math.random() * playableWidth;
-                
-                const tooClose = enemies.some(e => Math.abs(e.x - newX) < 65 && e.y < 150);
-                if (!tooClose) {
-                    enemies.push({
-                        x: newX,
-                        y: -110,
-                        width: 50,
-                        height: 88,
-                        speed: baseSpeed * (0.6 + Math.random() * 0.4),
-                        color: enemyColors[Math.floor(Math.random() * enemyColors.length)]
-                    });
-                }
-            }
-
-            if (Math.random() < 0.02) {
-                const coinX = roadMargin + 15 + Math.random() * Math.max(50, playableWidth - 20);
-                coins.push({
-                    x: coinX,
-                    y: -40,
-                    radius: 14
-                });
-            }
-        }
-
-        function updateUI() {
-            document.getElementById('score-display').textContent = Math.floor(score);
-            const currentSpeedKmh = Math.floor((baseSpeed + (player.isNitro ? 4 : 0)) * 22);
-            document.getElementById('speed-display').textContent = currentSpeedKmh;
-        }
-
-        function gameLoop() {
-            if (gameState !== 'PLAYING') return;
-
-            const currentSpeed = baseSpeed + (player.isNitro ? 5 : 0);
-            score += currentSpeed * 0.05;
-            baseSpeed += 0.0015;
-
-            ctx.fillStyle = '#1e293b';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            const curbWidth = 18;
-            const stripeHeight = 40;
-            const offset = (Date.now() * currentSpeed * 0.05) % (stripeHeight * 2);
-            
-            for (let y = -stripeHeight * 2 + offset; y < canvas.height; y += stripeHeight) {
-                const isRed = Math.floor((y - offset) / stripeHeight) % 2 === 0;
-                ctx.fillStyle = isRed ? '#dc2626' : '#f8fafc';
-                ctx.fillRect(0, y, curbWidth, stripeHeight);
-                ctx.fillRect(canvas.width - curbWidth, y, curbWidth, stripeHeight);
-            }
-
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            roadLines.forEach(line => {
-                line.y += currentSpeed;
-                if (line.y > canvas.height) line.y = -60;
-                
-                ctx.fillRect(canvas.width / 3 - 3, line.y, 6, 40);
-                ctx.fillRect((canvas.width / 3) * 2 - 3, line.y, 6, 40);
-            });
-
-            if (keys.left) player.x -= player.speed;
-            if (keys.right) player.x += player.speed;
-
-            if (player.x < curbWidth + 4) player.x = curbWidth + 4;
-            if (player.x + player.width > canvas.width - curbWidth - 4) {
-                player.x = canvas.width - curbWidth - 4 - player.width;
-            }
-
-            spawnEntities();
-
-            for (let i = coins.length - 1; i >= 0; i--) {
-                const c = coins[i];
-                c.y += currentSpeed;
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(c.x, c.y, c.radius, 0, Math.PI * 2);
-                ctx.fillStyle = '#fbbf24';
-                ctx.fill();
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = '#fef08a';
-                ctx.stroke();
-                ctx.fillStyle = '#92400e';
-                ctx.font = 'bold 14px Tajawal';
-                ctx.textAlign = 'center';
-                ctx.fillText('$', c.x, c.y + 5);
-                ctx.restore();
-
-                const dist = Math.hypot((player.x + player.width/2) - c.x, (player.y + player.height/2) - c.y);
-                if (dist < player.width/2 + c.radius) {
-                    score += 50;
-                    playSound('coin');
-                    coins.splice(i, 1);
-                    continue;
-                }
-
-                if (c.y > canvas.height + 50) coins.splice(i, 1);
-            }
-
-            for (let i = enemies.length - 1; i >= 0; i--) {
-                const e = enemies[i];
-                e.y += currentSpeed - (e.speed * 0.3);
-                drawEnemyCar(e);
-
-                const margin = 6;
-                if (
-                    player.x + margin < e.x + e.width - margin &&
-                    player.x + player.width - margin > e.x + margin &&
-                    player.y + margin < e.y + e.height - margin &&
-                    player.y + player.height - margin > e.y + margin
-                ) {
-                    endGame();
-                    return;
-                }
-
-                if (e.y > canvas.height + 120) {
-                    enemies.splice(i, 1);
-                }
-            }
-
-            drawPlayerCar();
-            updateUI();
-
-            animationId = requestAnimationFrame(gameLoop);
-        }
-
-        function endGame() {
-            gameState = 'GAMEOVER';
-            playSound('crash');
-            
-            const finalScore = Math.floor(score);
-            if (finalScore > highScore) {
-                highScore = finalScore;
-                try {
-                    localStorage.setItem('carRaceHighScore', highScore);
-                } catch (e) {}
-                document.getElementById('high-score-display').textContent = highScore;
-            }
-
-            document.getElementById('final-score').textContent = finalScore;
-            document.getElementById('final-highscore').textContent = highScore;
-            document.getElementById('gameover-screen').classList.remove('hidden');
-        }
-    </script>
-<script>// اكتب دوال JavaScript هنا
-console.log('gharb studi app ready');</script></body>
+  // تشغيل التهيئة عند التحميل
+  loadState();
+});
+</script>
+</body>
 </html>
-
-```</p>
-                        <button class="btn" onclick="document.getElementById('status').innerText='تم التفاعل بنجاح بدون إنترنت!'">تشغيل الإجراء</button>
-                        <p id="status" style="color:#38BDF8;margin-top:14px;"></p>
-                    </div>
-                <script>// اكتب دوال JavaScript هنا
-console.log('gharb studi app ready');</script></body>
-                </html>

@@ -3,10 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "com.gharb.myapp"
+    namespace = "com.wintool.app"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.gharb.myapp"
+        applicationId = "com.wintool.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -32,4 +32,5 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.webkit:webkit:1.11.0")
 }
