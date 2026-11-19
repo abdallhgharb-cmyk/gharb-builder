@@ -1,4 +1,4 @@
-package comComprehensiveministerialassistant.myapp
+package com.gharb.myapp
 
 import android.annotation.SuppressLint
 import android.os.Bundle

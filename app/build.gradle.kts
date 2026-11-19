@@ -3,14 +3,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "comComprehensiveministerialassistant.myapp"
+    namespace = "com.gharb.myapp"
     compileSdk = 34
     defaultConfig {
-        applicationId = "comComprehensiveministerialassistant.myapp"
+        applicationId = "com.gharb.myapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.2.0"
+        versionName = "1.0.0"
     }
     buildTypes {
         release {
