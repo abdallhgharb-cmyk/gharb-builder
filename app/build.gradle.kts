@@ -3,14 +3,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "com.ComprehensiveMinisterialAssistant.app"
+    namespace = "comComprehensiveministerialassistant.myapp"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.ComprehensiveMinisterialAssistant.app"
+        applicationId = "comComprehensiveministerialassistant.myapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "1.2.0"
     }
     buildTypes {
         release {
@@ -32,5 +32,4 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.webkit:webkit:1.11.0")
 }

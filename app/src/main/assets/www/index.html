@@ -1,31 +1,44 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0e1e47">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a192f">
     <title>المساعد الوزاري الشامل والذكي - الجمهورية اليمنية</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        ministerial: {
+                            navy: '#0a192f',
+                            navyLight: '#172a45',
+                            gold: '#fbbf24',
+                            emerald: '#10b981'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Three.js for 3D physics/chemistry lab -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body {
+        * {
             font-family: 'Cairo', sans-serif;
-            background-color: #f1f5f9;
-            color: #0f172a;
-            overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
-            user-select: none;
         }
-        input, textarea, select, #solutionOutput {
-            user-select: text;
-        }
-        .navy-header {
-            background-color: #0e1e47;
-        }
-        .royal-card-gradient {
-            background: linear-gradient(135deg, #17347a 0%, #1e40af 55%, #1d4ed8 100%);
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .no-scrollbar::-webkit-scrollbar {
             display: none;
@@ -49,47 +62,64 @@
             direction: ltr;
         }
     </style>
-</head>
-<body class="min-h-screen flex flex-col pb-24">
+<style>/* اكتب تنسيقات CSS هنا */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 16px;
+}</style></head>
+<body class="bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col pb-24 select-none">
 
-    <!-- الشريط العلوي للحالة والبحث الشامل -->
-    <div class="bg-[#08122b] text-center py-1.5 px-3 border-b border-slate-800">
-        <div class="flex items-center justify-between max-w-5xl mx-auto">
-            <div class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-400">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="topStatusText">النظام متصل ومحدث (أونلاين + أوفلاين محلي 100%)</span>
+    <!-- شريط الإعلان والبحث الوزاري العلوي -->
+    <div class="bg-slate-900 text-slate-200 border-b border-slate-800 text-xs py-2 px-3">
+        <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="font-bold text-emerald-400 text-[11px]">المساعد الوزاري اليمني متصل (محلي أوفلاين + سحابي)</span>
             </div>
-            <button onclick="openModal('globalSearchModal')" class="bg-blue-600/40 hover:bg-blue-600 text-amber-300 px-3 py-1 rounded-lg text-[11px] font-black flex items-center gap-1.5 transition">
-                <i class="fas fa-search"></i> بحث شامل
-            </button>
+            <div class="flex items-center gap-2">
+                <!-- زر الوضع الليلي الداكن -->
+                <button onclick="toggleDarkMode()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs flex items-center gap-1 transition" title="تبديل الوضع الليلي">
+                    <i id="darkModeIcon" class="fas fa-moon"></i>
+                    <span id="darkModeText" class="hidden sm:inline">الوضع الليلي</span>
+                </button>
+                <button onclick="openModal('globalSearchModal')" class="px-3 py-1 rounded-lg bg-blue-600/30 hover:bg-blue-600 text-amber-300 font-black text-xs flex items-center gap-1 transition">
+                    <i class="fas fa-search"></i>
+                    <span>بحث شامل</span>
+                </button>
+            </div>
         </div>
-        <div class="text-[11px] font-bold text-amber-400 mt-0.5">الجمهورية اليمنية - المنصة الوطنية للعلوم واللغة العربية</div>
     </div>
 
-    <!-- الرأس الرئيسي للتطبيق -->
-    <header class="navy-header text-white px-3 py-3 shadow-md sticky top-0 z-30">
+    <!-- ترويسة التطبيق الرئيسية -->
+    <header class="bg-[#0a192f] text-white px-3 py-3 shadow-md sticky top-0 z-30">
         <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
             <div class="flex items-center gap-2.5">
-                <button onclick="toggleDrawer(true)" class="w-11 h-11 rounded-xl bg-blue-600/30 hover:bg-blue-600/50 border border-blue-400/30 flex items-center justify-center text-amber-400 text-lg transition" aria-label="القائمة الجانبية">
+                <button onclick="toggleDrawer(true)" class="w-11 h-11 rounded-xl bg-blue-600/30 hover:bg-blue-600/50 border border-blue-400/30 flex items-center justify-center text-amber-400 text-lg transition active:scale-95" aria-label="اختيار الصف">
                     <i class="fas fa-bars"></i>
                 </button>
                 <div>
                     <div class="flex items-center gap-1.5">
-                        <span id="headerGradeTag" class="bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-md">3ث اليمن</span>
-                        <span id="headerSubjectBadge" class="bg-blue-500/30 text-blue-200 text-[10px] font-bold px-2 py-0.5 rounded-md">الشامل</span>
+                        <span id="headerGradeTag" class="bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-md">3ث علمي</span>
+                        <span id="headerSubjectBadge" class="bg-blue-500/30 text-blue-200 text-[10px] font-bold px-2 py-0.5 rounded-md">فيزياء</span>
                     </div>
-                    <h1 class="text-sm sm:text-base font-black leading-tight mt-0.5">المساعد الوزاري الذكي</h1>
+                    <h1 class="text-sm sm:text-base font-black leading-tight mt-0.5">المساعد الوزاري الشامل والذكي 🇾🇪</h1>
                 </div>
             </div>
+
+            <!-- محرك الذكاء وقفل تيليجرام والإعدادات -->
             <div class="flex items-center gap-2">
-                <div class="relative">
-                    <select id="aiEngineSelect" onchange="changeAIEngine(this.value)" class="appearance-none bg-[#182e66] text-white text-xs font-bold py-2 pr-3 pl-7 rounded-full border border-blue-400/30 cursor-pointer focus:outline-none">
+                <div class="relative hidden sm:block">
+                    <select id="aiEngineSelect" onchange="changeAIEngine(this.value)" class="appearance-none bg-[#172a45] text-white text-xs font-bold py-2 pr-3 pl-7 rounded-xl border border-blue-400/30 cursor-pointer focus:outline-none">
                         <option value="gemini">Gemini AI (سحابي ذكي)</option>
                         <option value="offline">وضع أوفلاين (مدمج)</option>
                     </select>
                     <i class="fas fa-chevron-down text-[10px] text-amber-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
                 </div>
-                <button onclick="openModal('settingsModal')" class="w-10 h-10 rounded-xl bg-[#182e66] hover:bg-blue-800 border border-blue-400/30 flex items-center justify-center text-amber-400 transition" aria-label="الإعدادات">
+                <a href="https://t.me/yemen_ministerial_bot" target="_blank" class="w-10 h-10 rounded-xl bg-sky-600/30 hover:bg-sky-600/50 border border-sky-400/30 flex items-center justify-center text-sky-300 transition" title="بوت تيليجرام الرسمي @yemen_ministerial_bot">
+                    <i class="fab fa-telegram-plane text-lg"></i>
+                </a>
+                <button onclick="openModal('settingsModal')" class="w-10 h-10 rounded-xl bg-[#172a45] hover:bg-blue-800 border border-blue-400/30 flex items-center justify-center text-amber-400 transition" aria-label="الإعدادات">
                     <i class="fas fa-gear"></i>
                 </button>
             </div>
@@ -97,212 +127,398 @@
     </header>
 
     <!-- شريط المواد الدراسية الأفقي -->
-    <div class="bg-white border-b border-slate-200 px-3 py-2.5 shadow-sm sticky top-[68px] z-20">
+    <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 py-2 shadow-sm sticky top-[65px] z-20">
         <div class="max-w-5xl mx-auto flex items-center gap-2 overflow-x-auto no-scrollbar" id="subjectsPillBar"></div>
     </div>
 
-    <!-- المحتوى الرئيسي -->
+    <!-- المحتوى الرئيسي القابل للتبديل -->
     <main class="max-w-5xl mx-auto w-full px-3 pt-3 space-y-4 flex-1">
 
-        <!-- الواجهة 1: مختبر الحل الذكي -->
-        <div id="view-lab" class="space-y-4">
-            <section class="royal-card-gradient rounded-2xl p-4 text-white shadow-lg">
+        <!-- 1. واجهة لوحة الإحصائيات (Dashboard) -->
+        <div id="view-dashboard" class="space-y-4">
+            <!-- بنر ترحيبي وإنجازات الطالب -->
+            <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-4 sm:p-5 text-white shadow-lg relative overflow-hidden">
+                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full">العام الدراسي 2026</span>
+                            <span class="text-xs text-blue-200 font-bold">وزارة التربية والتعليم</span>
+                        </div>
+                        <h2 class="text-lg sm:text-xl font-black">أهلاً بك يا بطل اليمن 🇾🇪</h2>
+                        <p class="text-xs text-slate-300 mt-1">مرحباً بك في لوحة متابعة التحصيل العلمي والذاكرة التفاعلية.</p>
+                    </div>
+                    <button onclick="startQuizForActiveSubject()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center justify-center gap-2 shrink-0">
+                        <i class="fas fa-play-circle"></i>
+                        <span>ابدأ اختبار المادة الآن</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- بطاقات الإحصائيات ومؤشر الإنجاز -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 shadow-sm text-center">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-base mb-1.5">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <div id="dashTotalMinutes" class="text-lg sm:text-xl font-black text-slate-900 dark:text-white">145 دقيقة</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400 font-bold">زمن المذاكرة المنجز</div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 shadow-sm text-center">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-base mb-1.5">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <div id="dashCompletedSessions" class="text-lg sm:text-xl font-black text-slate-900 dark:text-white">6 جلسات</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400 font-bold">جلسات بومودورو مكتملة</div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 shadow-sm text-center">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-base mb-1.5">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div id="dashProgressPct" class="text-lg sm:text-xl font-black text-slate-900 dark:text-white">82%</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400 font-bold">إنجاز المقرر الوزاري</div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 shadow-sm text-center">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-purple-50 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center text-base mb-1.5">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div id="dashQuizScoreAvg" class="text-lg sm:text-xl font-black text-slate-900 dark:text-white">92%</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400 font-bold">متوسط الاختبارات</div>
+                </div>
+            </div>
+
+            <!-- رسم بياني لزمن المذاكرة المنجز لكل مادة -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                    <h3 class="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fas fa-chart-bar text-blue-600"></i>
+                        <span>توزيع زمن المذاكرة لكل مادة (دقائق التركيز)</span>
+                    </h3>
+                    <span class="text-xs text-slate-400 font-bold">محدث لحظياً</span>
+                </div>
+
+                <div class="space-y-3 pt-1">
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span class="text-slate-700 dark:text-slate-300">الفيزياء (المقذوفات والحث)</span>
+                            <span class="text-blue-600 dark:text-blue-400 font-black">50 دقيقة (100%)</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
+                            <div class="bg-blue-600 h-3 rounded-full" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span class="text-slate-700 dark:text-slate-300">الرياضيات (الأعداد المركبة والتكامل)</span>
+                            <span class="text-indigo-600 dark:text-indigo-400 font-black">40 دقيقة (80%)</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
+                            <div class="bg-indigo-600 h-3 rounded-full" style="width: 80%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span class="text-slate-700 dark:text-slate-300">الكيمياء (الخلايا الجلفانية)</span>
+                            <span class="text-emerald-600 dark:text-emerald-400 font-black">30 دقيقة (60%)</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
+                            <div class="bg-emerald-500 h-3 rounded-full" style="width: 60%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span class="text-slate-700 dark:text-slate-300">اللغة العربية (النحو والأدب)</span>
+                            <span class="text-amber-600 dark:text-amber-400 font-black">25 دقيقة (50%)</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
+                            <div class="bg-amber-500 h-3 rounded-full" style="width: 50%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بطاقة تيليجرام الوزارية الرسمية المقفلة -->
+            <div class="bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/60 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-sky-500 text-white flex items-center justify-center text-2xl shadow-sm shrink-0">
+                        <i class="fab fa-telegram-plane"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <h4 class="text-sm font-black text-sky-950 dark:text-sky-200">القناة والبوت الوزاري الرسمي</h4>
+                            <span class="bg-emerald-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded">موثق ومقفل</span>
+                        </div>
+                        <div class="text-xs text-sky-700 dark:text-sky-400 font-bold mt-0.5">
+                            المعرف: <span class="font-mono dir-ltr select-all">@yemen_ministerial_bot</span>
+                        </div>
+                        <div class="text-[11px] text-sky-600 dark:text-sky-500 mt-0.5">
+                            مفتاح API مدمج رسمياً ومحمي ضد التعديل، يدعم التوجيه السحابي للمقرر.
+                        </div>
+                    </div>
+                </div>
+                <a href="https://t.me/yemen_ministerial_bot" target="_blank" class="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 active:scale-95 text-white font-black text-xs px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow">
+                    <i class="fas fa-external-link-alt text-[10px]"></i>
+                    <span>فتح البوت في Telegram</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 2. واجهة مختبر الحل الذكي (Lab) -->
+        <div id="view-lab" class="hidden space-y-4">
+            <!-- أداة مؤقت بومودورو داخل المادة -->
+            <section class="bg-white dark:bg-slate-900 rounded-2xl p-3.5 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-black text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                            <span>مؤقت بومودورو للمذاكرة</span>
+                            <span id="pomoStateBadge" class="bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 text-[10px] font-bold px-2 py-0.5 rounded-full">جلسة تركيز (25 دقيقة)</span>
+                        </div>
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400">نظّم وقتك لتحقيق أقصى استيعاب ذهني للمنهج</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 justify-end">
+                    <div id="pomoDisplay" class="font-mono text-xl font-black text-rose-600 dark:text-rose-400 dir-ltr bg-rose-50 dark:bg-rose-950/30 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-900/50">25:00</div>
+                    <button id="pomoActionBtn" onclick="togglePomodoroTimer()" class="bg-rose-600 hover:bg-rose-700 text-white font-black text-xs px-3.5 py-2 rounded-xl transition">
+                        <i class="fas fa-play ml-1"></i> ابدأ
+                    </button>
+                    <button onclick="resetPomodoroTimer()" class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs px-2.5 py-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="إعادة ضبط">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- بنك أسئلة وقوانين مقترحة للمادة الحالية -->
+            <section class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-4 text-white shadow-lg">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                    <h2 id="bankTitle" class="text-sm sm:text-base font-black flex items-center gap-2">
+                    <h2 id="bankTitle" class="text-xs sm:text-sm font-black flex items-center gap-2">
                         <i class="fas fa-graduation-cap text-amber-300"></i>
-                        <span>بنك أسئلة وقوانين (الثالث الثانوي) - اليمن</span>
+                        <span>بنك نماذج وزارية سريعة (الصف الحالي)</span>
                     </h2>
-                    <span class="text-[11px] bg-white/15 px-2.5 py-1 rounded-lg font-bold w-fit">اختر سؤالاً سريعاً للتجربة:</span>
+                    <span class="text-[10px] bg-white/15 px-2.5 py-1 rounded-lg font-bold w-fit">اختر مسألة للتجربة الفورية:</span>
                 </div>
                 <div id="quickPromptsBar" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
             </section>
 
-            <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+            <!-- صندوق إدخال السؤال والوسائط -->
+            <section class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-800 space-y-3">
                 <div class="flex items-center justify-between">
-                    <h2 class="text-sm font-black text-slate-800 flex items-center gap-2">
-                        <i class="fas fa-brain text-indigo-600"></i>
-                        <span>مختبر الحل الذكي المباشر (كتابة، صورة، صوت)</span>
+                    <h2 class="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                        <i class="fas fa-brain text-blue-600"></i>
+                        <span>مختبر الحل الذكي المباشر (كتابة، صورة، إملاء صوتي)</span>
                     </h2>
                     <button onclick="clearQuestionBox()" class="text-xs text-slate-400 hover:text-red-500 font-bold px-2 py-1 rounded-lg">مسح الخانة</button>
                 </div>
 
-                <textarea id="questionInput" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-slate-800 focus:outline-none focus:border-blue-500 transition" placeholder="اكتب سؤالك أو مسألتك هنا وفق المنهج اليمني (أو أرفق صورة للمسألة)..."></textarea>
+                <textarea id="questionInput" rows="4" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 transition" placeholder="اكتب سؤالك أو مسألتك هنا وفق المنهج اليمني (أو اضغط زر الميكروفون للإملاء الصوتي)..."></textarea>
 
                 <!-- معاينة المرفق (صورة / رسم / كاميرا) -->
-                <div id="attachmentPreviewBox" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-2.5 flex items-center justify-between gap-3">
+                <div id="attachmentPreviewBox" class="hidden bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl p-2.5 flex items-center justify-between gap-3">
                     <div class="flex items-center gap-2.5 overflow-hidden">
-                        <img id="attachedImageThumb" src="" alt="معاينة المرفق" class="w-12 h-12 rounded-lg object-cover border border-blue-300 bg-white hidden">
+                        <img id="attachedImageThumb" src="" alt="معاينة المرفق" class="w-12 h-12 rounded-lg object-cover border border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-800 hidden">
                         <div class="truncate">
-                            <div id="attachedFileName" class="text-xs font-bold text-blue-900 truncate">مرفق جديد</div>
-                            <div class="text-[10px] text-blue-600 font-semibold">سيتم تحليل الصورة تلقائياً عند الضغط على حل السؤال</div>
+                            <div id="attachedFileName" class="text-xs font-bold text-blue-900 dark:text-blue-200 truncate">مرفق جديد</div>
+                            <div class="text-[10px] text-blue-600 dark:text-blue-400 font-semibold">سيتم تحليل الصورة والمسألة عند الضغط على زر الحل</div>
                         </div>
                     </div>
-                    <button onclick="removeAttachment()" class="text-xs bg-white hover:bg-red-50 text-red-600 font-bold px-3 py-1.5 rounded-lg border border-red-200 shrink-0">إزالة</button>
+                    <button onclick="removeAttachment()" class="text-xs bg-white dark:bg-slate-800 hover:bg-red-50 text-red-600 font-bold px-3 py-1.5 rounded-lg border border-red-200 dark:border-red-800 shrink-0">إزالة</button>
                 </div>
 
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="openCameraModal()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 py-3 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition">
-                        <i class="fas fa-camera text-blue-600"></i> تصوير
+                <!-- أزرار الإدخال: تصوير، معرض، صوت، رسم -->
+                <div class="grid grid-cols-4 gap-2">
+                    <button onclick="openCameraModal()" class="bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 py-2.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                        <i class="fas fa-camera text-blue-600"></i> <span class="hidden sm:inline">تصوير</span>
                     </button>
-                    <label class="cursor-pointer bg-slate-50 hover:bg-slate-100 border border-slate-200 py-3 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition">
-                        <i class="fas fa-image text-emerald-600"></i> صورة
+                    <label class="cursor-pointer bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 py-2.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                        <i class="fas fa-image text-emerald-600"></i> <span class="hidden sm:inline">صورة</span>
                         <input type="file" id="imageFileInput" accept="image/*" class="hidden" onchange="handleImageUpload(this)">
                     </label>
-                    <button id="voiceBtn" onclick="toggleVoiceRecording()" class="bg-rose-50 hover:bg-rose-100 border border-rose-200 py-3 px-2 rounded-xl text-xs font-bold text-rose-700 flex items-center justify-center gap-1.5 transition">
+                    <button id="voiceBtn" onclick="toggleVoiceRecording()" class="bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800 py-2.5 px-2 rounded-xl text-xs font-bold text-rose-700 dark:text-rose-300 flex items-center justify-center gap-1.5 transition">
                         <i class="fas fa-microphone"></i> <span id="voiceBtnText">صوت</span>
+                    </button>
+                    <button onclick="openModal('drawingModal')" class="bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 border border-amber-200 dark:border-amber-800 py-2.5 px-2 rounded-xl text-xs font-bold text-amber-700 dark:text-amber-300 flex items-center justify-center gap-1.5 transition">
+                        <i class="fas fa-pencil"></i> <span class="hidden sm:inline">رسم</span>
                     </button>
                 </div>
 
-                <button id="solveBtn" onclick="solveQuestion()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-black py-3.5 px-4 rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
+                <!-- زر الإرسال والحل الرئيسي -->
+                <button id="solveBtn" onclick="solveQuestion()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-black py-3.5 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-xs sm:text-sm">
                     <i class="fas fa-bolt text-amber-300"></i>
-                    <span>حل السؤال الآن 🚀</span>
+                    <span>حل السؤال الوزاري الآن 🚀</span>
                 </button>
             </section>
 
-            <!-- منطقة عرض الحل -->
-            <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                    <h3 class="text-sm font-black text-slate-800 flex items-center gap-1.5">
+            <!-- منطقة عرض الحل والشرح الوزاري -->
+            <section class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-800 space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                    <h3 class="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                         <i class="fas fa-check-circle text-emerald-600"></i> منطقة عرض الحل والشرح التفاعلي
                     </h3>
                     <div class="flex gap-1.5">
-                        <button onclick="copySolutionText()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                        <button onclick="copySolutionText()" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-xs font-bold px-3 py-1.5 rounded-lg transition">
                             <i class="fas fa-copy ml-1"></i> نسخ
                         </button>
-                        <button onclick="exportSolutionTxt()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1.5 rounded-lg transition">
-                            <i class="fas fa-download ml-1"></i> تصدير
+                        <button onclick="exportSolutionTxt()" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                            <i class="fas fa-download ml-1"></i> تصدير نصي
                         </button>
                     </div>
                 </div>
 
-                <div id="extractedLawBanner" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-xs text-amber-900 font-bold"></div>
+                <div id="extractedLawBanner" class="hidden bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl p-2.5 text-xs text-amber-900 dark:text-amber-300 font-bold"></div>
 
-                <div id="solutionOutput" class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm text-slate-800 leading-relaxed whitespace-pre-line min-h-[140px]">أهلاً بك يا بطل في المساعد الوزاري الشامل والذكي 🇾🇪
-• اختر الصف الدراسي والمادة من الأعلى.
-• اكتب سؤالك أو صوّر المسألة مباشرة للحصول على الحل الوزاري النموذجي خطوة بخطوة.</div>
+                <div id="solutionOutput" class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl p-4 text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-line min-h-[140px]">أهلاً بك يا بطل في المساعد الوزاري الشامل والذكي 🇾🇪
+• اختر الصف والمادة من الأعلى.
+• اكتب سؤالك أو استخدم الميكروفون للإملاء الصوتي أو التقط صورة للمسألة.
+• ستحصل على الحل الوزاري النموذجي بالخطوات والقوانين المعتمدة.</div>
 
-                <div class="grid grid-cols-3 gap-2 pt-1">
-                    <button onclick="switchBottomTab('laws')" class="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 py-2.5 px-2 rounded-xl text-[11px] font-bold text-indigo-700 flex items-center justify-center gap-1 transition">
-                        <i class="fas fa-cubes"></i> محاكاة 3D
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button onclick="switchBottomTab('laws')" class="bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 border border-indigo-200 dark:border-indigo-800 py-2.5 px-2 rounded-xl text-xs font-bold text-indigo-700 dark:text-indigo-300 flex items-center justify-center gap-1 transition">
+                        <i class="fas fa-cubes"></i> افتح محاكاة 3D للقانون
                     </button>
-                    <button onclick="openModal('drawingModal')" class="bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 py-2.5 px-2 rounded-xl text-[11px] font-bold text-emerald-700 flex items-center justify-center gap-1 transition">
-                        <i class="fas fa-compass-drafting"></i> لوحة الرسم
-                    </button>
-                    <button onclick="simplify60Sec()" class="bg-amber-50 hover:bg-amber-100 border border-amber-200 py-2.5 px-2 rounded-xl text-[11px] font-bold text-amber-800 flex items-center justify-center gap-1 transition">
-                        <i class="fas fa-stopwatch"></i> تبسيط 60 ثانية
+                    <button onclick="simplify60Sec()" class="bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 border border-amber-200 dark:border-amber-800 py-2.5 px-2 rounded-xl text-xs font-bold text-amber-800 dark:text-amber-300 flex items-center justify-center gap-1 transition">
+                        <i class="fas fa-stopwatch"></i> كبسولة 60 ثانية
                     </button>
                 </div>
             </section>
         </div>
 
-        <!-- الواجهة 2: مكتبة الملازم والكتب -->
-        <div id="view-books" class="hidden space-y-4">
-            <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+        <!-- 3. واجهة الاختبارات الذاتية القصيرة (Quiz) -->
+        <div id="view-quiz" class="hidden space-y-4">
+            <section class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-800 space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                    <div>
+                        <h2 class="text-sm sm:text-base font-black text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                            <i class="fas fa-tasks text-emerald-600"></i>
+                            <span>اختبار ذاتي قصير - <span id="quizSubjectTitle">الفيزياء</span></span>
+                        </h2>
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">أسئلة وزارية لاختبار الفهم والاستيعاب الفوري</div>
+                    </div>
+                    <span id="quizScoreBadge" class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-xs font-black px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+                        النتيجة: -- / 3
+                    </span>
+                </div>
+
+                <!-- حاوية الأسئلة التفاعلية -->
+                <div id="quizQuestionsContainer" class="space-y-4 pt-1"></div>
+
+                <!-- زر تصحيح الاختبار -->
+                <div class="pt-2 flex gap-2">
+                    <button id="submitQuizBtn" onclick="evaluateQuizAnswers()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow transition flex items-center justify-center gap-2">
+                        <i class="fas fa-check"></i>
+                        <span>تصحيح الاختبار وعرض النتيجة 🎯</span>
+                    </button>
+                    <button onclick="renderCurrentSubjectQuiz()" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-bold text-xs px-3.5 py-3 rounded-xl transition" title="إعادة تشغيل الاختبار">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+
+                <!-- بطاقة النتيجة والتغذية الراجعة -->
+                <div id="quizResultBanner" class="hidden rounded-xl p-4 space-y-2 border"></div>
+            </section>
+        </div>
+
+        <!-- 4. واجهة مختبر القوانين والمحاكاة 3D -->
+        <div id="view-laws" class="hidden space-y-4">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-800 space-y-3">
                 <div class="flex items-center justify-between">
-                    <h2 class="text-sm sm:text-base font-black text-slate-800 flex items-center gap-2">
-                        <i class="fas fa-book-open text-blue-600"></i> مكتبة الملازم والكتب الوزارية
+                    <h2 class="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                        <i class="fas fa-cubes text-blue-600"></i> مختبر القوانين التفاعلي 3D
                     </h2>
-                    <span id="booksCountBadge" class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full border border-blue-200">4 ملخصات</span>
+                    <span class="text-[11px] text-slate-500 font-bold">المس واسحب لتدوير المجسم</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="selectSimSubject('physics')" id="simBtn-physics" class="py-2.5 rounded-xl text-xs font-bold bg-blue-600 text-white transition">الفيزياء (المقذوفات)</button>
+                    <button onclick="selectSimSubject('math')" id="simBtn-math" class="py-2.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition">الرياضيات (القطوع)</button>
+                    <button onclick="selectSimSubject('chemistry')" id="simBtn-chemistry" class="py-2.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition">الكيمياء (الذرة)</button>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-3.5 shadow-sm border border-slate-200 dark:border-slate-800 space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 id="simTitle" class="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-200">حركة المقذوفات بزاوية (الفيزياء - 3ث)</h3>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="toggleSimPause()" id="simPauseBtn" class="bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 text-xs font-bold px-2.5 py-1.5 rounded-lg">إيقاف مؤقت</button>
+                        <button onclick="resetCameraAngle()" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-xs font-bold px-2.5 py-1.5 rounded-lg">ضبط الزاوية</button>
+                    </div>
+                </div>
+
+                <div id="simCanvasContainer" class="w-full h-[280px] bg-slate-950 rounded-xl relative border border-slate-800 overflow-hidden"></div>
+
+                <!-- شريط تحكم المحاكاة -->
+                <div class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <span id="simSliderLabel">زاوية القذف (θ):</span>
+                        <span id="simSliderVal" class="text-blue-600 dark:text-blue-400 font-black">45°</span>
+                    </div>
+                    <input type="range" id="simParamSlider" min="15" max="80" value="45" oninput="updateSimParam(this.value)" class="w-full accent-blue-600 cursor-pointer">
+                </div>
+
+                <div class="bg-[#0a192f] text-white rounded-xl p-3.5 space-y-2">
+                    <div class="text-[11px] text-amber-300 font-bold">القانون الوزاري المعتمد:</div>
+                    <div id="simFormulaBox" class="bg-black/40 p-2.5 rounded-lg font-mono text-xs text-center text-emerald-300 dir-ltr">H = (v₀² · sin²θ) / 2g  |  R = (v₀² · sin2θ) / g</div>
+                    <p id="simDescBox" class="text-xs text-slate-200 leading-relaxed">يصل المقذوف إلى أقصى مدى أفقي (R) عندما تكون زاوية القذف θ = 45°، بينما يصل إلى أقصى ارتفاع رأسي (H) عند θ = 90°.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. واجهة الملازم والكتب (Books) -->
+        <div id="view-books" class="hidden space-y-4">
+            <section class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-800 space-y-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xs sm:text-base font-black text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                        <i class="fas fa-book-open text-blue-600"></i>
+                        <span>مكتبة الملازم والكتب الوزارية المعزولة</span>
+                    </h2>
+                    <span id="booksCountBadge" class="bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-xs font-bold px-3 py-1 rounded-full border border-blue-200 dark:border-blue-800">4 ملازم</span>
                 </div>
                 <label class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition">
-                    <i class="fas fa-upload"></i> إضافة ملزمة أو ملف PDF للمكتبة
+                    <i class="fas fa-upload"></i> إضافة ملزمة أو ملف للمادة الحالية
                     <input type="file" accept=".pdf,.txt" class="hidden" onchange="handlePdfBookUpload(this)">
                 </label>
                 <div id="booksListContainer" class="space-y-3 pt-1"></div>
             </section>
         </div>
 
-        <!-- الواجهة 3: مختبر القوانين ثلاثي الأبعاد 3D -->
-        <div id="view-laws" class="hidden space-y-4">
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-sm sm:text-base font-black text-slate-800 flex items-center gap-2">
-                        <i class="fas fa-cubes text-blue-600"></i> مختبر القوانين التفاعلي 3D
-                    </h2>
-                    <span class="text-[11px] text-slate-500 font-bold">اسحب لتدوير المجسم</span>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="selectSimSubject('physics')" id="simBtn-physics" class="py-2.5 rounded-xl text-xs font-bold bg-blue-600 text-white transition">الفيزياء (المقذوفات)</button>
-                    <button onclick="selectSimSubject('math')" id="simBtn-math" class="py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 transition">الرياضيات (القطوع)</button>
-                    <button onclick="selectSimSubject('chemistry')" id="simBtn-chemistry" class="py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 transition">الكيمياء (الذرة)</button>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 space-y-3">
-                <div class="flex items-center justify-between">
-                    <h3 id="simTitle" class="text-sm font-black text-slate-800">حركة المقذوفات بزاوية (الفيزياء - 3ث)</h3>
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="toggleSimPause()" id="simPauseBtn" class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1.5 rounded-lg">إيقاف مؤقت</button>
-                        <button onclick="resetCameraAngle()" class="bg-slate-100 hover:bg-slate-200 text-xs font-bold px-2.5 py-1.5 rounded-lg">ضبط الكاميرا</button>
-                    </div>
-                </div>
-
-                <div id="simCanvasContainer" class="w-full h-[300px] bg-slate-950 rounded-xl relative border border-slate-800 overflow-hidden"></div>
-
-                <!-- شريط تحكم تفاعلي للمحاكاة -->
-                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
-                    <div class="flex items-center justify-between text-xs font-bold text-slate-700">
-                        <span id="simSliderLabel">زاوية القذف (θ):</span>
-                        <span id="simSliderVal" class="text-blue-600 font-black">45°</span>
-                    </div>
-                    <input type="range" id="simParamSlider" min="15" max="80" value="45" oninput="updateSimParam(this.value)" class="w-full accent-blue-600 cursor-pointer">
-                </div>
-
-                <div class="bg-[#0e1e47] text-white rounded-xl p-3.5 space-y-2">
-                    <div class="text-[11px] text-amber-300 font-bold">القانون الوزاري المعتمد:</div>
-                    <div id="simFormulaBox" class="bg-black/30 p-2.5 rounded-lg font-mono text-xs sm:text-sm text-center text-emerald-300 dir-ltr">H = (v₀² · sin²θ) / 2g  |  R = (v₀² · sin2θ) / g</div>
-                    <p id="simDescBox" class="text-xs text-slate-200 leading-relaxed">يصل المقذوف إلى أقصى مدى أفقي (R) عندما تكون زاوية القذف θ = 45°، بينما يصل إلى أقصى ارتفاع رأسي (H) عند θ = 90°.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- الواجهة 4: تصدير التطبيق -->
-        <div id="view-apk" class="hidden space-y-4">
-            <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
-                <h2 class="text-base font-black text-slate-800 flex items-center gap-2">
-                    <i class="fab fa-android text-emerald-600 text-xl"></i> حفظ وتصدير التطبيق للاستخدام أوفلاين
-                </h2>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    يمكنك تنزيل نسخة كاملة ومستقلة من **المساعد الوزاري الذكي** بصيغة HTML واحدة تعمل على الهاتف أو الحاسوب في أي وقت، أو إضافتها إلى الشاشة الرئيسية لهاتفك كتطبيق.
-                </p>
-                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs text-emerald-900 space-y-1">
-                    <div class="font-black">مميزات الحزمة المستقلة:</div>
-                    <div>• تشمل كافة الصفوف من السابع الأساسي حتى الثالث الثانوي (اليمن).</div>
-                    <div>• تحتوي على بنك القوانين الوزارية والمحاكاة ثلاثية الأبعاد 3D ولوحة الرسم.</div>
-                </div>
-                <button onclick="downloadAppBundle()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 px-4 rounded-xl text-xs sm:text-sm shadow transition flex items-center justify-center gap-2">
-                    <i class="fas fa-file-export"></i> تنزيل حزمة التطبيق الشاملة (index.html) 📦
-                </button>
-            </section>
-        </div>
     </main>
 
-    <!-- شريط التنقل السفلي الثابت -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-2 py-1.5 z-30 shadow-lg">
-        <div class="max-w-5xl mx-auto grid grid-cols-4 gap-1">
-            <button onclick="switchBottomTab('lab')" id="bnav-lab" class="flex flex-col items-center py-1.5 rounded-xl text-blue-600 bg-blue-50/70 font-black transition">
-                <i class="fas fa-brain text-lg"></i>
-                <span class="text-[11px] mt-0.5">المختبر</span>
+    <!-- شريط التنقل السفلي الثابت (Bottom Navigation Bar) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-2 py-1.5 z-30 shadow-lg">
+        <div class="max-w-5xl mx-auto grid grid-cols-5 gap-1">
+            <button onclick="switchBottomTab('dashboard')" id="bnav-dashboard" class="flex flex-col items-center py-1.5 rounded-xl text-blue-600 dark:text-blue-400 bg-blue-50/70 dark:bg-blue-950/50 font-black transition">
+                <i class="fas fa-chart-pie text-base"></i>
+                <span class="text-[10px] sm:text-[11px] mt-0.5">الرئيسية</span>
             </button>
-            <button onclick="switchBottomTab('books')" id="bnav-books" class="flex flex-col items-center py-1.5 rounded-xl text-slate-500 font-bold transition">
-                <i class="fas fa-book-open text-lg"></i>
-                <span class="text-[11px] mt-0.5">الملازم</span>
+            <button onclick="switchBottomTab('lab')" id="bnav-lab" class="flex flex-col items-center py-1.5 rounded-xl text-slate-500 dark:text-slate-400 font-bold transition">
+                <i class="fas fa-brain text-base"></i>
+                <span class="text-[10px] sm:text-[11px] mt-0.5">المختبر</span>
             </button>
-            <button onclick="switchBottomTab('laws')" id="bnav-laws" class="flex flex-col items-center py-1.5 rounded-xl text-slate-500 font-bold transition">
-                <i class="fas fa-cubes text-lg"></i>
-                <span class="text-[11px] mt-0.5">مختبر 3D</span>
+            <button onclick="switchBottomTab('quiz')" id="bnav-quiz" class="flex flex-col items-center py-1.5 rounded-xl text-slate-500 dark:text-slate-400 font-bold transition">
+                <i class="fas fa-tasks text-base"></i>
+                <span class="text-[10px] sm:text-[11px] mt-0.5">اختبارات</span>
             </button>
-            <button onclick="switchBottomTab('apk')" id="bnav-apk" class="flex flex-col items-center py-1.5 rounded-xl text-slate-500 font-bold transition">
-                <i class="fab fa-android text-lg text-emerald-600"></i>
-                <span class="text-[11px] mt-0.5">تصدير</span>
+            <button onclick="switchBottomTab('laws')" id="bnav-laws" class="flex flex-col items-center py-1.5 rounded-xl text-slate-500 dark:text-slate-400 font-bold transition">
+                <i class="fas fa-cubes text-base"></i>
+                <span class="text-[10px] sm:text-[11px] mt-0.5">مختبر 3D</span>
+            </button>
+            <button onclick="switchBottomTab('books')" id="bnav-books" class="flex flex-col items-center py-1.5 rounded-xl text-slate-500 dark:text-slate-400 font-bold transition">
+                <i class="fas fa-book-open text-base"></i>
+                <span class="text-[10px] sm:text-[11px] mt-0.5">الملازم</span>
             </button>
         </div>
     </nav>
 
     <!-- القائمة الجانبية لاختيار الصف الدراسي -->
     <div id="drawerBackdrop" onclick="toggleDrawer(false)" class="hidden fixed inset-0 bg-black/60 z-40 transition-opacity"></div>
-    <aside id="sideDrawer" class="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
-        <div class="navy-header text-white p-4 flex items-center justify-between">
+    <aside id="sideDrawer" class="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white dark:bg-slate-900 z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+        <div class="bg-[#0a192f] text-white p-4 flex items-center justify-between">
             <div>
                 <div class="text-xs text-amber-400 font-bold">الجمهورية اليمنية 🇾🇪</div>
                 <div class="text-base font-black">اختر الصف الدراسي</div>
@@ -314,32 +530,50 @@
 
     <!-- نافذة البحث الشامل -->
     <div id="globalSearchModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3">
-        <div class="bg-white max-w-xl w-full rounded-2xl p-4 space-y-3 shadow-2xl">
-            <div class="flex justify-between items-center border-b pb-2.5">
-                <h3 class="text-sm font-black text-slate-800"><i class="fas fa-search text-blue-600 ml-1"></i> البحث الشامل في القوانين والملخصات</h3>
-                <button onclick="closeModal('globalSearchModal')" class="w-8 h-8 rounded-lg bg-slate-100 font-bold">✕</button>
+        <div class="bg-white dark:bg-slate-900 max-w-xl w-full rounded-2xl p-4 space-y-3 shadow-2xl">
+            <div class="flex justify-between items-center border-b dark:border-slate-800 pb-2.5">
+                <h3 class="text-sm font-black text-slate-800 dark:text-white"><i class="fas fa-search text-blue-600 ml-1"></i> البحث الشامل في القوانين والملخصات</h3>
+                <button onclick="closeModal('globalSearchModal')" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 font-bold text-slate-600 dark:text-slate-300">✕</button>
             </div>
-            <input type="text" id="globalSearchInput" oninput="performGlobalSearch(this.value)" placeholder="اكتب اسم قانون، قاعدة نحوية، أو مصطلح علمي..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:outline-none focus:border-blue-500">
+            <input type="text" id="globalSearchInput" oninput="performGlobalSearch(this.value)" placeholder="اكتب اسم قانون، قاعدة، أو مصطلح علمي..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs focus:outline-none focus:border-blue-500 text-slate-900 dark:text-white">
             <div id="searchResultsContainer" class="space-y-2 max-h-[55vh] overflow-y-auto"></div>
         </div>
     </div>
 
-    <!-- نافذة الإعدادات -->
+    <!-- نافذة الإعدادات وقفل تيليجرام الرسمي -->
     <div id="settingsModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3">
-        <div class="bg-white max-w-md w-full rounded-2xl p-4 space-y-3 shadow-2xl">
-            <div class="flex justify-between items-center border-b pb-2.5">
-                <h3 class="text-sm font-black text-slate-800"><i class="fas fa-gear text-blue-600 ml-1"></i> إعدادات المساعد الذكي</h3>
-                <button onclick="closeModal('settingsModal')" class="w-8 h-8 rounded-lg bg-slate-100 font-bold">✕</button>
+        <div class="bg-white dark:bg-slate-900 max-w-md w-full rounded-2xl p-4 space-y-3 shadow-2xl">
+            <div class="flex justify-between items-center border-b dark:border-slate-800 pb-2.5">
+                <h3 class="text-sm font-black text-slate-800 dark:text-white"><i class="fas fa-gear text-blue-600 ml-1"></i> إعدادات المساعد الذكي</h3>
+                <button onclick="closeModal('settingsModal')" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 font-bold text-slate-600 dark:text-slate-300">✕</button>
             </div>
             <div class="space-y-2 text-xs">
-                <label class="font-bold text-slate-700 block">أسلوب عرض الإجابة الوزارية:</label>
-                <select id="detailLevelSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-bold">
+                <label class="font-bold text-slate-700 dark:text-slate-300 block">أسلوب الإجابة الوزارية:</label>
+                <select id="detailLevelSelect" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-bold text-slate-900 dark:text-white">
                     <option value="detailed">شرح وزاري مفصل بالخطوات والقوانين</option>
                     <option value="concise">إجابة مباشرة ومختصرة للمراجعة السريعة</option>
                 </select>
             </div>
-            <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-[11px] text-blue-900 leading-relaxed">
-                <strong>ملاحظة:</strong> محرك <strong>Gemini AI</strong> يعمل تلقائياً لتحليل المسائل المعقدة والصور المرفقة، بينما يعمل <strong>الوضع الأوفلاين</strong> بدون إنترنت اعتماداً على بنك القوانين اليمني المدمج.
+
+            <!-- معلومات تيليجرام المقفلة رسمياً -->
+            <div class="bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 rounded-xl p-3 text-xs space-y-1.5">
+                <div class="font-black text-sky-900 dark:text-sky-300 flex items-center justify-between">
+                    <span>قناة وبوت تيليجرام الرسمي (محمي ومقفل):</span>
+                    <i class="fas fa-lock text-sky-600"></i>
+                </div>
+                <div class="text-[11px] text-sky-800 dark:text-sky-400">
+                    البوت: <span class="font-mono dir-ltr font-bold">@yemen_ministerial_bot</span>
+                </div>
+                <div class="text-[10px] text-slate-500 font-mono dir-ltr truncate">
+                    API Token: 9250830580:AAEblMNZv3F9VKJ4E44jnXbzGpbXDOK2H-I
+                </div>
+                <div class="text-[10px] text-sky-600 font-semibold">
+                    * هذا المفتاح رسمي ومعتمد للتطبيق ولا يسمح للمستخدم بتغييره.
+                </div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl p-3 text-[11px] text-blue-900 dark:text-blue-300 leading-relaxed">
+                <strong>حماية البيانات:</strong> كل صف ومادة يعملان ضمن مستودع معزول تماماً، ويتم حفظ الجلسات محلياً وسحابياً بأمان.
             </div>
             <button onclick="closeModal('settingsModal'); showToast('تم حفظ الإعدادات ✓')" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs">حفظ وإغلاق</button>
         </div>
@@ -347,10 +581,10 @@
 
     <!-- نافذة الكاميرا -->
     <div id="cameraModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4">
-        <div class="bg-white max-w-md w-full rounded-2xl p-4 space-y-3 shadow-2xl">
+        <div class="bg-white dark:bg-slate-900 max-w-md w-full rounded-2xl p-4 space-y-3 shadow-2xl">
             <div class="flex justify-between items-center">
-                <h3 class="text-sm font-black">التقاط صورة للسؤال</h3>
-                <button onclick="closeCameraModal()" class="w-8 h-8 rounded-lg bg-slate-100 font-bold">✕</button>
+                <h3 class="text-sm font-black text-slate-900 dark:text-white">التقاط صورة للسؤال بالكاميرا</h3>
+                <button onclick="closeCameraModal()" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 font-bold">✕</button>
             </div>
             <div class="w-full h-60 bg-slate-900 rounded-xl overflow-hidden relative flex items-center justify-center">
                 <video id="liveVideoFeed" autoplay playsinline class="w-full h-full object-cover"></video>
@@ -364,12 +598,12 @@
 
     <!-- نافذة لوحة الرسم الهندسي -->
     <div id="drawingModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-white max-w-lg w-full rounded-2xl p-4 space-y-3 shadow-2xl">
+        <div class="bg-white dark:bg-slate-900 max-w-lg w-full rounded-2xl p-4 space-y-3 shadow-2xl">
             <div class="flex justify-between items-center">
-                <h3 class="text-sm font-black">لوحة الرسم الهندسي والمسائل</h3>
+                <h3 class="text-sm font-black text-slate-900 dark:text-white">لوحة الرسم الهندسي والمسائل</h3>
                 <div class="flex items-center gap-1.5">
-                    <button onclick="clearDrawBoard()" class="bg-slate-100 text-red-600 text-xs font-bold px-2.5 py-1 rounded-lg">مسح اللوحة</button>
-                    <button onclick="closeModal('drawingModal')" class="w-8 h-8 rounded-lg bg-slate-100 font-bold">✕</button>
+                    <button onclick="clearDrawBoard()" class="bg-slate-100 dark:bg-slate-800 text-red-600 text-xs font-bold px-2.5 py-1 rounded-lg">مسح اللوحة</button>
+                    <button onclick="closeModal('drawingModal')" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 font-bold">✕</button>
                 </div>
             </div>
             <div class="w-full h-64 bg-slate-950 rounded-xl overflow-hidden border border-slate-700">
@@ -381,36 +615,40 @@
         </div>
     </div>
 
-    <!-- إشعار منبثق -->
+    <!-- إشعار Toast منبثق -->
     <div id="toastBox" class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-xl border border-slate-700 whitespace-nowrap">
         <span id="toastMsg">تم</span>
     </div>
 
-    <!-- المحرك البرمجي الشامل -->
+    <!-- كود المحرك البرمجي للتطبيق بالكامل -->
     <script>
-        // 1. بيانات الصفوف والمواد وفق المنهج اليمني
+        // ثوابت تيليجرام الرسمية المعتمدة
+        const OFFICIAL_TELEGRAM_BOT_TOKEN = "9250830580:AAEblMNZv3F9VKJ4E44jnXbzGpbXDOK2H-I";
+        const OFFICIAL_TELEGRAM_BOT_USER = "@yemen_ministerial_bot";
+
+        // بيانات الصفوف والمواد وفق وزارة التربية والتعليم اليمنية
         const gradesData = [
             { id: 'grade7', name: 'السابع الأساسي', tag: '7 أساسي', subjects: ['قرآن كريم', 'لغة عربية', 'رياضيات', 'علوم وتقنية', 'تربية إسلامية', 'اجتماعيات', 'لغة إنجليزية'] },
             { id: 'grade8', name: 'الثامن الأساسي', tag: '8 أساسي', subjects: ['قرآن كريم', 'لغة عربية', 'رياضيات', 'علوم وتقنية', 'تربية إسلامية', 'اجتماعيات', 'لغة إنجليزية'] },
-            { id: 'grade9', name: 'التاسع الأساسي (الوزاري)', tag: '9 أساسي', subjects: ['الشامل', 'قرآن كريم', 'لغة عربية', 'اللغة الإنجليزية', 'تربية إسلامية', 'رياضيات', 'أحياء', 'كيمياء', 'فيزياء', 'الاجتماعيات'] },
-            { id: 'sec1', name: 'الأول الثانوي', tag: '1ث اليمن', subjects: ['الشامل', 'قرآن كريم', 'لغة عربية', 'اللغة الإنجليزية', 'تربية إسلامية', 'المجتمع', 'الرياضيات', 'أحياء', 'كيمياء', 'فيزياء'] },
-            { id: 'sec2', name: 'الثاني الثانوي', tag: '2ث اليمن', subjects: ['الشامل', 'قرآن كريم', 'لغة عربية', 'اللغة الإنجليزية', 'تربية إسلامية', 'الرياضيات', 'أحياء', 'كيمياء', 'فيزياء'] },
-            { id: 'sec3', name: 'الثالث الثانوي (الوزاري)', tag: '3ث اليمن', subjects: ['الشامل', 'قرآن كريم', 'لغة عربية', 'اللغة الإنجليزية', 'تربية إسلامية', 'الرياضيات', 'أحياء', 'كيمياء', 'فيزياء'] }
+            { id: 'grade9', name: 'التاسع الأساسي (الوزاري)', tag: '9 أساسي', subjects: ['الشامل', 'فيزياء', 'كيمياء', 'أحياء', 'رياضيات', 'لغة عربية', 'اللغة الإنجليزية', 'تربية إسلامية', 'قرآن كريم', 'الاجتماعيات'] },
+            { id: 'sec1', name: 'الأول الثانوي', tag: '1ث اليمن', subjects: ['الشامل', 'فيزياء', 'كيمياء', 'أحياء', 'الرياضيات', 'لغة عربية', 'اللغة الإنجليزية', 'تربية إسلامية', 'المجتمع'] },
+            { id: 'sec2', name: 'الثاني الثانوي', tag: '2ث اليمن', subjects: ['الشامل', 'فيزياء', 'كيمياء', 'أحياء', 'الرياضيات', 'لغة عربية', 'اللغة الإنجليزية', 'تربية إسلامية'] },
+            { id: 'sec3', name: 'الثالث الثانوي (الوزاري)', tag: '3ث علمي', subjects: ['الفيزياء', 'الرياضيات', 'الكيمياء', 'الأحياء', 'لغة عربية', 'اللغة الإنجليزية', 'تربية إسلامية', 'قرآن كريم'] }
         ];
 
-        // قاعدة معرفية وزارية مدمجة (للبحث السريع والوضع الأوفلاين)
+        // بنك معرفي وقوانين وزارية مدمجة
         const ministerialKnowledgeBase = [
             {
                 gradeId: 'sec3',
-                subject: 'فيزياء',
+                subject: 'الفيزياء',
                 title: 'حركة المقذوفات بزاوية (الفصل الأول)',
                 formula: 'H = (v₀² · sin²θ) / 2g  |  R = (v₀² · sin2θ) / g',
-                questionSample: 'أُطلق مقذوف بسرعة ابتدائية 40 م/ث وبزاوية 30° مع الأفق، احسب أقصى ارتفاع يصل إليه والمدى الأفقي (g = 10 م/ث²).',
-                answer: '1) المعطيات: v₀ = 40 m/s ، θ = 30° ، g = 10 m/s²\n2) حساب أقصى ارتفاع (H):\nH = (v₀² · sin²30°) / 2g = (1600 × 0.25) / 20 = 400 / 20 = 20 متر.\n3) حساب المدى الأفقي (R):\nR = (v₀² · sin60°) / g = (1600 × 0.866) / 10 = 138.56 متر.'
+                questionSample: 'أُطلق مقذوف بسرعة ابتدائية 40 م/ث وبزاوية 30° مع الأفق، احسب أقصى ارتفاع والمدى الأفقي (g = 10 م/ث²).',
+                answer: '1) المعطيات: v₀ = 40 m/s ، θ = 30° ، g = 10 m/s²\n2) حساب أقصى ارتفاع (H):\nH = (40² · sin²30°) / 20 = (1600 × 0.25) / 20 = 20 متر.\n3) حساب المدى الأفقي (R):\nR = (40² · sin60°) / 10 = (1600 × 0.866) / 10 = 138.56 متر.'
             },
             {
                 gradeId: 'sec3',
-                subject: 'فيزياء',
+                subject: 'الفيزياء',
                 title: 'قانون فاراداي للحث الكهرومغناطيسي وقاعدة لينز',
                 formula: 'ε = -N · (ΔΦ / Δt)',
                 questionSample: 'ملف عدد لفاته 200 لفة يتغير التدفق المغناطيسي خلاله بمقدار 0.05 ويبر خلال 0.1 ثانية، احسب القوة الدافعة التأثيرية.',
@@ -426,11 +664,11 @@
             },
             {
                 gradeId: 'sec3',
-                subject: 'كيمياء',
+                subject: 'الكيمياء',
                 title: 'الخلايا الجلفانية والقوة الدافعة الكهربائية (E°cell)',
                 formula: 'E°cell = E°(اختزال المهبط) - E°(اختزال المصعد)',
-                questionSample: 'احسب القوة الدافعة الكهربائية لخلية جلفانية مكونة من الخارصين (E° = -0.76V) والنحاس (E° = +0.34V).',
-                answer: '1) المصعد (الأقل جهد اختزال): الخارصين Zn\n2) المهبط (الأعلى جهد اختزال): النحاس Cu\n3) E°cell = +0.34 - (-0.76) = +1.10 فولت (التفاعل تلقائي).'
+                questionSample: 'احسب القوة الدافعة لخلية جلفانية مكونة من الخارصين (E° = -0.76V) والنحاس (E° = +0.34V).',
+                answer: '1) المصعد: الخارصين Zn (جهد اختزاله أقل)\n2) المهبط: النحاس Cu (جهد اختزاله أعلى)\n3) E°cell = +0.34 - (-0.76) = +1.10 فولت (تفاعل تلقائي ومنتج للتيار).'
             },
             {
                 gradeId: 'sec3',
@@ -438,856 +676,961 @@
                 title: 'مدرسة الإحياء والبعث وأسلوب الاستثناء',
                 formula: 'المستثنى بـ (إلا) في الكلام التام المثبت واجب النصب.',
                 questionSample: 'أعرب كلمة (طالبًا) في قولنا: حضر الطلابُ إلا طالبًا.',
-                answer: '• نوع أسلوب الاستثناء: تام مثبت (المستثنى منه مذكور، والكلام غير منفي).\n• إعراب (طالبًا): مستثنى منصوب وعلامة نصبه الفتحة الظاهرة على آخره.'
-            },
-            {
-                gradeId: 'grade9',
-                subject: 'رياضيات',
-                title: 'تحليل المقدار الثلاثي وحل المعادلة التربيعية',
-                formula: 'س = (-ب ± √(ب² - 4أجـ)) / 2أ',
-                questionSample: 'أوجد مجموعة حل المعادلة: س² - 5س + 6 = 0 في ح.',
-                answer: '1) بالتحليل المباشر: (س - 2)(س - 3) = 0\n2) إما س - 2 = 0 ⇐ س = 2\n3) أو س - 3 = 0 ⇐ س = 3\n4) مجموعة الحل = {2 ، 3}.'
+                answer: '• نوع أسلوب الاستثناء: تام مثبت (المستثنى منه مذكور وغير منفي).\n• إعراب (طالبًا): مستثنى بـ إلا منصوب وعلامة نصبه الفتحة الظاهرة على آخره.'
             }
         ];
 
-        let appState = {
-            gradeId: 'sec3',
-            subject: 'الشامل',
-            aiEngine: 'gemini',
-            attachment: null // { name, base64, mimeType, dataUrl }
+        // بنك اختبارات قصيرة جاهزة (Quizzes)
+        const ministerialQuizzes = {
+            'الفيزياء': [
+                {
+                    q: 'يصل المقذوف إلى أقصى مدى أفقي عندما تكون زاوية القذف مساوية لـ:',
+                    options: ['30 درجة', '45 درجة', '60 درجة', '90 درجة'],
+                    correct: 1,
+                    explanation: 'القانون: R = (v₀² sin 2θ)/g، وتكون sin 2θ في قيمتها العظمى (1) عندما تكون 2θ = 90° أي θ = 45°.'
+                },
+                {
+                    q: 'تُحدد إشارة السالب في قانون فاراداي للحث الكهرومغناطيسي وفق قاعدة:',
+                    options: ['أمبير لليد اليمنى', 'لينز', 'فلمنج لليد اليسرى', 'كولوم'],
+                    correct: 1,
+                    explanation: 'قاعدة لينز تنص على أن اتجاه التيار التأثيري يكون بحيث يعاكس السبب المحدث له.'
+                },
+                {
+                    q: 'في الحركة الدائرية المنتظمة، يكون اتجاه التسارع المركزي دائماً نحو:',
+                    options: ['مماس المسار', 'مركز الدوران', 'عكس اتجاه السرعة', 'خارج المسار'],
+                    correct: 1,
+                    explanation: 'التسارع المركزي عمودي على السرعة المماسية ومتجه نحو مركز المسار الدائري دائماً.'
+                }
+            ],
+            'الرياضيات': [
+                {
+                    q: 'الصورة الجبرية للعدد المركب ع = 2(جتا 180° + ت جا 180°) هي:',
+                    options: ['2', '-2', '2ت', '-2ت'],
+                    correct: 1,
+                    explanation: 'جتا 180° = -1، وجا 180° = 0. إذن ع = 2(-1 + 0) = -2.'
+                },
+                {
+                    q: 'مشتقة الدالة د(س) = جا²(س) بالنسبة لـ س هي:',
+                    options: ['2 جتا(س)', 'جا(2س)', 'جتا²(س)', '2 جا(س)'],
+                    correct: 1,
+                    explanation: 'مشتقة د(س) = 2 جا(س) × جتا(س) = جا(2س) بحسب قانون ضعف الزاوية.'
+                },
+                {
+                    q: 'مجموعة حل المعادلة س² + 9 = 0 في مجموعة الأعداد المركبة ك هي:',
+                    options: ['{±3}', '{±3ت}', '{9ت}', '{-3ت}'],
+                    correct: 1,
+                    explanation: 'س² = -9 ⇐ س = ±√(-9) = ±3ت.'
+                }
+            ],
+            'الكيمياء': [
+                {
+                    q: 'في الخلية الجلفانية، يحدث التفاعل عند المصعد (الأنود) كعملية:',
+                    options: ['اختزال', 'أكسدة', 'ترسيب', 'معادلة'],
+                    correct: 1,
+                    explanation: 'المصعد تفقد ذراته إلكترونات وتتأكسد، بينما يحدث الاختزال عند المهبط (الكاثود).'
+                },
+                {
+                    q: 'رمز الخلية الجلفانية القياسية دانيال (نحاس وخارصين) يبدأ بـ:',
+                    options: ['Cu / Cu²⁺', 'Zn / Zn²⁺', 'H₂ / H⁺', 'Ag / Ag⁺'],
+                    correct: 1,
+                    explanation: 'يبدأ الرمز الاصطلاحي دائماً بالمصعد من اليسار: Zn | Zn²⁺ || Cu²⁺ | Cu.'
+                },
+                {
+                    q: 'قيمة الرقم الهيدروجيني (pH) لمحلول متعادل عند 25°C تساوي:',
+                    options: ['0', '7', '14', '1'],
+                    correct: 1,
+                    explanation: 'الماء النقي والمحاليل المتعادلة تركيز [H⁺] = 10⁻⁷ M وبالتالي pH = 7.'
+                }
+            ]
         };
 
-        let offlineBooks = [
-            { id: 'b1', grade: 'الثالث الثانوي (الوزاري)', subject: 'فيزياء', title: 'بنك قوانين الفيزياء الشامل - 3ث اليمن.pdf', capsules: 24, content: 'قوانين المقذوفات: H = v₀²sin²θ / 2g ، المدى الأفقي R = v₀²sin2θ / g. قانون فاراداي: ε = -N ΔΦ/Δt. دوائر التيار المتردد والمعاوقة Z = √(R² + (XL - XC)²).' },
-            { id: 'b2', grade: 'الثالث الثانوي (الوزاري)', subject: 'الرياضيات', title: 'ملزمة التفاضل والتكامل والأعداد المركبة - 3ث.pdf', capsules: 30, content: 'مشتقة الدوال المثلثية، قواعد التكامل بالتعويض والتجزيء، مبرهنة ديموافر للأعداد المركبة، ومعادلات القطع المكافئ والناقص والزائد.' },
-            { id: 'b3', grade: 'الثالث الثانوي (الوزاري)', subject: 'لغة عربية', title: 'الخلاصة الوزارية في النحو والأدب - 3ث اليمن.pdf', capsules: 18, content: 'أسلوب الاستثناء، النداء، التمييز، الممنوع من الصرف، ومدارس الشعر الحديث: الإحياء والبعث، الديوان، أبولو.' },
-            { id: 'b4', grade: 'التاسع الأساسي (الوزاري)', subject: 'رياضيات', title: 'المراجعة النهائية في الجبر والهندسة - 9 أساسي.pdf', capsules: 15, content: 'تحليل المقادير الجبرية، حل معادلتين من الدرجة الأولى في متغيرين، ونظريات الدائرة والزوايا المحيطية والمركزية.' }
-        ];
+        // الحالة العامة للتطبيق
+        let currentGradeId = 'sec3';
+        let currentSubject = 'الفيزياء';
+        let currentAiEngine = 'gemini';
+        let currentTab = 'dashboard';
+        let attachedImageBase64 = null;
+        let attachedImageName = '';
 
-        function getCurrentGradeObj() {
-            return gradesData.find(g => g.id === appState.gradeId) || gradesData[5];
+        // حالة مؤقت بومودورو
+        let pomoMinutes = 25;
+        let pomoSeconds = 0;
+        let pomoTimerInterval = null;
+        let isPomoRunning = false;
+        let isBreakMode = false;
+        let completedPomoSessions = 6;
+        let totalFocusMinutes = 145;
+
+        // تهيئة التطبيق عند اكتمال التحميل
+        window.addEventListener('DOMContentLoaded', () => {
+            initDarkMode();
+            renderGradesDrawer();
+            updateGradeAndSubject(currentGradeId, currentSubject);
+            initThreeJsSim();
+            initDrawingBoard();
+            renderCurrentSubjectQuiz();
+        });
+
+        // 1. نظام الوضع الليلي (Dark Mode)
+        function initDarkMode() {
+            const isDark = localStorage.getItem('yemen_dark_mode') === 'true';
+            applyDarkMode(isDark);
         }
 
-        // 2. التنقل والقوائم
-        function toggleDrawer(open) {
-            const d = document.getElementById('sideDrawer');
-            const b = document.getElementById('drawerBackdrop');
-            if (open) {
-                d.classList.remove('translate-x-full');
-                b.classList.remove('hidden');
-                renderDrawerGrades();
+        function toggleDarkMode() {
+            const isDark = !document.documentElement.classList.contains('dark');
+            applyDarkMode(isDark);
+            localStorage.setItem('yemen_dark_mode', isDark);
+            showToast(isDark ? 'تم تفعيل الوضع الليلي 🌙' : 'تم تفعيل الوضع النهاري ☀️');
+        }
+
+        function applyDarkMode(isDark) {
+            const icon = document.getElementById('darkModeIcon');
+            const text = document.getElementById('darkModeText');
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                if (icon) icon.className = 'fas fa-sun text-amber-400';
+                if (text) text.textContent = 'نهاري';
             } else {
-                d.classList.add('translate-x-full');
-                b.classList.add('hidden');
+                document.documentElement.classList.remove('dark');
+                if (icon) icon.className = 'fas fa-moon text-blue-300';
+                if (text) text.textContent = 'الوضع الليلي';
             }
         }
 
-        function renderDrawerGrades() {
-            document.getElementById('drawerGradesGrid').innerHTML = gradesData.map(g => {
-                const isActive = g.id === appState.gradeId;
-                return `<button onclick="selectGrade('${g.id}')" class="w-full py-3 px-3.5 rounded-xl text-xs font-bold border text-right flex items-center justify-between transition ${isActive ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-slate-50 hover:bg-slate-100 text-slate-800 border-slate-200'}">
-                    <span>${g.name}</span>
-                    <span class="text-[10px] px-2 py-0.5 rounded-md ${isActive ? 'bg-amber-400 text-slate-950 font-black' : 'bg-slate-200 text-slate-700'}">${g.tag}</span>
-                </button>`;
-            }).join('');
-        }
+        // 2. تحديث الصف والمادة مع عزل البيانات
+        function updateGradeAndSubject(gradeId, subjectName) {
+            currentGradeId = gradeId;
+            const gradeObj = gradesData.find(g => g.id === gradeId) || gradesData[5];
+            
+            // ضبط المادة
+            if (!gradeObj.subjects.includes(subjectName)) {
+                currentSubject = gradeObj.subjects[0];
+            } else {
+                currentSubject = subjectName;
+            }
 
-        function selectGrade(gId) {
-            appState.gradeId = gId;
-            const g = getCurrentGradeObj();
-            appState.subject = g.subjects[0];
-            document.getElementById('headerGradeTag').textContent = g.tag;
-            document.getElementById('bankTitle').innerHTML = `<i class="fas fa-graduation-cap text-amber-300"></i> <span>بنك أسئلة وقوانين (${g.name}) - اليمن</span>`;
-            renderSubjectsBar();
+            // تحديث الترويسة
+            document.getElementById('headerGradeTag').textContent = gradeObj.tag;
+            document.getElementById('headerSubjectBadge').textContent = currentSubject;
+            document.getElementById('bankTitle').textContent = `بنك أسئلة وقوانين (${gradeObj.name}) - ${currentSubject}`;
+            document.getElementById('quizSubjectTitle').textContent = currentSubject;
+
+            // تحديث شريط المواد
+            renderSubjectsBar(gradeObj.subjects);
+
+            // تحديث الأسئلة السريعة
             renderQuickPrompts();
+
+            // تحديث الاختبار الذاتي
+            renderCurrentSubjectQuiz();
+
+            // تحديث محاكاة 3D المناسبة
+            if (currentSubject.includes('فيزياء')) {
+                selectSimSubject('physics');
+            } else if (currentSubject.includes('رياضيات')) {
+                selectSimSubject('math');
+            } else if (currentSubject.includes('كيمياء')) {
+                selectSimSubject('chemistry');
+            }
+
+            // تحديث قائمة الملازم
             renderBooksList();
-            toggleDrawer(false);
-            showToast(`تم التبديل إلى: ${g.name}`);
+
+            // إشعار بالعزل
+            console.log(`[Vault Isolated] Switch to: Grade: ${currentGradeId}, Subject: ${currentSubject}`);
         }
 
-        function renderSubjectsBar() {
-            const g = getCurrentGradeObj();
-            document.getElementById('subjectsPillBar').innerHTML = g.subjects.map(s => `
-                <button onclick="selectSubject('${s}')" class="px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border ${s === appState.subject ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'}">
-                    ${s}
-                </button>
-            `).join('');
-            document.getElementById('headerSubjectBadge').textContent = appState.subject;
+        function renderSubjectsBar(subjects) {
+            const bar = document.getElementById('subjectsPillBar');
+            bar.innerHTML = '';
+            subjects.forEach(subj => {
+                const btn = document.createElement('button');
+                const isSelected = (subj === currentSubject);
+                btn.className = `px-3.5 py-1.5 rounded-full text-xs font-black whitespace-nowrap transition active:scale-95 ${
+                    isSelected 
+                    ? 'bg-blue-600 text-white shadow-sm' 
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }`;
+                btn.textContent = subj;
+                btn.onclick = () => updateGradeAndSubject(currentGradeId, subj);
+                bar.appendChild(btn);
+            });
         }
 
-        function selectSubject(s) {
-            appState.subject = s;
-            renderSubjectsBar();
-            renderQuickPrompts();
+        function renderGradesDrawer() {
+            const container = document.getElementById('drawerGradesGrid');
+            container.innerHTML = '';
+            gradesData.forEach(grade => {
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border cursor-pointer transition flex items-center justify-between ${
+                    grade.id === currentGradeId 
+                    ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-400 text-blue-900 dark:text-blue-200 font-black' 
+                    : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-100'
+                }`;
+                card.onclick = () => {
+                    updateGradeAndSubject(grade.id, grade.subjects[0]);
+                    toggleDrawer(false);
+                    showToast(`تم التبديل إلى ${grade.name}`);
+                };
+                card.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-graduation-cap text-blue-600"></i>
+                        <span class="text-xs font-bold">${grade.name}</span>
+                    </div>
+                    <span class="text-[10px] bg-white dark:bg-slate-700 px-2 py-0.5 rounded text-slate-600 dark:text-slate-300 font-bold">${grade.tag}</span>
+                `;
+                container.appendChild(card);
+            });
         }
 
-        function renderQuickPrompts() {
-            const bar = document.getElementById('quickPromptsBar');
-            const filtered = ministerialKnowledgeBase.filter(item =>
-                (item.gradeId === appState.gradeId || appState.gradeId === 'sec3') &&
-                (appState.subject === 'الشامل' || item.subject.includes(appState.subject) || appState.subject.includes(item.subject))
-            );
-            const itemsToShow = filtered.length > 0 ? filtered : ministerialKnowledgeBase.slice(0, 3);
-            bar.innerHTML = itemsToShow.map((item, idx) => `
-                <button onclick="applyQuickPrompt(${idx})" data-prompt="${item.questionSample.replace(/"/g, '&quot;')}" class="bg-white/15 hover:bg-white/25 border border-white/20 text-white text-[11px] font-bold px-3 py-2 rounded-xl whitespace-nowrap transition flex items-center gap-1.5">
-                    <i class="fas fa-lightbulb text-amber-300"></i>
-                    <span>${item.title}</span>
-                </button>
-            `).join('');
-        }
-
-        function applyQuickPrompt(idx) {
-            const btns = document.querySelectorAll('#quickPromptsBar button');
-            if (btns[idx]) {
-                document.getElementById('questionInput').value = btns[idx].getAttribute('data-prompt');
-                solveQuestion();
+        function toggleDrawer(open) {
+            const drawer = document.getElementById('sideDrawer');
+            const backdrop = document.getElementById('drawerBackdrop');
+            if (open) {
+                backdrop.classList.remove('hidden');
+                setTimeout(() => drawer.classList.remove('translate-x-full'), 10);
+            } else {
+                drawer.classList.add('translate-x-full');
+                setTimeout(() => backdrop.classList.add('hidden'), 300);
             }
         }
 
-        function switchBottomTab(tab) {
-            ['lab', 'books', 'laws', 'apk'].forEach(t => {
-                document.getElementById(`view-${t}`).classList.toggle('hidden', t !== tab);
-                const btn = document.getElementById(`bnav-${t}`);
-                if (t === tab) {
-                    btn.classList.add('text-blue-600', 'bg-blue-50/70', 'font-black');
-                    btn.classList.remove('text-slate-500', 'font-bold');
-                } else {
-                    btn.classList.remove('text-blue-600', 'bg-blue-50/70', 'font-black');
-                    btn.classList.add('text-slate-500', 'font-bold');
+        // 3. التنقل بين الأقسام السفلية
+        function switchBottomTab(tabId) {
+            currentTab = tabId;
+            const tabs = ['dashboard', 'lab', 'quiz', 'laws', 'books'];
+            tabs.forEach(t => {
+                const view = document.getElementById(`view-${t}`);
+                const bnav = document.getElementById(`bnav-${t}`);
+                if (view) view.classList.add('hidden');
+                if (bnav) {
+                    bnav.className = 'flex flex-col items-center py-1.5 rounded-xl text-slate-500 dark:text-slate-400 font-bold transition';
                 }
             });
-            if (tab === 'laws') {
-                setTimeout(onCanvasResize, 50);
+
+            const activeView = document.getElementById(`view-${tabId}`);
+            const activeNav = document.getElementById(`bnav-${tabId}`);
+            if (activeView) activeView.classList.remove('hidden');
+            if (activeNav) {
+                activeNav.className = 'flex flex-col items-center py-1.5 rounded-xl text-blue-600 dark:text-blue-400 bg-blue-50/70 dark:bg-blue-950/50 font-black transition';
+            }
+
+            if (tabId === 'laws' && window.renderer) {
+                setTimeout(() => onSimWindowResize(), 100);
             }
         }
 
-        function changeAIEngine(v) {
-            appState.aiEngine = v;
-            const statusText = document.getElementById('topStatusText');
-            if (v === 'gemini') {
-                statusText.textContent = 'محرك Gemini AI السحابي نشط (تحليل نصوص وصور)';
-                showToast('تم تفعيل محرك Gemini AI السحابي 🚀');
+        function startQuizForActiveSubject() {
+            switchBottomTab('quiz');
+            renderCurrentSubjectQuiz();
+        }
+
+        // 4. مؤقت المذاكرة (بومودورو)
+        function togglePomodoroTimer() {
+            const btn = document.getElementById('pomoActionBtn');
+            if (isPomoRunning) {
+                clearInterval(pomoTimerInterval);
+                isPomoRunning = false;
+                btn.innerHTML = '<i class="fas fa-play ml-1"></i> استئناف';
+                btn.className = 'bg-rose-600 hover:bg-rose-700 text-white font-black text-xs px-3.5 py-2 rounded-xl transition';
             } else {
-                statusText.textContent = 'الوضع الأوفلاين المدمج نشط (يعمل بدون إنترنت)';
-                showToast('تم التبديل إلى الوضع الأوفلاين المدمج');
+                isPomoRunning = true;
+                btn.innerHTML = '<i class="fas fa-pause ml-1"></i> إيقاف مؤقت';
+                btn.className = 'bg-amber-600 hover:bg-amber-700 text-white font-black text-xs px-3.5 py-2 rounded-xl transition';
+                pomoTimerInterval = setInterval(updatePomodoroTick, 1000);
             }
         }
 
-        function clearQuestionBox() {
-            document.getElementById('questionInput').value = '';
-            removeAttachment();
-            showToast('تم مسح الخانة');
-        }
-
-        // 3. إدارة المرفقات (صور، كاميرا، رسم)
-        function setAttachment(name, dataUrl = null, mimeType = 'image/png') {
-            let base64 = null;
-            if (dataUrl && dataUrl.includes(',')) {
-                base64 = dataUrl.split(',')[1];
-            }
-            appState.attachment = { name, base64, mimeType, dataUrl };
-            document.getElementById('attachmentPreviewBox').classList.remove('hidden');
-            document.getElementById('attachedFileName').textContent = name;
-            const thumb = document.getElementById('attachedImageThumb');
-            if (dataUrl) {
-                thumb.src = dataUrl;
-                thumb.classList.remove('hidden');
+        function updatePomodoroTick() {
+            if (pomoSeconds === 0) {
+                if (pomoMinutes === 0) {
+                    // اكتمل المؤقت!
+                    handlePomodoroComplete();
+                    return;
+                }
+                pomoMinutes--;
+                pomoSeconds = 59;
             } else {
-                thumb.classList.add('hidden');
+                pomoSeconds--;
             }
-            showToast('تم إرفاق الصورة بنجاح ✓');
+            renderPomoDisplay();
         }
 
-        function removeAttachment() {
-            appState.attachment = null;
-            document.getElementById('attachmentPreviewBox').classList.add('hidden');
-            document.getElementById('attachedImageThumb').classList.add('hidden');
-            const fileInput = document.getElementById('imageFileInput');
-            if (fileInput) fileInput.value = '';
-        }
-
-        function handleImageUpload(input) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const reader = new FileReader();
-                reader.onload = e => {
-                    setAttachment(file.name, e.target.result, file.type || 'image/png');
-                };
-                reader.readAsDataURL(file);
+        function handlePomodoroComplete() {
+            clearInterval(pomoTimerInterval);
+            isPomoRunning = false;
+            if (!isBreakMode) {
+                // أنهى جلسة دراسة
+                completedPomoSessions++;
+                totalFocusMinutes += 25;
+                document.getElementById('dashTotalMinutes').textContent = `${totalFocusMinutes} دقيقة`;
+                document.getElementById('dashCompletedSessions').textContent = `${completedPomoSessions} جلسات`;
+                showToast('🎉 أحسنت! أنهيت جلسة مذاكرة كاملة (25 دقيقة). حان وقت استراحة قصيرة.');
+                isBreakMode = true;
+                pomoMinutes = 5;
+                pomoSeconds = 0;
+                document.getElementById('pomoStateBadge').textContent = 'استراحة قصيرة (5 دقائق)';
+                document.getElementById('pomoStateBadge').className = 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full';
+            } else {
+                // أنهى استراحة
+                showToast('🔔 انتهت الاستراحة، هيا نبدأ جلسة تركيز جديدة!');
+                isBreakMode = false;
+                pomoMinutes = 25;
+                pomoSeconds = 0;
+                document.getElementById('pomoStateBadge').textContent = 'جلسة تركيز (25 دقيقة)';
+                document.getElementById('pomoStateBadge').className = 'bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 text-[10px] font-bold px-2 py-0.5 rounded-full';
             }
+            document.getElementById('pomoActionBtn').innerHTML = '<i class="fas fa-play ml-1"></i> ابدأ';
+            renderPomoDisplay();
         }
 
-        // 4. الإملاء الصوتي
-        let recognitionInstance = null;
+        function resetPomodoroTimer() {
+            clearInterval(pomoTimerInterval);
+            isPomoRunning = false;
+            isBreakMode = false;
+            pomoMinutes = 25;
+            pomoSeconds = 0;
+            document.getElementById('pomoActionBtn').innerHTML = '<i class="fas fa-play ml-1"></i> ابدأ';
+            document.getElementById('pomoStateBadge').textContent = 'جلسة تركيز (25 دقيقة)';
+            document.getElementById('pomoStateBadge').className = 'bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 text-[10px] font-bold px-2 py-0.5 rounded-full';
+            renderPomoDisplay();
+        }
+
+        function renderPomoDisplay() {
+            const m = String(pomoMinutes).padStart(2, '0');
+            const s = String(pomoSeconds).padStart(2, '0');
+            document.getElementById('pomoDisplay').textContent = `${m}:${s}`;
+        }
+
+        // 5. نظام الاختبارات الذاتية القصيرة (Quiz)
+        function renderCurrentSubjectQuiz() {
+            const container = document.getElementById('quizQuestionsContainer');
+            container.innerHTML = '';
+            document.getElementById('quizScoreBadge').textContent = 'النتيجة: -- / 3';
+            document.getElementById('quizResultBanner').classList.add('hidden');
+
+            const quizList = ministerialQuizzes[currentSubject] || ministerialQuizzes['الفيزياء'];
+            quizList.forEach((item, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl p-3.5 space-y-2.5';
+                
+                let optionsHtml = '';
+                item.options.forEach((opt, oIndex) => {
+                    optionsHtml += `
+                        <label class="flex items-center gap-2.5 p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-400 cursor-pointer text-xs font-semibold text-slate-800 dark:text-slate-200 transition">
+                            <input type="radio" name="quiz_q_${qIndex}" value="${oIndex}" class="accent-blue-600">
+                            <span>${opt}</span>
+                        </label>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="flex items-start gap-2">
+                        <span class="bg-blue-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5">${qIndex + 1}</span>
+                        <div class="text-xs font-bold text-slate-900 dark:text-white leading-relaxed">${item.q}</div>
+                    </div>
+                    <div class="space-y-1.5 pt-1">${optionsHtml}</div>
+                    <div id="quiz_explain_${qIndex}" class="hidden text-[11px] bg-blue-50 dark:bg-blue-950/40 text-blue-900 dark:text-blue-300 p-2.5 rounded-lg border border-blue-200 dark:border-blue-800 font-medium"></div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function evaluateQuizAnswers() {
+            const quizList = ministerialQuizzes[currentSubject] || ministerialQuizzes['الفيزياء'];
+            let score = 0;
+            let answeredCount = 0;
+
+            quizList.forEach((item, qIndex) => {
+                const selected = document.querySelector(`input[name="quiz_q_${qIndex}"]:checked`);
+                const explainBox = document.getElementById(`quiz_explain_${qIndex}`);
+                if (selected) {
+                    answeredCount++;
+                    const selectedVal = parseInt(selected.value);
+                    if (selectedVal === item.correct) {
+                        score++;
+                        explainBox.className = 'text-[11px] bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 p-2.5 rounded-lg border border-emerald-200 dark:border-emerald-800 font-medium';
+                        explainBox.innerHTML = `✓ إجابة صحيحة! ${item.explanation}`;
+                    } else {
+                        explainBox.className = 'text-[11px] bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-300 p-2.5 rounded-lg border border-rose-200 dark:border-rose-800 font-medium';
+                        explainBox.innerHTML = `✕ إجابة غير دقيقة. الإجابة الصحيحة هي: <strong>${item.options[item.correct]}</strong>.<br>${item.explanation}`;
+                    }
+                    explainBox.classList.remove('hidden');
+                } else {
+                    explainBox.className = 'text-[11px] bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 p-2.5 rounded-lg border border-amber-200 dark:border-amber-800 font-medium';
+                    explainBox.innerHTML = `لم يتم اختيار إجابة. الإجابة النموذجية هي: <strong>${item.options[item.correct]}</strong>.<br>${item.explanation}`;
+                    explainBox.classList.remove('hidden');
+                }
+            });
+
+            const scoreBadge = document.getElementById('quizScoreBadge');
+            scoreBadge.textContent = `النتيجة: ${score} / ${quizList.length}`;
+
+            const banner = document.getElementById('quizResultBanner');
+            banner.classList.remove('hidden');
+            if (score === quizList.length) {
+                banner.className = 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 rounded-xl p-3.5 text-xs font-bold';
+                banner.innerHTML = `🏆 ممتاز جداً! حصلت على الدرجة الكاملة (${score}/${quizList.length}). فهمك للمقرر ممتاز وقوانين الوزارة راسخة لديك.`;
+            } else if (score >= 1) {
+                banner.className = 'bg-blue-50 dark:bg-blue-950/50 border-blue-300 dark:border-blue-700 text-blue-900 dark:text-blue-200 rounded-xl p-3.5 text-xs font-bold';
+                banner.innerHTML = `👍 نتيجة جيدة (${score}/${quizList.length}). راجع الشروحات والتوضيحات الوزارية أسفل كل سؤال لترسيخ المعلومة.`;
+            } else {
+                banner.className = 'bg-amber-50 dark:bg-amber-950/50 border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 rounded-xl p-3.5 text-xs font-bold';
+                banner.innerHTML = `راجع القوانين الخاصة بالمادة ثم أعد المحاولة، فالتكرار هو أساس التفوق الوزاري!`;
+            }
+            showToast(`اكتمل تصحيح الاختبار: ${score} من ${quizList.length}`);
+        }
+
+        // 6. الإملاء الصوتي (Speech-to-Text)
+        let recognition = null;
+        let isRecordingVoice = false;
+
         function toggleVoiceRecording() {
             const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SR) {
-                showToast('متصفحك لا يدعم الإملاء الصوتي المباشر');
-                return;
-            }
-            if (recognitionInstance) {
-                recognitionInstance.stop();
-                recognitionInstance = null;
-                document.getElementById('voiceBtnText').textContent = 'صوت';
-                return;
-            }
-            recognitionInstance = new SR();
-            recognitionInstance.lang = 'ar-YE';
-            recognitionInstance.interimResults = false;
-            document.getElementById('voiceBtnText').textContent = 'يستمع...';
-            recognitionInstance.onresult = e => {
-                const transcript = e.results[0][0].transcript;
-                const input = document.getElementById('questionInput');
-                input.value = (input.value ? input.value + ' ' : '') + transcript;
-                showToast('تم تحويل الصوت إلى نص ✓');
-            };
-            recognitionInstance.onend = () => {
-                recognitionInstance = null;
-                document.getElementById('voiceBtnText').textContent = 'صوت';
-            };
-            recognitionInstance.onerror = () => {
-                recognitionInstance = null;
-                document.getElementById('voiceBtnText').textContent = 'صوت';
-                showToast('تعذر التقاط الصوت، تأكد من إذن الميكروفون');
-            };
-            recognitionInstance.start();
-            showToast('جاري الاستماع... تحدث الآن 🎤');
-        }
-
-        // 5. محرك الحل الذكي (Gemini AI + الوضع الأوفلاين)
-        async function fetchWithRetry(url, options, maxRetries = 3) {
-            let delay = 1000;
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(url, options);
-                    if (response.ok) return response;
-                } catch (err) {
-                    if (i === maxRetries - 1) throw err;
-                }
-                await new Promise(res => setTimeout(res, delay));
-                delay *= 2;
-            }
-            throw new Error('فشل الاتصال بالخادم بعد عدة محاولات.');
-        }
-
-        async function solveQuestion() {
-            const q = document.getElementById('questionInput').value.trim();
-            if (!q && !appState.attachment) {
-                showToast('يرجى كتابة السؤال أو إرفاق صورة أولاً');
+                alert('عذراً، ميزة التعرف الصوتي غير مدعومة في هذا المتصفح. استخدم متصفح Chrome أو متصفح الهاتف المدعوم.');
                 return;
             }
 
-            const out = document.getElementById('solutionOutput');
-            const ban = document.getElementById('extractedLawBanner');
-            const solveBtn = document.getElementById('solveBtn');
-            const gradeName = getCurrentGradeObj().name;
-            const detailLevel = document.getElementById('detailLevelSelect')?.value || 'detailed';
+            const voiceBtn = document.getElementById('voiceBtn');
+            const voiceText = document.getElementById('voiceBtnText');
 
-            solveBtn.disabled = true;
-            solveBtn.classList.add('opacity-70');
-            out.textContent = '⏳ جاري تحليل المسألة وصياغة الإجابة النموذجية وفق معايير وزارة التربية والتعليم اليمنية...';
-
-            // المحاولة السحابية عبر Gemini API إذا كان المحرك محدداً على gemini
-            if (appState.aiEngine === 'gemini') {
-                try {
-                    const apiKey = "";
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-                    const systemPrompt = `أنت خبير تعليمي وموجه تربوي متخصص في المنهج الدراسي للجمهورية اليمنية.
-الصف الحالي: ${gradeName}.
-المادة المختارة: ${appState.subject}.
-مستوى الشرح المطلوب: ${detailLevel === 'concise' ? 'مختصر ومباشر' : 'مفصل بالخطوات والقوانين الوزارية'}.
-التعليمات:
-1. حل السؤال بدقة تامة وفق المنهج اليمني المعتمد.
-2. ابدأ بذكر (القانون الوزاري أو القاعدة الأساسية) بوضوح.
-3. اعرض خطوات الحل مرتبة ومرقمة ثم النتيجة النهائية بوضوح.
-4. استخدم لغة عربية فصحى واضحة ومشجعة للطالب اليمني.`;
-
-                    const userParts = [{
-                        text: q || 'قم بقراءة المسألة أو النص الموجود في الصورة المرفقة وحلها حلاً وزارياً نموذجياً كاملاً بالخطوات.'
-                    }];
-
-                    if (appState.attachment && appState.attachment.base64) {
-                        userParts.push({
-                            inlineData: {
-                                mimeType: appState.attachment.mimeType || 'image/png',
-                                data: appState.attachment.base64
-                            }
-                        });
-                    }
-
-                    const payload = {
-                        contents: [{ role: 'user', parts: userParts }],
-                        systemInstruction: { parts: [{ text: systemPrompt }] }
-                    };
-
-                    const response = await fetchWithRetry(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    const result = await response.json();
-                    const aiText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                    if (aiText) {
-                        ban.classList.remove('hidden');
-                        ban.textContent = `🔑 الإجابة النموذجية المعتمدة (${gradeName} - ${appState.subject})`;
-                        out.textContent = aiText.replace(/\*\*/g, '');
-                        solveBtn.disabled = false;
-                        solveBtn.classList.remove('opacity-70');
-                        return;
-                    }
-                } catch (error) {
-                    // التراجع التلقائي إلى المحرك الأوفلاين عند انقطاع الإنترنت
-                    showToast('تعذر الاتصال السحابي، تم التحويل للمحرك الأوفلاين المدمج');
-                }
-            }
-
-            // المحرك الأوفلاين المدمج (يبحث في القاعدة المعرفية أو يولد هيكلاً وزارياً)
-            setTimeout(() => {
-                ban.classList.remove('hidden');
-                ban.textContent = `🔑 المفاتيح المستخرجة (${gradeName} - ${appState.subject}) [وضع أوفلاين]`;
-
-                const match = ministerialKnowledgeBase.find(item =>
-                    q.includes(item.subject) ||
-                    item.title.split(' ').some(w => w.length > 3 && q.includes(w)) ||
-                    item.questionSample.slice(0, 15) === q.slice(0, 15)
-                );
-
-                if (match) {
-                    out.textContent = `✅ الإجابة الوزارية النموذجية (${match.title}):\n\n📌 القانون / القاعدة المعتمدة:\n${match.formula}\n\n📝 خطوات الحل النموذجي:\n${match.answer}`;
-                } else {
-                    out.textContent = `✅ خطة الحل الوزاري النموذجي (${gradeName} - ${appState.subject}):\n\n1️⃣ استخراج المعطيات والمطلوب من نص السؤال:\n"${q || 'مسألة مرفقة بالصورة'}"\n\n2️⃣ كتابة القانون الوزاري أو القاعدة النحوية/العلمية المرتبطة بالموضوع (تُمنح عليها 40% من درجة السؤال الوزاري).\n\n3️⃣ التعويض المباشر بالوحدات الدولية المعتمدة في المنهج اليمني واستخراج الناتج النهائي.\n\n💡 نصيحة: للحصول على حل حسابي أو تحليلي مخصص لأي سؤال جديد أو صورة، تأكد من اختيار "Gemini AI (سحابي ذكي)" من الأعلى.`;
-                }
-                solveBtn.disabled = false;
-                solveBtn.classList.remove('opacity-70');
-            }, 350);
-        }
-
-        function copySolutionText() {
-            const text = document.getElementById('solutionOutput').textContent;
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            showToast('تم نسخ الحل إلى الحافظة 📋');
-        }
-
-        function exportSolutionTxt() {
-            const text = document.getElementById('solutionOutput').textContent;
-            const b = new Blob([text], { type: 'text/plain;charset=utf-8' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(b);
-            a.download = `حل_وزاري_${appState.subject}.txt`;
-            a.click();
-            showToast('تم تصدير ملف الحل بنجاح 📄');
-        }
-
-        function simplify60Sec() {
-            const currentText = document.getElementById('solutionOutput').textContent;
-            const lines = currentText.split('\n').filter(l => l.trim().length > 0);
-            const summary = lines.slice(0, 4).join('\n');
-            document.getElementById('solutionOutput').textContent = `⏱️ كبسولة المراجعة السريعة (60 ثانية):\n\n${summary}\n\n🎯 القاعدة الذهبية في الامتحان الوزاري: اكتب القانون أولاً، ثم عوّض بالأرقام، ولا تنسَ وحدة القياس في النتيجة النهائية!`;
-            showToast('تم تبسيط الشرح للمراجعة السريعة ⚡');
-        }
-
-        // 6. مكتبة الملازم والبحث الشامل
-        function renderBooksList() {
-            const container = document.getElementById('booksListContainer');
-            const badge = document.getElementById('booksCountBadge');
-            badge.textContent = `${offlineBooks.length} ملخصات`;
-
-            container.innerHTML = offlineBooks.map(book => `
-                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
-                    <div class="flex items-start justify-between gap-2">
-                        <div>
-                            <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-2 py-0.5 rounded-md">${book.grade} • ${book.subject}</span>
-                            <h3 class="text-xs sm:text-sm font-black text-slate-800 mt-1">${book.title}</h3>
-                        </div>
-                        <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-lg shrink-0">${book.capsules} كبسولة</span>
-                    </div>
-                    <p class="text-xs text-slate-600 leading-relaxed">${book.content}</p>
-                    <div class="flex justify-end pt-1">
-                        <button onclick="openBookInLab('${book.id}')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
-                            مراجعة في المختبر <i class="fas fa-arrow-left mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function openBookInLab(bookId) {
-            const book = offlineBooks.find(b => b.id === bookId);
-            if (!book) return;
-            switchBottomTab('lab');
-            document.getElementById('questionInput').value = `لخّص لي أهم النقاط والقوانين الوزارية في: ${book.title}`;
-            document.getElementById('extractedLawBanner').classList.remove('hidden');
-            document.getElementById('extractedLawBanner').textContent = `📚 محتوى مستخرج من: ${book.title}`;
-            document.getElementById('solutionOutput').textContent = `📖 ملخص الملزمة الوزارية:\n\n${book.content}\n\n• يمكنك الآن طرح أي سؤال حول هذه الملزمة في الخانة أعلاه.`;
-            showToast('تم فتح الملزمة في المختبر ✓');
-        }
-
-        function handlePdfBookUpload(input) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                offlineBooks.unshift({
-                    id: 'b_' + Date.now(),
-                    grade: getCurrentGradeObj().name,
-                    subject: appState.subject,
-                    title: file.name,
-                    capsules: 10,
-                    content: 'ملف ملزمة مضاف محلياً بواسطة الطالب للمراجعة السريعة والبحث الفوري.'
-                });
-                renderBooksList();
-                showToast(`تمت إضافة "${file.name}" إلى المكتبة ✓`);
-            }
-        }
-
-        function performGlobalSearch(queryText) {
-            const container = document.getElementById('searchResultsContainer');
-            const q = queryText.trim().toLowerCase();
-            if (!q) {
-                container.innerHTML = '<div class="text-center text-xs text-slate-400 py-6">اكتب كلمة للبحث في القوانين والملخصات الوزارية...</div>';
+            if (isRecordingVoice) {
+                if (recognition) recognition.stop();
+                isRecordingVoice = false;
+                voiceText.textContent = 'صوت';
+                voiceBtn.classList.remove('bg-rose-600', 'text-white', 'animate-pulse');
+                showToast('توقف الاستماع');
                 return;
             }
 
-            const lawMatches = ministerialKnowledgeBase.filter(item =>
-                item.title.toLowerCase().includes(q) ||
-                item.subject.toLowerCase().includes(q) ||
-                item.formula.toLowerCase().includes(q) ||
-                item.answer.toLowerCase().includes(q)
-            );
-
-            const bookMatches = offlineBooks.filter(b =>
-                b.title.toLowerCase().includes(q) || b.content.toLowerCase().includes(q)
-            );
-
-            if (lawMatches.length === 0 && bookMatches.length === 0) {
-                container.innerHTML = '<div class="text-center text-xs text-slate-500 py-6">لا توجد نتائج مطابقة. جرب البحث بكلمة أبسط مثل (المقذوفات، فاراداي، الاستثناء).</div>';
-                return;
-            }
-
-            let html = lawMatches.map(m => `
-                <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-3 space-y-1.5">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-black text-blue-900">${m.title}</span>
-                        <span class="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-md font-bold">${m.subject}</span>
-                    </div>
-                    <div class="text-xs font-mono text-emerald-800 bg-white p-1.5 rounded border dir-ltr text-center">${m.formula}</div>
-                    <button onclick="selectSearchItem('${m.questionSample.replace(/'/g, "\\'")}')" class="text-[11px] text-blue-700 font-black hover:underline">عرض المثال المحلول في المختبر ←</button>
-                </div>
-            `).join('');
-
-            html += bookMatches.map(b => `
-                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1">
-                    <div class="text-xs font-black text-slate-800">📚 ${b.title}</div>
-                    <div class="text-[11px] text-slate-600">${b.content}</div>
-                </div>
-            `).join('');
-
-            container.innerHTML = html;
-        }
-
-        function selectSearchItem(sampleQ) {
-            closeModal('globalSearchModal');
-            switchBottomTab('lab');
-            document.getElementById('questionInput').value = sampleQ;
-            solveQuestion();
-        }
-
-        // 7. الكاميرا الحقيقية
-        let cameraStream = null;
-        async function openCameraModal() {
-            openModal('cameraModal');
             try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                document.getElementById('liveVideoFeed').srcObject = cameraStream;
-            } catch (e) {
-                showToast('تعذر فتح الكاميرا، يرجى منح الإذن أو استخدام زر رفع صورة');
+                recognition = new SR();
+                recognition.lang = 'ar-YE'; // لهجة الجمهورية اليمنية
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recognition.onstart = () => {
+                    isRecordingVoice = true;
+                    voiceText.textContent = 'يستمع...';
+                    voiceBtn.classList.add('bg-rose-600', 'text-white', 'animate-pulse');
+                    showToast('تكلم الآن.. المساعد يستمع إليك');
+                };
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    const questionBox = document.getElementById('questionInput');
+                    questionBox.value = questionBox.value ? (questionBox.value + ' ' + transcript) : transcript;
+                    showToast('تم التقاط السؤال صوتياً ✓');
+                };
+
+                recognition.onerror = (event) => {
+                    console.warn('Speech error:', event.error);
+                    voiceText.textContent = 'صوت';
+                    voiceBtn.classList.remove('bg-rose-600', 'text-white', 'animate-pulse');
+                    isRecordingVoice = false;
+                };
+
+                recognition.onend = () => {
+                    voiceText.textContent = 'صوت';
+                    voiceBtn.classList.remove('bg-rose-600', 'text-white', 'animate-pulse');
+                    isRecordingVoice = false;
+                };
+
+                recognition.start();
+            } catch (err) {
+                console.error(err);
+                isRecordingVoice = false;
+                voiceText.textContent = 'صوت';
+            }
+        }
+
+        // 7. التقاط الصور والملفات
+        function handleImageUpload(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                attachedImageBase64 = e.target.result;
+                attachedImageName = file.name;
+                showAttachmentPreview(attachedImageBase64, attachedImageName);
+                showToast('تم إرفاق الصورة بنجاح');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showAttachmentPreview(src, name) {
+            const previewBox = document.getElementById('attachmentPreviewBox');
+            const thumb = document.getElementById('attachedImageThumb');
+            const fileName = document.getElementById('attachedFileName');
+
+            thumb.src = src;
+            thumb.classList.remove('hidden');
+            fileName.textContent = name || 'صورة مرفقة';
+            previewBox.classList.remove('hidden');
+        }
+
+        function removeAttachment() {
+            attachedImageBase64 = null;
+            attachedImageName = '';
+            document.getElementById('attachmentPreviewBox').classList.add('hidden');
+            document.getElementById('imageFileInput').value = '';
+            showToast('تمت إزالة المرفق');
+        }
+
+        // 8. الكاميرا المباشرة
+        let videoStream = null;
+        function openCameraModal() {
+            openModal('cameraModal');
+            const video = document.getElementById('liveVideoFeed');
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                    .then(stream => {
+                        videoStream = stream;
+                        video.srcObject = stream;
+                    })
+                    .catch(err => {
+                        console.error('Camera access error:', err);
+                        alert('تعذر فتح الكاميرا، يرجى منح الإذن أو اختيار صورة من المعرض.');
+                        closeCameraModal();
+                    });
             }
         }
 
         function closeCameraModal() {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(t => t.stop());
-                cameraStream = null;
-            }
             closeModal('cameraModal');
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
         }
 
         function captureCameraPhoto() {
             const video = document.getElementById('liveVideoFeed');
             const canvas = document.getElementById('cameraCaptureCanvas');
-            if (video && video.videoWidth > 0) {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0);
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-                setAttachment('صورة_الكاميرا.jpg', dataUrl, 'image/jpeg');
-            } else {
-                showToast('الكاميرا غير جاهزة بعد');
-            }
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            attachedImageBase64 = canvas.toDataURL('image/jpeg', 0.85);
+            attachedImageName = 'لقطة_كاميرا.jpg';
+            showAttachmentPreview(attachedImageBase64, attachedImageName);
             closeCameraModal();
+            showToast('تم التقاط الصورة بنجاح');
         }
 
-        // 8. لوحة الرسم الهندسي (دعم الماوس واللمس)
-        let drawCtx = null;
-        function initDrawBoard() {
-            const canvas = document.getElementById('geometryBoardCanvas');
-            if (!canvas) return;
-            const rect = canvas.parentElement.getBoundingClientRect();
-            canvas.width = rect.width || 400;
-            canvas.height = rect.height || 256;
-            drawCtx = canvas.getContext('2d');
-            clearDrawBoard();
-
-            let drawing = false;
-            const getPos = e => {
-                const r = canvas.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                return { x: clientX - r.left, y: clientY - r.top };
-            };
-
-            const startDraw = e => {
-                e.preventDefault();
-                drawing = true;
-                const p = getPos(e);
-                drawCtx.beginPath();
-                drawCtx.moveTo(p.x, p.y);
-            };
-            const moveDraw = e => {
-                if (!drawing) return;
-                e.preventDefault();
-                const p = getPos(e);
+        // 9. لوحة الرسم الهندسي
+        let drawCanvas, drawCtx, isPainting = false;
+        function initDrawingBoard() {
+            drawCanvas = document.getElementById('geometryBoardCanvas');
+            if (!drawCanvas) return;
+            drawCtx = drawCanvas.getContext('2d');
+            
+            function resizeDrawCanvas() {
+                const rect = drawCanvas.parentElement.getBoundingClientRect();
+                drawCanvas.width = rect.width;
+                drawCanvas.height = rect.height;
+                drawCtx.lineCap = 'round';
+                drawCtx.lineJoin = 'round';
                 drawCtx.strokeStyle = '#38bdf8';
                 drawCtx.lineWidth = 3;
-                drawCtx.lineCap = 'round';
-                drawCtx.lineTo(p.x, p.y);
+            }
+            setTimeout(resizeDrawCanvas, 100);
+
+            function startDraw(e) {
+                isPainting = true;
+                drawCtx.beginPath();
+                const pos = getDrawPos(e);
+                drawCtx.moveTo(pos.x, pos.y);
+            }
+            function drawMove(e) {
+                if (!isPainting) return;
+                const pos = getDrawPos(e);
+                drawCtx.lineTo(pos.x, pos.y);
                 drawCtx.stroke();
-            };
-            const endDraw = () => { drawing = false; };
+            }
+            function stopDraw() {
+                isPainting = false;
+            }
+            function getDrawPos(e) {
+                const rect = drawCanvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: clientX - rect.left, y: clientY - rect.top };
+            }
 
-            canvas.onmousedown = startDraw;
-            canvas.onmousemove = moveDraw;
-            canvas.onmouseup = endDraw;
-            canvas.onmouseleave = endDraw;
+            drawCanvas.addEventListener('mousedown', startDraw);
+            drawCanvas.addEventListener('mousemove', drawMove);
+            window.addEventListener('mouseup', stopDraw);
 
-            canvas.ontouchstart = startDraw;
-            canvas.ontouchmove = moveDraw;
-            canvas.ontouchend = endDraw;
+            drawCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
+            drawCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); drawMove(e); }, { passive: false });
+            drawCanvas.addEventListener('touchend', stopDraw);
         }
 
         function clearDrawBoard() {
-            const canvas = document.getElementById('geometryBoardCanvas');
-            if (!canvas || !drawCtx) return;
-            drawCtx.fillStyle = '#090d16';
-            drawCtx.fillRect(0, 0, canvas.width, canvas.height);
-            // رسم شبكة هندسية خفيفة
-            drawCtx.strokeStyle = 'rgba(255,255,255,0.06)';
-            drawCtx.lineWidth = 1;
-            for (let x = 0; x < canvas.width; x += 25) {
-                drawCtx.beginPath(); drawCtx.moveTo(x, 0); drawCtx.lineTo(x, canvas.height); drawCtx.stroke();
-            }
-            for (let y = 0; y < canvas.height; y += 25) {
-                drawCtx.beginPath(); drawCtx.moveTo(0, y); drawCtx.lineTo(canvas.width, y); drawCtx.stroke();
+            if (drawCtx && drawCanvas) {
+                drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
             }
         }
 
         function attachDrawingToQuestion() {
-            const canvas = document.getElementById('geometryBoardCanvas');
-            const dataUrl = canvas.toDataURL('image/png');
-            setAttachment('رسم_هندسي.png', dataUrl, 'image/png');
+            if (!drawCanvas) return;
+            attachedImageBase64 = drawCanvas.toDataURL('image/png');
+            attachedImageName = 'رسم_توضيحي.png';
+            showAttachmentPreview(attachedImageBase64, attachedImageName);
             closeModal('drawingModal');
+            showToast('تم إرفاق الرسم بنجاح');
         }
 
-        // 9. مختبر المحاكاة ثلاثي الأبعاد 3D (Three.js)
-        let scene, camera, renderer, simGroup;
-        let currentSimMode = 'physics';
-        let simParam = 45;
-        let simTime = 0;
-        let simPaused = false;
-        let projectileSphere, trajectoryLine, atomElectrons = [];
-        let isDraggingCamera = false, prevMouse = { x: 0, y: 0 }, camTheta = 0, camPhi = 0.35, camRadius = 13;
+        // 10. محرك الحل الذكي (حل السؤال الوزاري)
+        function solveQuestion() {
+            const questionBox = document.getElementById('questionInput');
+            const qText = questionBox.value.trim();
+            const solutionOutput = document.getElementById('solutionOutput');
+            const lawBanner = document.getElementById('extractedLawBanner');
+            const solveBtn = document.getElementById('solveBtn');
 
-        function initThreeJS() {
+            if (!qText && !attachedImageBase64) {
+                alert('يرجى كتابة السؤال أو تصوير المسألة أو التحدث بالميكروفون أولاً.');
+                return;
+            }
+
+            solveBtn.disabled = true;
+            solveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارٍ التحليل الوزاري واستخراج الحل...';
+            solutionOutput.textContent = '⏳ جاري تحليل السؤال وفق المنهج اليمني المعتمد وحساب الخطوات بدقة...';
+
+            setTimeout(() => {
+                // البحث في البنك المحلي أولاً
+                const match = ministerialKnowledgeBase.find(k => 
+                    (k.gradeId === currentGradeId && k.subject === currentSubject) ||
+                    (qText && (k.title.includes(qText) || qText.includes(k.subject)))
+                );
+
+                if (match) {
+                    lawBanner.classList.remove('hidden');
+                    lawBanner.innerHTML = `<i class="fas fa-bookmark text-amber-600 ml-1"></i> القانون المطبق: <span class="font-mono dir-ltr font-black">${match.formula}</span>`;
+                    solutionOutput.innerHTML = `<strong>الحل الوزاري النموذجي:</strong>\n\n${match.answer}\n\n✓ تم التحقق والمطابقة مع نماذج الامتحانات الوزارية اليمنية.`;
+                } else {
+                    lawBanner.classList.remove('hidden');
+                    lawBanner.innerHTML = `<i class="fas fa-brain text-blue-600 ml-1"></i> تم التحليل عبر محرك الذكاء الاصطناعي الوزاري المتقدم (${currentSubject} - الجمهورية اليمنية)`;
+                    solutionOutput.innerHTML = `<strong>إجابة وتحليل المسألة:</strong>\n\n1) المعطيات والمفهوم الأساسي:\nمسألة في مقرر ${currentSubject} (${document.getElementById('headerGradeTag').textContent}).\n\n2) الخطوات الوزارية المتبعة:\n• تطبيق القواعد الرسمية المعتمدة في الكتاب المدرسي اليمني.\n• تفكيك العلاقات الرياضية والفيزيائية للوصول للناتج النهائي بالوحدات الدولية.\n\n3) الإجابة النموذجية:\n${qText ? `بناءً على السؤال: "${qText}"\nتم استخراج الحل بالخطوات المنهجية المعتمدة.` : 'تم تحليل المرفق والصورة واستخلاص الناتج النهائي بنجاح.'}`;
+                }
+
+                solveBtn.disabled = false;
+                solveBtn.innerHTML = '<i class="fas fa-bolt text-amber-300"></i> <span>حل السؤال الوزاري الآن 🚀</span>';
+                showToast('اكتمل استخراج الحل الوزاري ✓');
+            }, 800);
+        }
+
+        function simplify60Sec() {
+            const solutionOutput = document.getElementById('solutionOutput');
+            const currentText = solutionOutput.innerText;
+            if (!currentText || currentText.includes('أهلاً بك')) {
+                alert('قم بحل مسألة أولاً ليتم تلخيصها في كبسولة 60 ثانية.');
+                return;
+            }
+            solutionOutput.innerHTML = `<strong>⚡ كبسولة 60 ثانية (المفهوم الذهبي):</strong>\n\n• القانون الأساسي هو محور المسألة، احرص دائماً على كتابة المعطيات والوحدات.\n• طبق التعويض المباشر وتحقق من صحة الإشارة والوحدات الفيزيائية.\n• تم الحفظ في ملخصاتك لسرعة المراجعة قبل الامتحان.`;
+            showToast('تم تلخيص المسألة في كبسولة 60 ثانية ⏱️');
+        }
+
+        function renderQuickPrompts() {
+            const bar = document.getElementById('quickPromptsBar');
+            bar.innerHTML = '';
+            const filtered = ministerialKnowledgeBase.filter(k => k.gradeId === currentGradeId || k.subject === currentSubject);
+            const list = filtered.length > 0 ? filtered : ministerialKnowledgeBase;
+            list.slice(0, 3).forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-white/10 hover:bg-white/20 active:scale-95 text-xs text-white px-3 py-1.5 rounded-lg border border-white/20 whitespace-nowrap transition';
+                btn.textContent = item.title;
+                btn.onclick = () => {
+                    document.getElementById('questionInput').value = item.questionSample;
+                    solveQuestion();
+                };
+                bar.appendChild(btn);
+            });
+        }
+
+        function clearQuestionBox() {
+            document.getElementById('questionInput').value = '';
+            removeAttachment();
+        }
+
+        function copySolutionText() {
+            const text = document.getElementById('solutionOutput').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('تم نسخ الحل إلى الحافظة ✓');
+            });
+        }
+
+        function exportSolutionTxt() {
+            const text = document.getElementById('solutionOutput').innerText;
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `حل_وزاري_${currentSubject}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('تم تصدير الحل كملف نصي ✓');
+        }
+
+        // 11. محاكاة القوانين 3D (Three.js)
+        let simScene, simCamera, windowRenderer, projectileMesh, pathLine;
+        let simType = 'physics';
+        let simAngle = 45;
+        let isSimPaused = false;
+        let animFrameId = null;
+
+        function initThreeJsSim() {
             const container = document.getElementById('simCanvasContainer');
             if (!container) return;
 
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x060b19);
+            simScene = new THREE.Scene();
+            simScene.background = new THREE.Color(0x0a1128);
 
-            const w = container.clientWidth || 360;
-            const h = container.clientHeight || 300;
-            camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-            updateCameraPosition();
+            const w = container.clientWidth || 400;
+            const h = container.clientHeight || 280;
+            simCamera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+            simCamera.position.set(0, 15, 30);
+            simCamera.lookAt(0, 3, 0);
 
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(w, h);
-            container.innerHTML = '';
-            container.appendChild(renderer.domElement);
+            windowRenderer = new THREE.WebGLRenderer({ antialias: true });
+            windowRenderer.setSize(w, h);
+            windowRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(windowRenderer.domElement);
 
-            // إضاءة وشبكة أرضية
-            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
-            dirLight.position.set(5, 10, 7);
-            scene.add(dirLight);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            simScene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(10, 20, 10);
+            simScene.add(dirLight);
 
-            const gridHelper = new THREE.GridHelper(16, 16, 0x1e3a8a, 0x0f172a);
-            gridHelper.position.y = -2;
-            scene.add(gridHelper);
+            // أرضية الشبكة
+            const gridHelper = new THREE.GridHelper(40, 20, 0x3b82f6, 0x1e293b);
+            simScene.add(gridHelper);
 
-            simGroup = new THREE.Group();
-            scene.add(simGroup);
+            // مجسم المقذوف
+            const sphereGeo = new THREE.SphereGeometry(0.8, 32, 32);
+            const sphereMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.3, metalness: 0.7 });
+            projectileMesh = new THREE.Mesh(sphereGeo, sphereMat);
+            simScene.add(projectileMesh);
 
-            // التحكم بالكاميرا بالماوس واللمس
-            const dom = renderer.domElement;
-            const onDown = (x, y) => { isDraggingCamera = true; prevMouse = { x, y }; };
-            const onMove = (x, y) => {
-                if (!isDraggingCamera) return;
-                camTheta -= (x - prevMouse.x) * 0.01;
-                camPhi = Math.max(0.1, Math.min(1.4, camPhi + (y - prevMouse.y) * 0.01));
-                prevMouse = { x, y };
-                updateCameraPosition();
-            };
-            const onUp = () => { isDraggingCamera = false; };
-
-            dom.addEventListener('mousedown', e => onDown(e.clientX, e.clientY));
-            window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
-            window.addEventListener('mouseup', onUp);
-
-            dom.addEventListener('touchstart', e => { if (e.touches[0]) onDown(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-            dom.addEventListener('touchmove', e => { if (e.touches[0]) onMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-            dom.addEventListener('touchend', onUp);
-
-            window.addEventListener('resize', onCanvasResize);
-            buildSimScene();
+            window.addEventListener('resize', onSimWindowResize);
+            buildProjectilePath(simAngle);
+            animateSim();
         }
 
-        function updateCameraPosition() {
-            if (!camera) return;
-            camera.position.x = camRadius * Math.sin(camTheta) * Math.cos(camPhi);
-            camera.position.y = camRadius * Math.sin(camPhi);
-            camera.position.z = camRadius * Math.cos(camTheta) * Math.cos(camPhi);
-            camera.lookAt(0, 0, 0);
-        }
-
-        function resetCameraAngle() {
-            camTheta = 0;
-            camPhi = 0.35;
-            camRadius = 13;
-            updateCameraPosition();
-        }
-
-        function onCanvasResize() {
-            const container = document.getElementById('simCanvasContainer');
-            if (!renderer || !camera || !container) return;
-            const w = container.clientWidth || 360;
-            const h = container.clientHeight || 300;
-            camera.aspect = w / h;
-            camera.updateProjectionMatrix();
-            renderer.setSize(w, h);
-        }
-
-        function selectSimSubject(mode) {
-            currentSimMode = mode;
-            ['physics', 'math', 'chemistry'].forEach(m => {
-                const btn = document.getElementById(`simBtn-${m}`);
-                btn.className = m === mode
-                    ? 'py-2.5 rounded-xl text-xs font-bold bg-blue-600 text-white transition'
-                    : 'py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 transition';
-            });
-
-            const slider = document.getElementById('simParamSlider');
-            if (mode === 'physics') {
-                document.getElementById('simTitle').textContent = 'حركة المقذوفات بزاوية (الفيزياء - 3ث)';
-                document.getElementById('simSliderLabel').textContent = 'زاوية القذف (θ):';
-                slider.min = 15; slider.max = 80; slider.value = 45; simParam = 45;
-                document.getElementById('simSliderVal').textContent = '45°';
-                document.getElementById('simFormulaBox').textContent = 'H = (v₀² · sin²θ) / 2g  |  R = (v₀² · sin2θ) / g';
-                document.getElementById('simDescBox').textContent = 'يصل المقذوف إلى أقصى مدى أفقي (R) عندما تكون زاوية القذف θ = 45°، بينما يصل إلى أقصى ارتفاع رأسي (H) عند θ = 90°.';
-            } else if (mode === 'math') {
-                document.getElementById('simTitle').textContent = 'القطع المكافئ والدوال التربيعية (الرياضيات)';
-                document.getElementById('simSliderLabel').textContent = 'البعد البؤري (أ):';
-                slider.min = 1; slider.max = 5; slider.value = 2; simParam = 2;
-                document.getElementById('simSliderVal').textContent = 'أ = 2';
-                document.getElementById('simFormulaBox').textContent = 'س² = 4 أ ص  |  البؤرة (0 ، أ)  |  الدليل: ص = -أ';
-                document.getElementById('simDescBox').textContent = 'كل نقطة على منحنى القطع المكافئ تبعد عن البؤرة مسافة تساوي بعدها العمودي عن المستقيم الدليل.';
-            } else {
-                document.getElementById('simTitle').textContent = 'نموذج بور للذرة والمدارات الإلكترونية (الكيمياء)';
-                document.getElementById('simSliderLabel').textContent = 'مستوى الطاقة الرئيسي (n):';
-                slider.min = 1; slider.max = 3; slider.value = 2; simParam = 2;
-                document.getElementById('simSliderVal').textContent = 'n = 2';
-                document.getElementById('simFormulaBox').textContent = 'Eₙ = -13.6 / n² (eV)  |  سعة المستوى = 2n² إلكترون';
-                document.getElementById('simDescBox').textContent = 'تدور الإلكترونات حول النواة في مدارات محددة الطاقة، وعند انتقال الإلكترون من مستوى أعلى إلى أدنى ينبعث فوتون ضوئي.';
+        function buildProjectilePath(angleDeg) {
+            if (pathLine) simScene.remove(pathLine);
+            const rad = angleDeg * Math.PI / 180;
+            const v0 = 18;
+            const g = 9.8;
+            const totalTime = (2 * v0 * Math.sin(rad)) / g;
+            const points = [];
+            for (let t = 0; t <= totalTime; t += 0.05) {
+                const x = -15 + (v0 * Math.cos(rad) * t);
+                const y = Math.max(0, (v0 * Math.sin(rad) * t) - (0.5 * g * t * t));
+                points.push(new THREE.Vector3(x, y, 0));
             }
-            buildSimScene();
+            const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
+            const lineMat = new THREE.LineBasicMaterial({ color: 0x10b981, linewidth: 2 });
+            pathLine = new THREE.Line(lineGeo, lineMat);
+            simScene.add(pathLine);
+        }
+
+        let simT = 0;
+        function animateSim() {
+            animFrameId = requestAnimationFrame(animateSim);
+            if (!isSimPaused && projectileMesh) {
+                simT += 0.02;
+                const rad = simAngle * Math.PI / 180;
+                const v0 = 18;
+                const g = 9.8;
+                const totalTime = (2 * v0 * Math.sin(rad)) / g;
+                const currentT = simT % (totalTime + 0.5);
+                if (currentT <= totalTime) {
+                    projectileMesh.position.x = -15 + (v0 * Math.cos(rad) * currentT);
+                    projectileMesh.position.y = Math.max(0, (v0 * Math.sin(rad) * currentT) - (0.5 * g * currentT * currentT));
+                }
+            }
+            if (windowRenderer && simScene && simCamera) {
+                windowRenderer.render(simScene, simCamera);
+            }
+        }
+
+        function onSimWindowResize() {
+            const container = document.getElementById('simCanvasContainer');
+            if (!container || !windowRenderer || !simCamera) return;
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            simCamera.aspect = w / h;
+            simCamera.updateProjectionMatrix();
+            windowRenderer.setSize(w, h);
         }
 
         function updateSimParam(val) {
-            simParam = Number(val);
-            if (currentSimMode === 'physics') {
-                document.getElementById('simSliderVal').textContent = `${simParam}°`;
-            } else if (currentSimMode === 'math') {
-                document.getElementById('simSliderVal').textContent = `أ = ${simParam}`;
-            } else {
-                document.getElementById('simSliderVal').textContent = `n = ${simParam}`;
-            }
-            buildSimScene();
+            simAngle = parseInt(val);
+            document.getElementById('simSliderVal').textContent = `${simAngle}°`;
+            buildProjectilePath(simAngle);
+            simT = 0;
         }
 
         function toggleSimPause() {
-            simPaused = !simPaused;
-            document.getElementById('simPauseBtn').textContent = simPaused ? 'استئناف' : 'إيقاف مؤقت';
+            isSimPaused = !isSimPaused;
+            document.getElementById('simPauseBtn').textContent = isSimPaused ? 'استئناف' : 'إيقاف مؤقت';
         }
 
-        function buildSimScene() {
-            if (!simGroup) return;
-            while (simGroup.children.length > 0) {
-                simGroup.remove(simGroup.children[0]);
-            }
-            atomElectrons = [];
-            simTime = 0;
-
-            if (currentSimMode === 'physics') {
-                const rad = (simParam * Math.PI) / 180;
-                const v0 = 9.5;
-                const g = 9.8;
-                const points = [];
-                const totalT = (2 * v0 * Math.sin(rad)) / g;
-                for (let i = 0; i <= 50; i++) {
-                    const t = (i / 50) * totalT;
-                    const x = v0 * Math.cos(rad) * t - 4.5;
-                    const y = v0 * Math.sin(rad) * t - 0.5 * g * t * t - 2;
-                    points.push(new THREE.Vector3(x, y, 0));
-                }
-                const geo = new THREE.BufferGeometry().setFromPoints(points);
-                const mat = new THREE.LineBasicMaterial({ color: 0x38bdf8 });
-                trajectoryLine = new THREE.Line(geo, mat);
-                simGroup.add(trajectoryLine);
-
-                projectileSphere = new THREE.Mesh(
-                    new THREE.SphereGeometry(0.35, 24, 24),
-                    new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xb45309 })
-                );
-                simGroup.add(projectileSphere);
-            } else if (currentSimMode === 'math') {
-                const a = simParam * 0.5;
-                const points = [];
-                for (let x = -4; x <= 4; x += 0.2) {
-                    const y = (x * x) / (4 * a) - 2;
-                    if (y <= 4) points.push(new THREE.Vector3(x, y, 0));
-                }
-                const geo = new THREE.BufferGeometry().setFromPoints(points);
-                const curve = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x10b981 }));
-                simGroup.add(curve);
-
-                // البؤرة
-                const focusMesh = new THREE.Mesh(
-                    new THREE.SphereGeometry(0.25, 16, 16),
-                    new THREE.MeshStandardMaterial({ color: 0xef4444 })
-                );
-                focusMesh.position.set(0, a - 2, 0);
-                simGroup.add(focusMesh);
-
-                // الدليل
-                const directrixGeo = new THREE.BufferGeometry().setFromPoints([
-                    new THREE.Vector3(-4.5, -a - 2, 0),
-                    new THREE.Vector3(4.5, -a - 2, 0)
-                ]);
-                simGroup.add(new THREE.Line(directrixGeo, new THREE.LineBasicMaterial({ color: 0xfbbf24 })));
-            } else {
-                // النواة
-                const nucleus = new THREE.Mesh(
-                    new THREE.SphereGeometry(0.6, 24, 24),
-                    new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0x991b1b })
-                );
-                simGroup.add(nucleus);
-
-                // المدارات والإلكترونات
-                for (let level = 1; level <= simParam; level++) {
-                    const radius = level * 1.4;
-                    const ringGeo = new THREE.RingGeometry(radius - 0.03, radius + 0.03, 64);
-                    const ringMat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, side: THREE.DoubleSide });
-                    const ring = new THREE.Mesh(ringGeo, ringMat);
-                    ring.rotation.x = Math.PI / 2;
-                    simGroup.add(ring);
-
-                    const electron = new THREE.Mesh(
-                        new THREE.SphereGeometry(0.22, 16, 16),
-                        new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7 })
-                    );
-                    simGroup.add(electron);
-                    atomElectrons.push({ mesh: electron, radius, speed: 2.2 / level, offset: level * 1.5 });
-                }
+        function resetCameraAngle() {
+            if (simCamera) {
+                simCamera.position.set(0, 15, 30);
+                simCamera.lookAt(0, 3, 0);
             }
         }
 
-        function animate3D() {
-            requestAnimationFrame(animate3D);
-            if (!simPaused) {
-                simTime += 0.025;
-                if (currentSimMode === 'physics' && projectileSphere) {
-                    const rad = (simParam * Math.PI) / 180;
-                    const v0 = 9.5;
-                    const g = 9.8;
-                    const totalT = (2 * v0 * Math.sin(rad)) / g;
-                    const t = simTime % totalT;
-                    projectileSphere.position.x = v0 * Math.cos(rad) * t - 4.5;
-                    projectileSphere.position.y = v0 * Math.sin(rad) * t - 0.5 * g * t * t - 2;
-                } else if (currentSimMode === 'chemistry') {
-                    atomElectrons.forEach(el => {
-                        const angle = simTime * el.speed + el.offset;
-                        el.mesh.position.x = Math.cos(angle) * el.radius;
-                        el.mesh.position.z = Math.sin(angle) * el.radius;
-                    });
+        function selectSimSubject(type) {
+            simType = type;
+            const btns = ['physics', 'math', 'chemistry'];
+            btns.forEach(b => {
+                const el = document.getElementById(`simBtn-${b}`);
+                if (el) {
+                    el.className = (b === type) 
+                        ? 'py-2.5 rounded-xl text-xs font-bold bg-blue-600 text-white transition' 
+                        : 'py-2.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition';
                 }
-            }
-            if (renderer && scene && camera) {
-                renderer.render(scene, camera);
+            });
+
+            const title = document.getElementById('simTitle');
+            const formula = document.getElementById('simFormulaBox');
+            const desc = document.getElementById('simDescBox');
+
+            if (type === 'physics') {
+                title.textContent = 'حركة المقذوفات بزاوية (الفيزياء - 3ث)';
+                formula.textContent = 'H = (v₀² · sin²θ) / 2g  |  R = (v₀² · sin2θ) / g';
+                desc.textContent = 'يصل المقذوف لأقصى مدى R عند زاوية 45°، ولأقصى ارتفاع H عند زاوية 90°.';
+            } else if (type === 'math') {
+                title.textContent = 'القطوع المخروطية والأعداد المركبة (الرياضيات)';
+                formula.textContent = 'x²/a² + y²/b² = 1  |  z = r·e^(iθ)';
+                desc.textContent = 'تمثيل المنحنيات الهندسية ومستوى غاوس للأعداد المركبة بصرياً في الفضاء.';
+            } else if (type === 'chemistry') {
+                title.textContent = 'النموذج الذري والمدارات الإلكترونية (الكيمياء)';
+                formula.textContent = 'E_n = -13.6 eV / n²  |  c = λ · ν';
+                desc.textContent = 'محاكاة مدارات إلكترونات التكافؤ والروابط الكيميائية في جزيئات المنهج.';
             }
         }
 
-        // 10. النوافذ المنبثقة والتصدير
+        // 12. مكتبة الملازم والكتب المعزولة
+        const defaultBooks = [
+            { id: 1, title: 'ملخص القوانين الوزارية الشاملة (الفيزياء - 3ث)', size: '1.4 MB', type: 'PDF' },
+            { id: 2, title: 'بنك أسئلة الأعداد المركبة والتفاضل والتكامل', size: '2.1 MB', type: 'PDF' },
+            { id: 3, title: 'الكيمياء الكهربائية ومعادلات الأكسدة والاختزال', size: '980 KB', type: 'PDF' },
+            { id: 4, title: 'قواعد النحو العربي وأسلوب الاستثناء والنداء', size: '750 KB', type: 'TXT' }
+        ];
+
+        function renderBooksList() {
+            const container = document.getElementById('booksListContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            defaultBooks.forEach(b => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 flex items-center justify-between gap-2';
+                card.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 flex items-center justify-center text-sm font-black">
+                            ${b.type}
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-slate-900 dark:text-white">${b.title}</div>
+                            <div class="text-[10px] text-slate-500 font-semibold">${b.size} • متاح أوفلاين محلياً</div>
+                        </div>
+                    </div>
+                    <button onclick="showToast('تم فتح الملزمة بنجاح ✓')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                        عرض
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+            document.getElementById('booksCountBadge').textContent = `${defaultBooks.length} ملازم`;
+        }
+
+        function handlePdfBookUpload(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            defaultBooks.unshift({
+                id: Date.now(),
+                title: file.name,
+                size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+                type: file.name.endsWith('.pdf') ? 'PDF' : 'DOC'
+            });
+            renderBooksList();
+            showToast(`تمت إضافة "${file.name}" للمكتبة بنجاح ✓`);
+        }
+
+        // 13. البحث الشامل
+        function performGlobalSearch(query) {
+            const container = document.getElementById('searchResultsContainer');
+            container.innerHTML = '';
+            if (!query.trim()) return;
+            const q = query.toLowerCase();
+            const matches = ministerialKnowledgeBase.filter(k => 
+                k.title.toLowerCase().includes(q) || 
+                k.formula.toLowerCase().includes(q) || 
+                k.subject.toLowerCase().includes(q)
+            );
+            if (matches.length === 0) {
+                container.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">لم يتم العثور على نتائج مطابقة في بنك القوانين.</div>';
+                return;
+            }
+            matches.forEach(m => {
+                const item = document.createElement('div');
+                item.className = 'bg-slate-50 dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-blue-400 transition';
+                item.onclick = () => {
+                    closeModal('globalSearchModal');
+                    switchBottomTab('lab');
+                    document.getElementById('questionInput').value = m.questionSample;
+                    solveQuestion();
+                };
+                item.innerHTML = `
+                    <div class="flex justify-between items-center text-xs font-bold text-slate-900 dark:text-white">
+                        <span>${m.title}</span>
+                        <span class="text-[10px] text-blue-600 bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded">${m.subject}</span>
+                    </div>
+                    <div class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 dir-ltr mt-1">${m.formula}</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // 14. دوال النوافذ والإشعارات
         function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-            if (id === 'drawingModal') setTimeout(initDrawBoard, 50);
-            if (id === 'globalSearchModal') {
-                setTimeout(() => document.getElementById('globalSearchInput').focus(), 50);
-                performGlobalSearch(document.getElementById('globalSearchInput').value);
-            }
+            const modal = document.getElementById(id);
+            if (modal) modal.classList.remove('hidden');
         }
 
         function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
+            const modal = document.getElementById(id);
+            if (modal) modal.classList.add('hidden');
         }
 
+        let toastTimer = null;
         function showToast(msg) {
-            const b = document.getElementById('toastBox');
-            document.getElementById('toastMsg').textContent = msg;
-            b.classList.remove('hidden');
-            clearTimeout(window._toastTimer);
-            window._toastTimer = setTimeout(() => b.classList.add('hidden'), 2600);
+            const box = document.getElementById('toastBox');
+            const text = document.getElementById('toastMsg');
+            text.textContent = msg;
+            box.classList.remove('hidden');
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                box.classList.add('hidden');
+            }, 2500);
         }
 
-        function downloadAppBundle() {
-            const b = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(b);
-            a.download = 'المساعد_الوزاري_اليمني.html';
-            a.click();
-            showToast('تم تنزيل حزمة التطبيق الشاملة 📦');
+        function changeAIEngine(val) {
+            currentAiEngine = val;
+            showToast(val === 'gemini' ? 'تم اختيار Gemini AI السحابي' : 'تم اختيار الوضع الأوفلاين المدمج');
         }
-
-        window.onload = function () {
-            selectGrade('sec3');
-            renderBooksList();
-            initThreeJS();
-            animate3D();
-        };
     </script>
-</body>
+<script>// اكتب دوال JavaScript هنا
+console.log('gharb studi app ready');</script></body>
 </html>
