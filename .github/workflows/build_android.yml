@@ -38,27 +38,24 @@ jobs:
       - name: Generate Release Keystore
         run: |
           mkdir -p keystore
-          if [ ! -f keystore/gharb-release.p12 ]; then
-            keytool -genkeypair -v -keystore keystore/gharb-release.p12 -storetype PKCS12 -keyalg RSA -keysize 2048 -validity 10000 -alias "gharb_release_key" -storepass "gharb@2026" -keypass "gharb@2026" -dname "CN=Gharb Studi, OU=Mobile, O=GharbStudi, L=Cairo, S=EG, C=EG"
-          fi
+          keytool -genkeypair -v -keystore keystore/gharb-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias "gharb_release_key" -storepass "gharb@2026" -keypass "gharb@2026" -dname "CN=Gharb Studi, OU=Mobile, O=GharbStudi, L=Cairo, S=EG, C=EG"
 
       - name: Build Signed Release APK
         run: |
-          gradle assembleRelease --no-daemon -Pandroid.injected.signing.store.file="$PWD/keystore/gharb-release.p12" -Pandroid.injected.signing.store.password="gharb@2026" -Pandroid.injected.signing.key.alias="gharb_release_key" -Pandroid.injected.signing.key.password="gharb@2026"
+          gradle assembleRelease --no-daemon -Pandroid.injected.signing.store.file="$PWD/keystore/gharb-release.jks" -Pandroid.injected.signing.store.password="gharb@2026" -Pandroid.injected.signing.key.alias="gharb_release_key" -Pandroid.injected.signing.key.password="gharb@2026"
           mkdir -p release_out
           APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
-          cp "$APK_PATH" "release_out/com_wintool_app_v1.0.0.apk"
-          "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --verbose "release_out/com_wintool_app_v1.0.0.apk"
+          cp "$APK_PATH" "release_out/com_support773148358_googlefix_v1.0.0.apk"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: gharb-built-apk
-          path: release_out/com_wintool_app_v1.0.0.apk
+          path: release_out/com_support773148358_googlefix_v1.0.0.apk
 
       - name: Publish Direct APK Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="apk-${{ github.run_number }}"
-          gh release create "$TAG" "release_out/com_wintool_app_v1.0.0.apk" --title "Build $TAG (com_wintool_app_v1.0.0.apk)" --notes "Built automatically by gharb studi app." || true
+          gh release create "$TAG" "release_out/com_support773148358_googlefix_v1.0.0.apk" --title "Build $TAG (com_support773148358_googlefix_v1.0.0.apk)" --notes "Built automatically by gharb studi app." || true

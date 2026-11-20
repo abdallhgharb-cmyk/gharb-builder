@@ -1,1607 +1,1119 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0d1117">
-<title>WinForge Studio IDE - بيئة تطوير أدوات ويندوز المتكاملة</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0B1726">
+<title>حل مشاكل حساب جوجل - أذونات الـ 20 تطبيقاً والخطوات</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%232685D9'/%3E%3Cstop offset='100%25' stop-color='%2350D9C1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' rx='28' fill='%23102236'/%3E%3Cpath d='M60 18L94 33V58C94 81 79 101 60 107C41 101 26 81 26 58V33L60 18Z' fill='url(%23g)'/%3E%3Cpath d='M48 61L56 69L74 51' stroke='%230B1726' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
 <style>
-  :root {
-    --bg-root: #0d1117;
-    --bg-sidebar: #161b22;
-    --bg-activity: #010409;
-    --bg-editor: #0d1117;
-    --bg-panel: #161b22;
-    --bg-hover: #21262d;
-    --bg-active: #1f6feb26;
-    --border: #30363d;
-    --primary: #2f81f7;
-    --primary-hover: #58a6ff;
-    --accent: #3fb950;
-    --warning: #d29922;
-    --danger: #f85149;
-    --text-main: #e6edf3;
-    --text-muted: #8b949e;
-    --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --font-mono: 'Consolas', 'Courier New', monospace;
-  }
+* {
+  box-sizing: border-box;
+}
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-  }
+body {
+  margin: 0;
+  padding: 16px;
+  background-color: #0B1726;
+  color: #E2EDF5;
+  font-family: Tahoma, Arial, sans-serif;
+}
 
-  body {
-    background-color: var(--bg-root);
-    color: var(--text-main);
-    font-family: var(--font-sans);
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
+.container {
+  max-width: 540px;
+  margin: 12px auto;
+  background-color: #14263A;
+  padding: 22px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid #233C58;
+}
 
-  /* الشريط العلوي (Top Menu Bar) */
-  .top-bar {
-    height: 44px;
-    background: var(--bg-activity);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 12px;
-    flex-shrink: 0;
-    z-index: 50;
-  }
+.app-logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
 
-  .brand-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+.app-logo {
+  width: 74px;
+  height: 74px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(80, 217, 193, 0.25);
+  border: 2px solid #2D527A;
+}
 
-  .logo-badge {
-    background: linear-gradient(135deg, #2f81f7, #8957e5);
-    color: white;
-    font-weight: 800;
-    font-size: 13px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    letter-spacing: 0.5px;
-  }
+h1 {
+  text-align: center;
+  color: #50D9C1;
+  font-size: 23px;
+  margin: 0 0 8px 0;
+}
 
-  .project-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-main);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+.subtitle {
+  text-align: center;
+  color: #B7C8D8;
+  font-size: 13px;
+  margin: 0 0 18px 0;
+  line-height: 1.6;
+}
 
-  .top-actions {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+.progress-wrap {
+  height: 9px;
+  background-color: #30445B;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 16px 0;
+}
 
-  button {
-    border: 1px solid transparent;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: var(--font-sans);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.15s ease;
-    color: var(--text-main);
-    background: var(--bg-hover);
-  }
+#progressBar {
+  height: 100%;
+  width: 12.5%;
+  background: linear-gradient(90deg, #2685D9, #50D9C1);
+  transition: width 0.3s ease;
+}
 
-  button:hover {
-    background: #30363d;
-  }
+#stepCounter {
+  text-align: center;
+  color: #9CEBDC;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
 
-  button:active {
-    transform: scale(0.97);
-  }
+.audio-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
 
-  .btn-run {
-    background: var(--accent);
-    color: #04260f;
-    font-weight: 700;
-  }
-  .btn-run:hover { background: #56d364; }
+.audio-controls .btn {
+  margin: 0;
+}
 
-  .btn-primary {
-    background: var(--primary);
-    color: #ffffff;
-  }
-  .btn-primary:hover { background: var(--primary-hover); }
+.audio-controls .btn-sec {
+  flex: 1;
+}
 
-  .btn-danger {
-    background: rgba(248, 81, 73, 0.15);
-    color: var(--danger);
-    border-color: rgba(248, 81, 73, 0.4);
-  }
-  .btn-danger:hover {
-    background: var(--danger);
-    color: white;
-  }
+.step-panel {
+  text-align: center;
+  min-height: 320px;
+  animation: fadeIn 0.25s ease-in-out;
+}
 
-  /* مساحة العمل الرئيسية (IDE Workspace) */
-  .ide-workspace {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-    position: relative;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-  /* شريط الأيقونات الجانبي (Activity Bar - مثل VS Code) */
-  .activity-bar {
-    width: 50px;
-    background: var(--bg-activity);
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 8px 0;
-    gap: 8px;
-    flex-shrink: 0;
-    z-index: 40;
-  }
+.hidden {
+  display: none !important;
+}
 
-  .act-btn {
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    border-radius: 8px;
-    background: transparent;
-    color: var(--text-muted);
-    font-size: 18px;
-    position: relative;
-  }
+.icon-box {
+  font-size: 46px;
+  margin: 12px 0;
+}
 
-  .act-btn:hover {
-    color: var(--text-main);
-    background: var(--bg-hover);
-  }
+h2 {
+  font-size: 20px;
+  color: #50D9C1;
+  margin: 0 0 10px 0;
+}
 
-  .act-btn.active {
-    color: var(--primary-hover);
-    background: var(--bg-active);
-  }
+h3 {
+  font-size: 16px;
+  color: #9CEBDC;
+  margin: 18px 0 8px 0;
+  text-align: right;
+}
 
-  .act-btn.active::before {
-    content: '';
-    position: absolute;
-    right: -6px;
-    top: 6px;
-    bottom: 6px;
-    width: 3px;
-    background: var(--primary);
-    border-radius: 2px;
-  }
+p {
+  line-height: 1.8;
+  color: #D4E0EA;
+  font-size: 14px;
+  margin: 0 0 14px 0;
+}
 
-  /* اللوحة الجانبية القابلة للطي (Side Drawer / Panel) */
-  .side-panel {
-    width: 310px;
-    max-width: 82vw;
-    background: var(--bg-sidebar);
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transition: width 0.2s ease;
-    flex-shrink: 0;
-    z-index: 30;
-  }
+.checklist {
+  text-align: right;
+  background-color: #101F30;
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin: 14px 0;
+  border-right: 4px solid #50D9C1;
+}
 
-  .side-panel.collapsed {
-    display: none;
-  }
+.checklist li {
+  margin-bottom: 10px;
+  color: #E2EDF5;
+  font-size: 13.5px;
+  line-height: 1.65;
+}
 
-  .panel-header {
-    padding: 10px 14px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #12161c;
-  }
+.checklist li:last-child {
+  margin-bottom: 0;
+}
 
-  .panel-body {
-    padding: 12px;
-    overflow-y: auto;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+.fix-box {
+  text-align: right;
+  background-color: #0F1E2E;
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin: 14px 0;
+  border: 1px solid #28486A;
+}
 
-  .side-view {
-    display: none;
-    flex-direction: column;
-    gap: 12px;
-  }
+.fix-item {
+  padding: 11px 0;
+  border-bottom: 1px solid #1B324B;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #DCE9F3;
+}
 
-  .side-view.active {
-    display: flex;
-  }
+.fix-item:last-child {
+  border-bottom: none;
+}
 
-  /* حقول الإدخال داخل اللوحات */
-  .field-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
+.fix-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
 
-  .field-group label {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 600;
-  }
+.fix-title {
+  color: #50D9C1;
+  font-weight: bold;
+}
 
-  input[type="text"], input[type="password"], select, textarea.ui-input {
-    width: 100%;
-    background: var(--bg-root);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 10px;
-    color: var(--text-main);
-    font-size: 12px;
-    outline: none;
-  }
+.btn-copy {
+  background-color: #193A5A;
+  color: #9CEBDC;
+  border: 1px solid #2D6294;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
 
-  input:focus, select:focus, textarea.ui-input:focus {
-    border-color: var(--primary);
-  }
+.btn-copy:hover {
+  background-color: #23507A;
+}
 
-  .ltr {
-    direction: ltr;
-    text-align: left;
-    font-family: var(--font-mono);
-  }
+.btn-copy.copied {
+  background-color: #164A47;
+  border-color: #50D9C1;
+  color: #50D9C1;
+}
 
-  /* قائمة الملفات (File Explorer) */
-  .file-list {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+.support-card {
+  background-color: #0F1E2E;
+  border: 1px solid #2D527A;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 16px 0;
+  text-align: center;
+}
 
-  .file-item {
-    padding: 8px 10px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-family: var(--font-mono);
-    direction: ltr;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    color: var(--text-muted);
-  }
+.support-card-title {
+  color: #50D9C1;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
 
-  .file-item:hover {
-    background: var(--bg-hover);
-    color: var(--text-main);
-  }
+.support-number {
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: #E2EDF5;
+  background-color: #14263A;
+  border: 1px dashed #50D9C1;
+  border-radius: 10px;
+  padding: 8px 14px;
+  display: inline-block;
+  margin: 6px 0 12px 0;
+  direction: ltr;
+}
 
-  .file-item.active {
-    background: var(--bg-active);
-    color: var(--primary-hover);
-    font-weight: bold;
-  }
+.support-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
-  /* بطاقات القوالب والدوال */
-  .tool-card {
-    background: var(--bg-root);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
+.apps-progress-counter {
+  text-align: center;
+  color: #9CEBDC;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 14px 0;
+}
 
-  .tool-card:hover {
-    border-color: var(--primary);
-  }
+.apps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
 
-  .tool-card strong {
-    display: block;
-    font-size: 12px;
-    color: var(--primary-hover);
-    direction: ltr;
-    text-align: left;
-    margin-bottom: 4px;
-  }
+.app-btn {
+  width: 100%;
+  background-color: #0F1E2E;
+  color: #E2EDF5;
+  border: 2px solid #2D527A;
+  border-radius: 15px;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
 
-  .tool-card span {
-    font-size: 11px;
-    color: var(--text-muted);
-    display: block;
-    line-height: 1.4;
-  }
+.app-btn:hover {
+  background-color: #18304A;
+  border-color: #3D6FA6;
+}
 
-  /* منطقة المحرر العملاقة (Main Code Editor Area) */
-  .editor-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-editor);
-    overflow: hidden;
-    min-width: 0;
-  }
+.app-btn:active {
+  transform: scale(0.98);
+}
 
-  /* شريط تبويبات الملفات المفتوحة */
-  .editor-tabs-bar {
-    height: 36px;
-    background: var(--bg-sidebar);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 8px;
-    flex-shrink: 0;
-    overflow-x: auto;
-  }
+.app-btn.visited {
+  background-color: #13363B;
+  border-color: #50D9C1;
+  border-width: 2.5px;
+  color: #9CEBDC;
+}
 
-  .active-file-tab {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--bg-editor);
-    border-top: 2px solid var(--primary);
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    padding: 6px 14px;
-    font-size: 12px;
-    font-family: var(--font-mono);
-    color: var(--text-main);
-    height: 100%;
-  }
+.pkg-name {
+  font-family: monospace;
+  font-size: 12px;
+  color: #9CB8D4;
+  direction: ltr;
+  word-break: break-all;
+}
 
-  .editor-quick-tools {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
+.app-btn.visited .pkg-name {
+  color: #7CE5D2;
+}
 
-  .editor-quick-tools button {
-    padding: 4px 8px;
-    font-size: 11px;
-    background: transparent;
-    border: 1px solid var(--border);
-  }
+.diag-box {
+  background-color: #0F1D2D;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 12px 0;
+  text-align: right;
+  font-size: 13px;
+  border: 1px solid #284260;
+}
 
-  /* حاوية المحرر مع أرقام الأسطر */
-  .code-container {
-    flex: 1;
-    display: flex;
-    position: relative;
-    overflow: hidden;
-    background: #090c10;
-  }
+.diag-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  border-bottom: 1px solid #1C3149;
+}
 
-  .line-numbers {
-    width: 44px;
-    background: #0d1117;
-    border-right: 1px solid #21262d;
-    color: #484f58;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    line-height: 1.6;
-    padding: 14px 6px;
-    text-align: right;
-    user-select: none;
-    overflow: hidden;
-    direction: ltr;
-    flex-shrink: 0;
-  }
+.diag-item:last-child {
+  border-bottom: none;
+}
 
-  #codeEditor {
-    flex: 1;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #79c0ff;
-    font-family: var(--font-mono);
-    font-size: 14px;
-    line-height: 1.6;
-    padding: 14px;
-    resize: none;
-    direction: ltr;
-    text-align: left;
-    white-space: pre;
-    overflow: auto;
-    tab-size: 4;
-  }
+.badge-ok {
+  color: #50D9C1;
+  font-weight: bold;
+}
 
-  /* الطرفية السفلية (Bottom Terminal / Console - مثل Replit) */
-  .bottom-terminal {
-    height: 165px;
-    background: #010409;
-    border-top: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    transition: height 0.2s ease;
-  }
+.badge-warn {
+  color: #FFB74D;
+  font-weight: bold;
+}
 
-  .bottom-terminal.minimized {
-    height: 32px;
-  }
+.btn {
+  border: 0;
+  padding: 12px 16px;
+  border-radius: 11px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 5px 2px;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
 
-  .terminal-header {
-    height: 32px;
-    background: var(--bg-sidebar);
-    border-bottom: 1px solid var(--border);
-    padding: 0 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-muted);
-  }
+.btn:hover {
+  opacity: 0.92;
+}
 
-  .terminal-body {
-    flex: 1;
-    padding: 10px 14px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    line-height: 1.5;
-    overflow-y: auto;
-    direction: ltr;
-    text-align: left;
-    color: #3fb950;
-  }
+.btn:active {
+  transform: scale(0.97);
+}
 
-  /* شريط الحالة السفلي (Status Bar) */
-  .status-bar {
-    height: 24px;
-    background: var(--primary);
-    color: white;
-    font-size: 11px;
-    padding: 0 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-    font-weight: 600;
-  }
+.btn-next {
+  background-color: #50D9C1;
+  color: #10243A;
+}
 
-  /* إشعار منبثق */
-  #toast {
-    position: fixed;
-    top: 54px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1f6feb;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-    z-index: 9999;
-    display: none;
-    border: 1px solid rgba(255,255,255,0.2);
-  }
+.btn-action {
+  background-color: #2685D9;
+  color: #FFFFFF;
+}
 
-  /* تحسين للهواتف والشاشات الصغيرة */
-  @media (max-width: 768px) {
-    .side-panel {
-      position: absolute;
-      right: 50px;
-      top: 0;
-      bottom: 0;
-      box-shadow: -10px 0 30px rgba(0,0,0,0.7);
-    }
-  }
+.btn-sec {
+  background-color: #1E4D78;
+  color: #9CEBDC;
+  border: 1px solid #2685D9;
+}
+
+.btn-back {
+  background-color: #42546B;
+  color: #FFFFFF;
+}
+
+.btn-full {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn-container .btn {
+  flex: 1;
+  margin: 0;
+}
+
+.status-banner {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background-color: #203B50;
+  border: 1px solid #2D527A;
+  color: #9CEBDC;
+  font-size: 13px;
+  text-align: center;
+  line-height: 1.65;
+}
+
+.footer {
+  text-align: center;
+  color: #8CA2B8;
+  font-size: 12px;
+  margin-top: 18px;
+}
 </style>
-</head>
+<style>/* اكتب تنسيقات CSS هنا */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 16px;
+}</style></head>
 <body>
+<div class="container">
+  <div class="app-logo-wrap">
+    <svg class="app-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="أيقونة حل مشاكل حساب جوجل">
+      <defs>
+        <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#0B1726"/>
+          <stop offset="55%" stop-color="#194B75"/>
+          <stop offset="100%" stop-color="#50D9C1"/>
+        </linearGradient>
+        <linearGradient id="shieldGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#50D9C1"/>
+          <stop offset="100%" stop-color="#2685D9"/>
+        </linearGradient>
+      </defs>
+      <rect width="120" height="120" rx="26" fill="url(#bgGrad)"/>
+      <path d="M60 18L94 33V58C94 81 79 101 60 107C41 101 26 81 26 58V33L60 18Z" fill="#0F2236" stroke="url(#shieldGrad)" stroke-width="5"/>
+      <path d="M47 61L56 70L75 50" stroke="#50D9C1" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="88" cy="32" r="6" fill="#50D9C1"/>
+    </svg>
+  </div>
+  <h1>حل مشاكل حساب جوجل</h1>
+  <p class="subtitle">دليل التشخيص وحل مشاكل إنشاء واسترداد حساب Google وأذونات الـ 20 تطبيقاً</p>
 
-  <!-- الشريط العلوي -->
-  <header class="top-bar">
-    <div class="brand-area">
-      <button id="toggleSidebarBtn" title="إظهار/إخفاء القائمة الجانبية" style="padding: 6px 8px;">☰</button>
-      <div class="logo-badge">WinForge IDE</div>
-      <div class="project-title">
-        <span id="currentProjectName">WinSystemOptimizer</span>
-      </div>
-    </div>
+  <div class="progress-wrap">
+    <div id="progressBar"></div>
+  </div>
+  <div id="stepCounter">الخطوة 1 من 8</div>
 
-    <div class="top-actions">
-      <button class="btn-run" id="runCodeBtn">▶ تشغيل / فحص</button>
-      <button class="btn-primary" id="quickPushBtn">🚀 رفع GitHub</button>
-    </div>
-  </header>
-
-  <!-- مساحة العمل المتكاملة -->
-  <div class="ide-workspace">
-
-    <!-- شريط الأيقونات الجانبي (Activity Bar) -->
-    <nav class="activity-bar">
-      <button class="act-btn active" data-view="view-ai" title="مساعد الذكاء الاصطناعي">🤖</button>
-      <button class="act-btn" data-view="view-files" title="مستكشف الملفات والمشاريع">📁</button>
-      <button class="act-btn" data-view="view-sdk" title="مكتبة دوال ويندوز (Win32 SDK)">🧰</button>
-      <button class="act-btn" data-view="view-build" title="بيئة البناء وتصدير EXE / ISO">📦</button>
-      <button class="act-btn" data-view="view-github" title="إدارة مستودع GitHub">🐙</button>
-      <button class="act-btn" data-view="view-settings" title="إعدادات API والمنصة">⚙️</button>
-    </nav>
-
-    <!-- اللوحة الجانبية (Side Drawer) -->
-    <aside class="side-panel" id="sidePanel">
-      <div class="panel-header">
-        <span id="sidePanelTitle">🤖 الذكاء الاصطناعي لتوليد الأدوات</span>
-        <button id="closeSidebarBtn" style="padding: 2px 6px; background: transparent;">✕</button>
-      </div>
-
-      <div class="panel-body">
-
-        <!-- 1. قسم الذكاء الاصطناعي -->
-        <div id="view-ai" class="side-view active">
-          <div class="field-group">
-            <label>لغة البرمجة / بيئة التشغيل المستهدفة:</label>
-            <select id="targetLang">
-              <option value="python">Python 3 (Win32 GUI + EXE)</option>
-              <option value="powershell">PowerShell (إدارة نظام ويندوز)</option>
-              <option value="cpp">C++ / Win32 API (تنفيذي أصلي)</option>
-              <option value="csharp">C# .NET (تطبيقات ويندوز)</option>
-              <option value="bat">Batch / CMD (أتمتة سريعة)</option>
-            </select>
-          </div>
-
-          <div class="field-group">
-            <label>وصف الأداة المطلوبة بالتفصيل:</label>
-            <textarea id="aiPrompt" class="ui-input" rows="5" placeholder="مثال: اصنع أداة احترافية لتنظيف وتسريع ويندوز 10 و 11 مع واجهة رسومية لعرض استهلاك الرام والمعالج..."></textarea>
-          </div>
-
-          <button class="btn-primary" id="generateAiBtn" style="width: 100%; padding: 10px;">⚡ توليد الأداة في المحرر</button>
-
-          <div class="field-group" style="margin-top: 8px;">
-            <label>قوالب أدوات جاهزة بنقرة واحدة:</label>
-            <div class="tool-card" data-template="sysinfo">
-              <strong>WinSystemUtility64.cpp (Win64 API)</strong>
-              <span>أداة C++ أصلية لاستخراج مواصفات المعالج والرام وفتح الشبكة و IMS والإصلاح</span>
-            </div>
-            <div class="tool-card" data-template="cleaner">
-              <strong>SystemCleaner_Pro.py</strong>
-              <span>تنظيف الملفات المؤقتة، سلة المحذوفات، وتسريع النظام بواجهة رسومية</span>
-            </div>
-            <div class="tool-card" data-template="wininstall">
-              <strong>WinDeploy_Setup.ps1</strong>
-              <span>أداة أتمتة تثبيت البرامج الأساسية وضبط إعدادات ويندوز بعد الفورمات</span>
-            </div>
-            <div class="tool-card" data-template="network">
-              <strong>NetFix_DNS_Master.ps1</strong>
-              <span>إصلاح مشاكل الشبكة وتغيير DNS إلى Cloudflare/Google بنقرة</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. قسم مستكشف الملفات (File Explorer) -->
-        <div id="view-files" class="side-view">
-          <div style="display: flex; gap: 6px;">
-            <button class="btn-primary" id="newFileBtn" style="flex: 1;">+ ملف جديد</button>
-            <button id="importFileBtn" style="flex: 1;">📂 استيراد</button>
-            <input type="file" id="hiddenFileInput" style="display: none;">
-          </div>
-
-          <div class="field-group">
-            <label>ملفات المشروع الحالي:</label>
-            <div class="file-list" id="fileListContainer">
-              <!-- يتم تعبئتها برمجياً -->
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. قسم مكتبة دوال ويندوز (Win32 SDK) -->
-        <div id="view-sdk" class="side-view">
-          <p style="font-size: 11px; color: var(--text-muted);">انقر لإدراج الدالة مباشرة داخل محرر الأكواد:</p>
-          <div class="tool-card" data-snippet="msgbox">
-            <strong>Win32 MessageBoxW</strong>
-            <span>إظهار نافذة تنبيه أصلية لنظام ويندوز</span>
-          </div>
-          <div class="tool-card" data-snippet="admin">
-            <strong>Request Admin Privileges</strong>
-            <span>طلب صلاحيات المسؤول (UAC) تلقائياً</span>
-          </div>
-          <div class="tool-card" data-snippet="registry">
-            <strong>Windows Registry Edit</strong>
-            <span>قراءة وتعديل مفاتيح الريجستري (بدء التشغيل)</span>
-          </div>
-          <div class="tool-card" data-snippet="process">
-            <strong>Process & Service Manager</strong>
-            <span>إيقاف أو تشغيل خدمات وعمليات ويندوز</span>
-          </div>
-          <div class="tool-card" data-snippet="gui">
-            <strong>Modern Dark Tkinter UI</strong>
-            <span>هيكل واجهة رسومية داكنة جاهزة للأداة</span>
-          </div>
-        </div>
-
-        <!-- 4. قسم بيئة البناء وتصدير EXE وأنظمة ويندوز -->
-        <div id="view-build" class="side-view">
-          <div class="field-group">
-            <label>اسم البرنامج التنفيذي (.EXE):</label>
-            <input type="text" id="exeOutputName" class="ltr" value="WinForge_Utility">
-          </div>
-
-          <div class="field-group">
-            <label>معمارية النظام المستهدفة:</label>
-            <select id="targetArch">
-              <option value="x64">Windows 10 / 11 (64-bit x64)</option>
-              <option value="x86">Windows 7 / 8 / 10 (32-bit x86)</option>
-              <option value="arm64">Windows on ARM64</option>
-            </select>
-          </div>
-
-          <button class="btn-primary" id="exportExePackageBtn" style="width: 100%; padding: 10px;">📦 تصدير حزمة البناء (EXE Builder)</button>
-          <button id="exportWinpeBtn" style="width: 100%; padding: 10px;">💿 توليد سكريبت بيئة تثبيت ويندوز (WinPE / Unattend.xml)</button>
-          <button id="downloadRawBtn" style="width: 100%; padding: 10px;">💾 تنزيل الملف المصدري الحالي</button>
-        </div>
-
-        <!-- 5. قسم مستودع GitHub المتكامل -->
-        <div id="view-github" class="side-view">
-          <div class="field-group">
-            <label>رمز الوصول الشخصي (GitHub Token):</label>
-            <input type="password" id="ghToken" class="ltr" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-          </div>
-          <div class="field-group">
-            <label>اسم المالك / الحساب (Owner):</label>
-            <input type="text" id="ghOwner" class="ltr" placeholder="username">
-          </div>
-          <div class="field-group">
-            <label>اسم المستودع (Repository):</label>
-            <input type="text" id="ghRepo" class="ltr" placeholder="windows-tools-repo">
-          </div>
-          <div class="field-group">
-            <label>الفرع (Branch):</label>
-            <input type="text" id="ghBranch" class="ltr" value="main">
-          </div>
-          <div class="field-group">
-            <label>مسار الملف داخل المستودع:</label>
-            <input type="text" id="ghFilePath" class="ltr" value="src/main.py">
-          </div>
-          <div class="field-group">
-            <label>رسالة التحديث (Commit Message):</label>
-            <input type="text" id="ghCommitMsg" value="Update tool via WinForge IDE">
-          </div>
-
-          <button class="btn-primary" id="saveGhBtn" style="width: 100%;">💾 حفظ بيانات المستودع</button>
-          <button class="btn-run" id="pushGhBtn" style="width: 100%; padding: 10px;">🚀 رفع ونشر الملف إلى GitHub</button>
-          <button id="pullGhBtn" style="width: 100%;">📥 جلب الملف من GitHub</button>
-        </div>
-
-        <!-- 6. قسم إعدادات الذكاء الاصطناعي و API Key -->
-        <div id="view-settings" class="side-view">
-          <div class="field-group">
-            <label>مزود الذكاء الاصطناعي:</label>
-            <select id="aiProvider">
-              <option value="offline">المحرك المحلي المدمج (Offline - مجاني)</option>
-              <option value="gemini">Google Gemini API (gemini-2.5-flash)</option>
-              <option value="openai">OpenAI API (gpt-4o-mini)</option>
-            </select>
-          </div>
-          <div class="field-group">
-            <label>مفتاح API Key:</label>
-            <input type="password" id="aiApiKey" class="ltr" placeholder="AIzaSy... أو sk-...">
-          </div>
-          <div class="field-group">
-            <label>حجم خط محرر الأكواد:</label>
-            <select id="editorFontSize">
-              <option value="13px">13px (قياسي)</option>
-              <option value="14px" selected>14px (مريح)</option>
-              <option value="16px">16px (كبير)</option>
-              <option value="18px">18px (كبير جداً)</option>
-            </select>
-          </div>
-
-          <button class="btn-primary" id="saveAllSettingsBtn" style="width: 100%; padding: 10px;">💾 حفظ كافة الإعدادات</button>
-          <button class="btn-danger" id="resetAllBtn" style="width: 100%;">🔄 إعادة ضبط المصنع</button>
-        </div>
-
-      </div>
-    </aside>
-
-    <!-- منطقة المحرر العملاقة -->
-    <main class="editor-main">
-      <!-- شريط تبويبات المحرر -->
-      <div class="editor-tabs-bar">
-        <div class="active-file-tab">
-          <span>📄</span>
-          <span id="activeFileName">main.py</span>
-        </div>
-
-        <div class="editor-quick-tools">
-          <button id="copyCodeBtn" title="نسخ الكود">📋 نسخ</button>
-          <button id="pasteCodeBtn" title="لصق الكود">📥 لصق</button>
-          <button id="formatCodeBtn" title="تنسيق المسافات">✨ تنسيق</button>
-          <button id="clearCodeBtn" title="مسح المحرر" style="color: var(--danger);">🗑️ مسح</button>
-        </div>
-      </div>
-
-      <!-- محرر الأكواد بكامل الشاشة مع أرقام الأسطر -->
-      <div class="code-container">
-        <div class="line-numbers" id="lineNumbers">1</div>
-        <textarea id="codeEditor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="# اكتب الكود البرمجي هنا أو استخدم الذكاء الاصطناعي لتوليد أداة ويندوز متكاملة..."></textarea>
-      </div>
-
-      <!-- الطرفية السفلية (Terminal / Output Console) -->
-      <div class="bottom-terminal" id="bottomTerminal">
-        <div class="terminal-header">
-          <span>🖥️ TERMINAL & BUILD OUTPUT</span>
-          <div style="display: flex; gap: 6px;">
-            <button id="clearTerminalBtn" style="padding: 2px 6px; font-size: 10px;">مسح</button>
-            <button id="toggleTerminalBtn" style="padding: 2px 6px; font-size: 10px;">🔽 تصغير/تكبير</button>
-          </div>
-        </div>
-        <div class="terminal-body" id="terminalOutput">
-          [WinForge IDE v2.0] Environment Ready.<br>
-          [System] Type code in the editor or open the sidebar (☰) to generate tools & push to GitHub.
-        </div>
-      </div>
-    </main>
-
+  <div class="audio-controls">
+    <button type="button" id="playAudioBtn" class="btn btn-sec" onclick="playStepAudio()">🔊 قراءة الخطوة صوتياً</button>
+    <button type="button" id="stopAudioBtn" class="btn btn-back" onclick="stopStepAudio()">⏹ إيقاف</button>
   </div>
 
-  <!-- شريط الحالة السفلي -->
-  <footer class="status-bar">
-    <div>
-      <span id="statusEngine">AI: Offline Engine</span> |
-      <span id="statusGit">GitHub: Disconnected</span>
-    </div>
-    <div>
-      <span id="cursorPos">Ln 1, Col 1</span> | <span id="statusLang">UTF-8</span>
-    </div>
-  </footer>
+  <!-- الخطوة 1 -->
+  <div id="step1" class="step-panel">
+    <div class="icon-box">👋</div>
+    <h2>مرحباً بك في تطبيق حل مشاكل حساب جوجل</h2>
+    <p>يساعدك هذا الدليل التفاعلي على فحص بيئة المتصفح والشبكة، وحل مشاكل إنشاء واسترداد حساب Google، والانتقال إلى صفحات أذونات 20 تطبيقاً وخدمة من داخل الهاتف خطوة بخطوة.</p>
+    <div class="status-banner">مراجعة أذونات الهاتف والرسائل وجهات الاتصال تساعدك على إدارة خصوصية حسابك وبياناتك.</div>
+    <button type="button" class="btn btn-next btn-full" onclick="nextStep()">ابدأ الخطوات</button>
+  </div>
 
-  <!-- إشعار منبثق -->
-  <div id="toast"></div>
-
-  <!-- نافذة معاينة محاكاة برنامج Win64 C++ داخل المنصة -->
-  <div id="win64PreviewModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:99999; align-items:center; justify-content:center; padding:16px;">
-    <div style="background:#f0f0f0; color:#111; width:100%; max-width:560px; border-radius:8px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.8); border:1px solid #555; direction:rtl;">
-      <div style="background:#005a9e; color:white; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:bold;">
-        <span>WinForge x64 - أداة فحص النظام والشبكة والإصلاح (معاينة حية)</span>
-        <button id="closeWin64Modal" style="background:#e81123; color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">✕</button>
-      </div>
-      <div style="padding:14px; display:flex; flex-direction:column; gap:12px;">
-        <textarea id="win64SimulatedOutput" readonly rows="11" style="width:100%; background:#ffffff; color:#000000; border:1px solid #999; padding:10px; font-family:Consolas, monospace; font-size:12px; resize:none; line-height:1.5;"></textarea>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(115px, 1fr)); gap:8px;">
-          <button onclick="simWin64Action('net')" style="background:#e1e1e1; color:#000; border:1px solid #adadad; padding:8px; border-radius:4px; font-weight:bold;">🌐 معلومات الشبكة</button>
-          <button onclick="simWin64Action('ims')" style="background:#e1e1e1; color:#000; border:1px solid #adadad; padding:8px; border-radius:4px; font-weight:bold;">📋 قائمة IMS</button>
-          <button onclick="simWin64Action('fix')" style="background:#e1e1e1; color:#000; border:1px solid #adadad; padding:8px; border-radius:4px; font-weight:bold;">🛠️ إصلاح (Fix)</button>
-          <button onclick="simWin64Action('refresh')" style="background:#e1e1e1; color:#000; border:1px solid #adadad; padding:8px; border-radius:4px; font-weight:bold;">🔄 تحديث</button>
-        </div>
-      </div>
+  <!-- الخطوة 2 -->
+  <div id="step2" class="step-panel hidden">
+    <div class="icon-box">🔍</div>
+    <h2>فحص بيئة المتصفح</h2>
+    <p>تحقق من إعدادات المتصفح الأساسية مثل ملفات تعريف الارتباط والمنطقة الزمنية وحالة الاتصال قبل المتابعة.</p>
+    <button type="button" class="btn btn-action" onclick="runEnvironmentScan()">تشغيل الفحص الفني</button>
+    <div id="diagResults" class="diag-box hidden"></div>
+    <div class="btn-container">
+      <button type="button" class="btn btn-back" onclick="prevStep()">السابق</button>
+      <button type="button" class="btn btn-next" onclick="nextStep()">التالي</button>
     </div>
   </div>
+
+  <!-- الخطوة 3: أزرار التطبيقات الـ 20 -->
+  <div id="step3" class="step-panel hidden">
+    <div class="icon-box">📱</div>
+    <h2>مشغّل أذونات الـ 20 تطبيقاً</h2>
+    <p>اضغط على أي زر لفتح صفحة التطبيق والانتقال إلى قسم الأذونات من داخل الهاتف مباشرة:</p>
+
+    <ul class="checklist">
+      <li><strong>تتبع التقدم:</strong> يتغير لون الزر ويحدّث العدّاد تلقائياً بعد الضغط عليه.</li>
+      <li><strong>التطبيقات النظامية:</strong> إذا لم يظهر تطبيق معين في قائمة النظام، فعّل خيار <em>إظهار تطبيقات النظام</em> داخل إعدادات التطبيقات.</li>
+    </ul>
+
+    <div id="appsProgressCounter" class="apps-progress-counter">تم فتح: 0 من 20</div>
+    <div id="appsListContainer" class="apps-list"></div>
+
+    <div class="btn-container">
+      <button type="button" class="btn btn-back" onclick="prevStep()">السابق</button>
+      <button type="button" class="btn btn-next" onclick="nextStep()">التالي</button>
+    </div>
+  </div>
+
+  <!-- الخطوة 4 -->
+  <div id="step4" class="step-panel hidden">
+    <div class="icon-box">🌐</div>
+    <h2>فحص الشبكة والاتصال</h2>
+    <p>تأكد من استقرار الشبكة وصحة التاريخ والوقت، واختبر استجابة الاتصال قبل إنشاء الحساب أو تسجيل الدخول.</p>
+    <ul class="checklist">
+      <li>أوقف أي VPN أو Proxy يسبب انقطاعاً أو تأخيراً في الاتصال لاختبار الشبكة الأساسية.</li>
+      <li>تأكد من ضبط التاريخ والوقت تلقائياً في إعدادات الجهاز.</li>
+    </ul>
+    <button type="button" class="btn btn-action" onclick="openExternalUrl('https://www.google.com/generate_204')">اختبار الاتصال</button>
+    <div class="btn-container">
+      <button type="button" class="btn btn-back" onclick="prevStep()">السابق</button>
+      <button type="button" class="btn btn-next" onclick="nextStep()">التالي</button>
+    </div>
+  </div>
+
+  <!-- الخطوة 5 -->
+  <div id="step5" class="step-panel hidden">
+    <div class="icon-box">🔐</div>
+    <h2>إرشادات إنشاء الحساب وحل مشاكله</h2>
+    <p>إذا واجهت رسالة تعذر إتمام إنشاء الحساب أو إيقاف التحقق، اتبع الخطوات العملية التالية بالترتيب:</p>
+
+    <h3>خطوات حل مشكلة إنشاء حساب Google</h3>
+    <div class="fix-box" id="googleFixesContainer">
+      <div class="fix-item">
+        <div class="fix-header">
+          <span class="fix-title">1. إيقاف VPN أو Proxy وتغيير الشبكة</span>
+          <button type="button" class="btn-copy" onclick="copyFixItem(this)">نسخ</button>
+        </div>
+        <span class="fix-desc">قد تسبب الخوادم المشتركة أو تغيّر الـ IP المتكرر إيقاف إنشاء الحساب. جرّب إيقاف أي VPN والتبديل بين Wi-Fi وبيانات الهاتف.</span>
+      </div>
+
+      <div class="fix-item">
+        <div class="fix-header">
+          <span class="fix-title">2. التحقق من التاريخ والوقت وخدمات Google</span>
+          <button type="button" class="btn-copy" onclick="copyFixItem(this)">نسخ</button>
+        </div>
+        <span class="fix-desc">اضبط التاريخ والوقت على التلقائي من إعدادات الجهاز، وتأكد من تحديث <em>خدمات Google Play</em> وتفعيل ملفات تعريف الارتباط (Cookies) في المتصفح.</span>
+      </div>
+
+      <div class="fix-item">
+        <div class="fix-header">
+          <span class="fix-title">3. تجنّب المحاولات المتكررة السريعة</span>
+          <button type="button" class="btn-copy" onclick="copyFixItem(this)">نسخ</button>
+        </div>
+        <span class="fix-desc">إذا ظهرت رسالة رفض مؤقت أو تعذر التحقق، لا تكرر المحاولة عشرات المرات متتالية؛ انتظر فترة مناسبة ثم جرّب من متصفح محدّث أو نافذة تصفح خاصة.</span>
+      </div>
+
+      <div class="fix-item">
+        <div class="fix-header">
+          <span class="fix-title">4. تجربة مسار الإنشاء المباشر من المتصفح</span>
+          <button type="button" class="btn-copy" onclick="copyFixItem(this)">نسخ</button>
+        </div>
+        <span class="fix-desc">إذا تعذّر الإنشاء من شاشة الإعدادات أو تطبيق معيّن، افتح صفحة إنشاء الحساب الرسمية مباشرة عبر المتصفح ثم أضف الحساب لاحقاً إلى الجهاز.</span>
+      </div>
+
+      <div class="fix-item">
+        <div class="fix-header">
+          <span class="fix-title">5. استخدام بيانات واضحة وبريد استرداد بديل</span>
+          <button type="button" class="btn-copy" onclick="copyFixItem(this)">نسخ</button>
+        </div>
+        <span class="fix-desc">استخدم اسماً وكلمة مرور قوية، وأضف بريداً إلكترونياً بديلاً للاسترداد لتقليل احتمالية توقف الحساب أو صعوبة استرجاعه.</span>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-sec btn-full" onclick="copyAllFixes(this)">📋 نسخ جميع خطوات الحل دفعة واحدة</button>
+    <button type="button" class="btn btn-next btn-full" onclick="openExternalUrl('https://accounts.google.com/signup')">صفحة إنشاء حساب Google المباشرة</button>
+    <button type="button" class="btn btn-action btn-full" onclick="openExternalUrl('https://support.google.com/accounts/answer/27441?hl=ar-001')">دليل إنشاء حساب Google</button>
+    <button type="button" class="btn btn-sec btn-full" onclick="openExternalUrl('https://accounts.google.com/signin/recovery')">استرداد حساب Google</button>
+    <div class="btn-container">
+      <button type="button" class="btn btn-back" onclick="prevStep()">السابق</button>
+      <button type="button" class="btn btn-next" onclick="nextStep()">التالي</button>
+    </div>
+  </div>
+
+  <!-- الخطوة 6 -->
+  <div id="step6" class="step-panel hidden">
+    <div class="icon-box">⚙️</div>
+    <h2>خدمات Google وسلامة الجهاز</h2>
+    <p>حافظ على تحديث خدمات Google Play واعتماد الجهاز لضمان عمل التطبيقات والخدمات بسلاسة.</p>
+    <button type="button" class="btn btn-action" onclick="openExternalUrl('https://play.google.com/store/apps/details?id=com.google.android.gms')">فتح خدمات Google Play</button>
+    <button type="button" class="btn btn-sec" onclick="openExternalUrl('https://support.google.com/googleplay/answer/7165974?hl=ar-001')">شرح اعتماد الجهاز</button>
+    <div class="btn-container">
+      <button type="button" class="btn btn-back" onclick="prevStep()">السابق</button>
+      <button type="button" class="btn btn-next" onclick="nextStep()">التالي</button>
+    </div>
+  </div>
+
+  <!-- الخطوة 7 -->
+  <div id="step7" class="step-panel hidden">
+    <div class="icon-box">💬</div>
+    <h2>واتساب الرسمي</h2>
+    <p>تأكد من استخدام النسخة الرسمية من واتساب وتحديثها من المتجر الرسمي مع توفر مساحة تخزين كافية.</p>
+    <button type="button" class="btn btn-action" onclick="openExternalUrl('https://play.google.com/store/apps/details?id=com.whatsapp')">فتح واتساب في متجر Play</button>
+    <button type="button" class="btn btn-sec" onclick="openExternalUrl('https://faq.whatsapp.com/')">مركز مساعدة واتساب</button>
+    <div class="btn-container">
+      <button type="button" class="btn btn-back" onclick="prevStep()">السابق</button>
+      <button type="button" class="btn btn-next" onclick="nextStep()">التالي</button>
+    </div>
+  </div>
+
+  <!-- الخطوة 8 -->
+  <div id="step8" class="step-panel hidden">
+    <div class="icon-box">🚀</div>
+    <h2>اكتمل دليل التشخيص</h2>
+    <p>انتهت جميع خطوات المعالج. يمكنك التواصل مع الدعم الفني مباشرة أو مراجعة صفحات الدعم الرسمية أو إعادة تشغيل الخطوات.</p>
+
+    <div class="support-card">
+      <div class="support-card-title">📞 التواصل بالدعم الفني</div>
+      <div class="support-number">773148358</div>
+      <div class="support-actions">
+        <button type="button" class="btn btn-next" onclick="callSupport()">📱 اتصال بالدعم (773148358)</button>
+        <button type="button" class="btn btn-action" onclick="whatsappSupport()">💬 مراسلة الدعم عبر واتساب</button>
+        <button type="button" class="btn btn-sec" onclick="copySupportNumber(this)">📋 نسخ رقم الدعم</button>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-next btn-full" onclick="openExternalUrl('https://support.google.com/accounts/?hl=ar-001')">دعم Google</button>
+    <button type="button" class="btn btn-action btn-full" onclick="openExternalUrl('https://www.whatsapp.com/contact/')">دعم WhatsApp</button>
+    <button type="button" class="btn btn-back btn-full" onclick="restartWizard()">إعادة الفحص</button>
+  </div>
+
+  <div id="statusBanner" class="status-banner">جاهز لبدء الخطوات. للدعم الفني: 773148358</div>
+  <div class="footer">حل مشاكل حساب جوجل | الدعم: 773148358</div>
+</div>
 
 <script>
-// دالة محاكاة أزرار نافذة Win64 C++ داخل المنصة
-function simWin64Action(action) {
-  const out = document.getElementById('win64SimulatedOutput');
-  const cores = navigator.hardwareConcurrency || 8;
-  const ram = navigator.deviceMemory || 8;
-  const baseReport = `==================================================
-       تقرير مواصفات النظام (Win64 Native API)      
-==================================================
+"use strict";
 
-[+] المعالج (CPU): x64 Architecture Processor (${cores} Logical Cores)
-[+] معمارية النظام: x64 (64-Bit Native)
-[+] إجمالي الذاكرة (Total RAM): ${ram}.00 GB
-[+] الذاكرة المتاحة (Available RAM): ${(ram * 0.58).toFixed(2)} GB
-==================================================\n`;
+let currentStep = 1;
+const totalSteps = 8;
+const supportLocalNumber = "773148358";
+const supportInternationalNumber = "967773148358";
 
-  if (action === 'refresh') {
-    out.value = baseReport + '[✔] تم تحديث قراءة المعالج والرام بنجاح.';
-  } else if (action === 'net') {
-    out.value = baseReport + '[🌐] تم تنفيذ: ipconfig /all & فتح لوحة محولات الشبكة (ncpa.cpl)\nIPv4 Address: 192.168.1.105 | DNS: 1.1.1.1';
-  } else if (action === 'ims') {
-    out.value = baseReport + '[📋] تم فتح قائمة إدارة الخدمات و IMS (services.msc).';
-  } else if (action === 'fix') {
-    out.value = baseReport + '[🛠️] جاري تنفيذ الإصلاح (Fix):\n- ipconfig /flushdns -> تم بنجاح\n- netsh winsock reset -> تم بنجاح\n- تنظيف ملفات TEMP -> تم بنجاح';
+const appsList = [
+  { title: "1. خدمات Google Play", packageName: "com.google.android.gms" },
+  { title: "2. متجر Google Play", packageName: "com.android.vending" },
+  { title: "3. إطار عمل خدمات Google", packageName: "com.google.android.gsf" },
+  { title: "4. تطبيق Gmail", packageName: "com.google.android.gm" },
+  { title: "5. رسائل Google", packageName: "com.google.android.apps.messaging" },
+  { title: "6. تطبيق YouTube", packageName: "com.google.android.youtube" },
+  { title: "7. Google Drive", packageName: "com.google.android.apps.docs" },
+  { title: "8. صور Google", packageName: "com.google.android.apps.photos" },
+  { title: "9. جهات اتصال Google", packageName: "com.google.android.contacts" },
+  { title: "10. مزامنة جهات الاتصال", packageName: "com.google.android.syncadapters.contacts" },
+  { title: "11. مزامنة التقويم", packageName: "com.google.android.syncadapters.calendar" },
+  { title: "12. تطبيق Google الرئيسي", packageName: "com.google.android.googlequicksearchbox" },
+  { title: "13. خدمات التحقق / Carrier", packageName: "com.google.android.ims" },
+  { title: "14. خرائط Google", packageName: "com.google.android.apps.maps" },
+  { title: "15. تقويم Google", packageName: "com.google.android.calendar" },
+  { title: "16. هاتف Google", packageName: "com.google.android.dialer" },
+  { title: "17. Google Meet", packageName: "com.google.android.apps.tachyon" },
+  { title: "18. إدارة حسابات Google", packageName: "com.google.android.gsf.login" },
+  { title: "19. خدمات النسخ الاحتياطي", packageName: "com.google.android.backupusesbackup" },
+  { title: "20. محرك تحويل النص لكلام", packageName: "com.google.android.tts" }
+];
+
+const visitedPackages = new Set();
+let availableVoices = [];
+let speechKeepAliveTimer = null;
+let fallbackAudioPlayer = null;
+let fallbackAudioObjectUrl = null;
+
+function loadVoices() {
+  if (!("speechSynthesis" in window)) return;
+  try {
+    availableVoices = window.speechSynthesis.getVoices() || [];
+  } catch (e) {
+    availableVoices = [];
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // ==========================================
-  // 1. إدارة الحالة والملفات (IDE State)
-  // ==========================================
-  const cppWin64Code = `// WinForge AI - C++ Win64 Native Executable
-// Goal: استخراج مواصفات المعالج والرام، وعرضها في نافذة Win64 أصلية مع أزرار الشبكة و IMS والإصلاح (Fix)
-
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-
-#include <windows.h>
-#include <shellapi.h>
-#include <intrin.h>
-#include <string>
-#include <sstream>
-#include <iomanip>
-
-#pragma comment(lib, "user32.lib")
-#pragma comment(lib, "gdi32.lib")
-#pragma comment(lib, "shell32.lib")
-#pragma comment(lib, "advapi32.lib")
-
-#define IDC_INFO_EDIT     101
-#define IDC_BTN_NETWORK   102
-#define IDC_BTN_IMS       103
-#define IDC_BTN_FIX       104
-#define IDC_BTN_REFRESH   105
-
-HWND hEditInfo = NULL;
-HFONT hAppFont = NULL;
-
-std::wstring GetProcessorBrandString() {
-    int cpuInfo[4] = { -1 };
-    char brandString[0x40] = { 0 };
-    __cpuid(cpuInfo, 0x80000000);
-    unsigned int nExIds = cpuInfo[0];
-    if (nExIds >= 0x80000004) {
-        __cpuid((int*)(brandString), 0x80000002);
-        __cpuid((int*)(brandString + 16), 0x80000003);
-        __cpuid((int*)(brandString + 32), 0x80000004);
-    } else {
-        strcpy_s(brandString, "Unknown x64 Processor");
-    }
-    std::string narrowStr(brandString);
-    size_t first = narrowStr.find_first_not_of(' ');
-    if (std::string::npos != first) narrowStr = narrowStr.substr(first);
-    return std::wstring(narrowStr.begin(), narrowStr.end());
+function findArabicVoice() {
+  if (!availableVoices || !availableVoices.length) return null;
+  const exactAr = availableVoices.find((v) => v.lang && v.lang.toLowerCase().startsWith("ar"));
+  if (exactAr) return exactAr;
+  const namedAr = availableVoices.find((v) => /arabic|عربي/i.test(v.name || ""));
+  return namedAr || null;
 }
 
-std::wstring CollectSystemSpecs() {
-    std::wstringstream ss;
-    SYSTEM_INFO sysInfo;
-    GetNativeSystemInfo(&sysInfo);
-
-    ss << L"==================================================\\r\\n";
-    ss << L"       تقرير مواصفات النظام (Win64 Native API)      \\r\\n";
-    ss << L"==================================================\\r\\n\\r\\n";
-    ss << L"[+] المعالج (CPU): " << GetProcessorBrandString() << L"\\r\\n";
-    ss << L"[+] عدد الأنوية (Cores): " << sysInfo.dwNumberOfProcessors << L"\\r\\n";
-
-    MEMORYSTATUSEX memStatus;
-    memStatus.dwLength = sizeof(memStatus);
-    if (GlobalMemoryStatusEx(&memStatus)) {
-        double totalRAM = static_cast<double>(memStatus.ullTotalPhys) / (1024.0 * 1024.0 * 1024.0);
-        double availRAM = static_cast<double>(memStatus.ullAvailPhys) / (1024.0 * 1024.0 * 1024.0);
-        ss << std::fixed << std::setprecision(2);
-        ss << L"[+] إجمالي الذاكرة (Total RAM): " << totalRAM << L" GB\\r\\n";
-        ss << L"[+] الذاكرة المتاحة (Available RAM): " << availRAM << L" GB\\r\\n";
-        ss << L"[+] نسبة الاستخدام: " << memStatus.dwMemoryLoad << L"%\\r\\n";
-    }
-    return ss.str();
+function clearSpeechKeepAlive() {
+  if (speechKeepAliveTimer) {
+    clearInterval(speechKeepAliveTimer);
+    speechKeepAliveTimer = null;
+  }
 }
 
-void ExecuteSystemAction(HWND hwnd, int actionId) {
-    if (actionId == IDC_BTN_NETWORK) {
-        ShellExecuteW(hwnd, L"open", L"cmd.exe", L"/k ipconfig /all", NULL, SW_SHOW);
-        ShellExecuteW(hwnd, L"open", L"ncpa.cpl", NULL, NULL, SW_SHOW);
-    } else if (actionId == IDC_BTN_IMS) {
-        ShellExecuteW(hwnd, L"open", L"services.msc", NULL, NULL, SW_SHOW);
-    } else if (actionId == IDC_BTN_FIX) {
-        const wchar_t* fixCmd = L"/c ipconfig /flushdns & netsh winsock reset & netsh int ip reset & pause";
-        ShellExecuteW(hwnd, L"runas", L"cmd.exe", fixCmd, NULL, SW_SHOW);
-    } else if (actionId == IDC_BTN_REFRESH) {
-        SetWindowTextW(hEditInfo, CollectSystemSpecs().c_str());
-    }
-}
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    if (uMsg == WM_CREATE) {
-        hAppFont = CreateFontW(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, CLEARTYPE_QUALITY, 0, L"Segoe UI");
-        hEditInfo = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_READONLY, 15, 15, 535, 250, hwnd, (HMENU)IDC_INFO_EDIT, GetModuleHandle(NULL), NULL);
-        SendMessageW(hEditInfo, WM_SETFONT, (WPARAM)hAppFont, TRUE);
-        SetWindowTextW(hEditInfo, CollectSystemSpecs().c_str());
-
-        HWND b1 = CreateWindowExW(0, L"BUTTON", L"🌐 معلومات الشبكة", WS_VISIBLE | WS_CHILD, 15, 280, 125, 38, hwnd, (HMENU)IDC_BTN_NETWORK, GetModuleHandle(NULL), NULL);
-        HWND b2 = CreateWindowExW(0, L"BUTTON", L"📋 قائمة IMS", WS_VISIBLE | WS_CHILD, 150, 280, 125, 38, hwnd, (HMENU)IDC_BTN_IMS, GetModuleHandle(NULL), NULL);
-        HWND b3 = CreateWindowExW(0, L"BUTTON", L"🛠️ إصلاح (Fix)", WS_VISIBLE | WS_CHILD, 285, 280, 125, 38, hwnd, (HMENU)IDC_BTN_FIX, GetModuleHandle(NULL), NULL);
-        HWND b4 = CreateWindowExW(0, L"BUTTON", L"🔄 تحديث", WS_VISIBLE | WS_CHILD, 420, 280, 130, 38, hwnd, (HMENU)IDC_BTN_REFRESH, GetModuleHandle(NULL), NULL);
-        SendMessageW(b1, WM_SETFONT, (WPARAM)hAppFont, TRUE);
-        SendMessageW(b2, WM_SETFONT, (WPARAM)hAppFont, TRUE);
-        SendMessageW(b3, WM_SETFONT, (WPARAM)hAppFont, TRUE);
-        SendMessageW(b4, WM_SETFONT, (WPARAM)hAppFont, TRUE);
-        return 0;
-    } else if (uMsg == WM_COMMAND) {
-        ExecuteSystemAction(hwnd, LOWORD(wParam));
-        return 0;
-    } else if (uMsg == WM_DESTROY) {
-        if (hAppFont) DeleteObject(hAppFont);
-        PostQuitMessage(0);
-        return 0;
-    }
-    return DefWindowProcW(hwnd, uMsg, wParam, lParam);
-}
-
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow) {
-    WNDCLASSEXW wc = { sizeof(WNDCLASSEXW), CS_HREDRAW | CS_VREDRAW, WindowProc, 0, 0, hInstance, NULL, LoadCursor(NULL, IDC_ARROW), (HBRUSH)(COLOR_WINDOW + 1), NULL, L"WinForgeSys64", NULL };
-    RegisterClassExW(&wc);
-    HWND hwnd = CreateWindowExW(0, L"WinForgeSys64", L"WinForge x64 - أداة فحص النظام والشبكة والإصلاح", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, 200, 150, 580, 375, NULL, NULL, hInstance, NULL);
-    ShowWindow(hwnd, nCmdShow);
-    MSG msg;
-    while (GetMessageW(&msg, NULL, 0, 0)) { TranslateMessage(&msg); DispatchMessageW(&msg); }
-    return 0;
-}
-`;
-
-  const defaultCode = `# WinForge IDE - أداة إدارة وتنظيف نظام ويندوز المتقدمة
-import os
-import shutil
-import tempfile
-import platform
-import tkinter as tk
-from tkinter import messagebox
-
-def clean_windows_temp():
-    temp_dir = tempfile.gettempdir()
-    deleted_files = 0
-    for item in os.listdir(temp_dir):
-        path = os.path.join(temp_dir, item)
-        try:
-            if os.path.isfile(path) or os.path.islink(path):
-                os.unlink(path)
-                deleted_files += 1
-            elif os.path.isdir(path):
-                shutil.rmtree(path)
-                deleted_files += 1
-        except Exception:
-            pass
-    messagebox.showinfo("WinForge Cleaner", f"تم تنظيف النظام بنجاح!\\nعدد العناصر المحذوفة: {deleted_files}")
-
-def main():
-    root = tk.Tk()
-    root.title("WinForge System Optimizer")
-    root.geometry("400x220")
-    root.configure(bg="#0d1117")
-
-    title = tk.Label(root, text="منصة صيانة وتسريع ويندوز", fg="#58a6ff", bg="#0d1117", font=("Segoe UI", 14, "bold"))
-    title.pack(pady=20)
-
-    info = tk.Label(root, text=f"النظام: {platform.system()} {platform.release()}", fg="#8b949e", bg="#0d1117")
-    info.pack(pady=5)
-
-    btn = tk.Button(root, text="بدء التنظيف الشامل الآن", command=clean_windows_temp, bg="#238636", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=8, relief="flat")
-    btn.pack(pady=20)
-
-    root.mainloop()
-
-if __name__ == "__main__":
-    main()
-`;
-
-  let ideState = {
-    activeFile: 'WinSystemUtility64.cpp',
-    files: {
-      'WinSystemUtility64.cpp': cppWin64Code,
-      'main.py': defaultCode,
-      'build_cpp_exe.bat': '@echo off\ng++ -O2 -mwindows -municode WinSystemUtility64.cpp -o WinSystemUtility64.exe\npause',
-      'README.md': '# WinForge Windows Tool\nCreated using WinForge Studio IDE.'
-    },
-    settings: {
-      aiProvider: 'offline',
-      aiApiKey: '',
-      ghToken: '',
-      ghOwner: '',
-      ghRepo: '',
-      ghBranch: 'main',
-      fontSize: '14px'
-    }
-  };
-
-  // العناصر الأساسية
-  const codeEditor = document.getElementById('codeEditor');
-  const lineNumbers = document.getElementById('lineNumbers');
-  const terminalOutput = document.getElementById('terminalOutput');
-  const sidePanel = document.getElementById('sidePanel');
-  const sidePanelTitle = document.getElementById('sidePanelTitle');
-
-  // تحميل البيانات المحفوظة
-  function loadState() {
+function stopFallbackAudio() {
+  if (fallbackAudioPlayer) {
     try {
-      const savedSettings = localStorage.getItem('winforge_ide_settings');
-      if (savedSettings) {
-        ideState.settings = { ...ideState.settings, ...JSON.parse(savedSettings) };
-      }
-      const savedFiles = localStorage.getItem('winforge_ide_files');
-      if (savedFiles) {
-        const parsed = JSON.parse(savedFiles);
-        ideState.files = { 'WinSystemUtility64.cpp': cppWin64Code, ...parsed };
-      }
+      fallbackAudioPlayer.pause();
+      fallbackAudioPlayer.currentTime = 0;
     } catch (e) {
-      console.error('Error loading state:', e);
+      // تجاهل
     }
-    applySettingsToUI();
-    renderFileList();
-    openFile(ideState.activeFile);
+    fallbackAudioPlayer = null;
   }
-
-  function saveFilesToStorage() {
-    ideState.files[ideState.activeFile] = codeEditor.value;
-    localStorage.setItem('winforge_ide_files', JSON.stringify(ideState.files));
-  }
-
-  // ==========================================
-  // 2. وظائف الإشعارات والطرفية وأرقام الأسطر
-  // ==========================================
-  function showToast(msg, isError = false) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.style.background = isError ? '#da3633' : '#1f6feb';
-    toast.style.display = 'block';
-    clearTimeout(window.toastTimer);
-    window.toastTimer = setTimeout(() => {
-      toast.style.display = 'none';
-    }, 3200);
-  }
-
-  function logTerminal(msg, type = 'info') {
-    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
-    const colors = { info: '#58a6ff', success: '#3fb950', warn: '#d29922', error: '#f85149' };
-    const line = document.createElement('div');
-    line.style.color = colors[type] || '#e6edf3';
-    line.textContent = `[${time}] ${msg}`;
-    terminalOutput.appendChild(line);
-    terminalOutput.scrollTop = terminalOutput.scrollHeight;
-  }
-
-  function updateLineNumbers() {
-    const linesCount = codeEditor.value.split('\n').length;
-    let nums = '';
-    for (let i = 1; i <= linesCount; i++) {
-      nums += i + '\n';
+  if (fallbackAudioObjectUrl && typeof URL !== "undefined" && typeof URL.revokeObjectURL === "function") {
+    try {
+      URL.revokeObjectURL(fallbackAudioObjectUrl);
+    } catch (e) {
+      // تجاهل
     }
-    lineNumbers.textContent = nums;
+    fallbackAudioObjectUrl = null;
   }
+}
 
-  function updateCursorPosition() {
-    const textBefore = codeEditor.value.substring(0, codeEditor.selectionStart);
-    const lines = textBefore.split('\n');
-    const ln = lines.length;
-    const col = lines[lines.length - 1].length + 1;
-    document.getElementById('cursorPos').textContent = `Ln ${ln}, Col ${col}`;
-  }
-
-  codeEditor.addEventListener('input', () => {
-    updateLineNumbers();
-    saveFilesToStorage();
-  });
-
-  codeEditor.addEventListener('scroll', () => {
-    lineNumbers.scrollTop = codeEditor.scrollTop;
-  });
-
-  codeEditor.addEventListener('click', updateCursorPosition);
-  codeEditor.addEventListener('keyup', updateCursorPosition);
-
-  // دعم مفتاح Tab داخل المحرر
-  codeEditor.addEventListener('keydown', (e) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      const start = codeEditor.selectionStart;
-      const end = codeEditor.selectionEnd;
-      codeEditor.value = codeEditor.value.substring(0, start) + '    ' + codeEditor.value.substring(end);
-      codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
-      updateLineNumbers();
+function stopStepAudio() {
+  clearSpeechKeepAlive();
+  stopFallbackAudio();
+  if ("speechSynthesis" in window) {
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) {
+      // تجاهل أخطاء الإلغاء في بعض المتصفحات
     }
-  });
+  }
+  if (window.AndroidBridge && typeof window.AndroidBridge.stopSpeaking === "function") {
+    try {
+      window.AndroidBridge.stopSpeaking();
+    } catch (e) {
+      // تجاهل
+    }
+  }
+  setStatusMessage("تم إيقاف القراءة الصوتية.");
+}
 
-  // ==========================================
-  // 3. التحكم باللوحة الجانبية والتبويبات
-  // ==========================================
-  const viewTitles = {
-    'view-ai': '🤖 الذكاء الاصطناعي لتوليد الأدوات',
-    'view-files': '📁 مستكشف ملفات المشروع',
-    'view-sdk': '🧰 مكتبة دوال ويندوز (Win32 SDK)',
-    'view-build': '📦 بيئة البناء وتصدير EXE / WinPE',
-    'view-github': '🐙 إدارة مستودع GitHub',
-    'view-settings': '⚙️ إعدادات API والمنصة'
-  };
+function playArabicSpeechFallback(textToRead) {
+  stopFallbackAudio();
 
-  document.querySelectorAll('.act-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetView = btn.getAttribute('data-view');
-      const isAlreadyActive = btn.classList.contains('active') && !sidePanel.classList.contains('collapsed');
-
-      if (isAlreadyActive) {
-        sidePanel.classList.add('collapsed');
-        btn.classList.remove('active');
-      } else {
-        document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.side-view').forEach(v => v.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(targetView).classList.add('active');
-        sidePanelTitle.textContent = viewTitles[targetView] || 'لوحة الأدوات';
-        sidePanel.classList.remove('collapsed');
-      }
-    });
-  });
-
-  document.getElementById('toggleSidebarBtn').addEventListener('click', () => {
-    sidePanel.classList.toggle('collapsed');
-  });
-
-  document.getElementById('closeSidebarBtn').addEventListener('click', () => {
-    sidePanel.classList.add('collapsed');
-  });
-
-  // ==========================================
-  // 4. إدارة الملفات (File Explorer)
-  // ==========================================
-  function renderFileList() {
-    const container = document.getElementById('fileListContainer');
-    container.innerHTML = '';
-    Object.keys(ideState.files).forEach(fileName => {
-      const div = document.createElement('div');
-      div.className = 'file-item' + (fileName === ideState.activeFile ? ' active' : '');
-      div.innerHTML = `<span>📄 ${fileName}</span>`;
-      div.addEventListener('click', () => openFile(fileName));
-      container.appendChild(div);
-    });
+  // لا نستخدم أصوات نغمية أو صفير أبداً؛ نعتمد على محرك نطق عربي صوتي حقيقي أو نرشد المستخدم لتفعيل صوت العربية
+  const cleanText = textToRead.replace(/\s+/g, " ").trim().slice(0, 240);
+  if (!cleanText || typeof Audio === "undefined") {
+    setStatusMessage("تعذر نطق النص العربي في هذا الجهاز؛ يرجى التأكد من تثبيت وتفعيل صوت اللغة العربية في إعدادات تحويل النص إلى كلام (TTS).");
+    return;
   }
 
-  function openFile(fileName) {
-    if (!ideState.files.hasOwnProperty(fileName)) return;
-    ideState.activeFile = fileName;
-    document.getElementById('activeFileName').textContent = fileName;
-    document.getElementById('ghFilePath').value = `src/${fileName}`;
-    codeEditor.value = ideState.files[fileName];
-    updateLineNumbers();
-    updateCursorPosition();
-    renderFileList();
-  }
+  try {
+    const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ar&q=${encodeURIComponent(cleanText)}`;
+    const audio = new Audio(ttsUrl);
+    fallbackAudioPlayer = audio;
 
-  document.getElementById('newFileBtn').addEventListener('click', () => {
-    const count = Object.keys(ideState.files).length + 1;
-    const newName = `tool_${count}.py`;
-    ideState.files[newName] = `# New Windows Tool: ${newName}\nimport ctypes\n\nctypes.windll.user32.MessageBoxW(0, "Hello from ${newName}", "WinForge", 0x40)\n`;
-    openFile(newName);
-    saveFilesToStorage();
-    showToast(`تم إنشاء الملف: ${newName}`);
-    logTerminal(`Created new file: ${newName}`, 'info');
-  });
-
-  document.getElementById('importFileBtn').addEventListener('click', () => {
-    document.getElementById('hiddenFileInput').click();
-  });
-
-  document.getElementById('hiddenFileInput').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      ideState.files[file.name] = ev.target.result;
-      openFile(file.name);
-      saveFilesToStorage();
-      showToast(`تم استيراد الملف: ${file.name}`);
-      logTerminal(`Imported file: ${file.name} (${file.size} bytes)`, 'success');
+    audio.onplay = () => {
+      setStatusMessage(`🔊 جاري قراءة تعليمات الخطوة ${currentStep} باللغة العربية...`);
     };
-    reader.readAsText(file);
-  });
 
-  // ==========================================
-  // 5. أزرار شريط المحرر السريعة
-  // ==========================================
-  document.getElementById('copyCodeBtn').addEventListener('click', () => {
-    if (!codeEditor.value) return showToast('المحرر فارغ!', true);
-    codeEditor.select();
-    document.execCommand('copy');
-    showToast('تم نسخ الكود بالكامل!');
-  });
+    audio.onended = () => {
+      stopFallbackAudio();
+      setStatusMessage("انتهت القراءة الصوتية باللغة العربية.");
+    };
 
-  document.getElementById('pasteCodeBtn').addEventListener('click', async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      codeEditor.value = text;
-      updateLineNumbers();
-      saveFilesToStorage();
-      showToast('تم لصق الكود في المحرر!');
-    } catch (e) {
-      showToast('استخدم زر اللصق في لوحة المفاتيح داخل المحرر', true);
-    }
-  });
+    audio.onerror = () => {
+      stopFallbackAudio();
+      setStatusMessage("لم يتمكن الجهاز من تشغيل نطق عربي واضح؛ فعّل صوت العربية في إعدادات تحويل النص إلى كلام (TTS) في الهاتف.");
+    };
 
-  document.getElementById('formatCodeBtn').addEventListener('click', () => {
-    codeEditor.value = codeEditor.value.replace(/\t/g, '    ').trim() + '\n';
-    updateLineNumbers();
-    saveFilesToStorage();
-    showToast('تم تنسيق الكود!');
-  });
-
-  document.getElementById('clearCodeBtn').addEventListener('click', () => {
-    codeEditor.value = '';
-    updateLineNumbers();
-    saveFilesToStorage();
-    showToast('تم مسح محتوى المحرر');
-  });
-
-  // ==========================================
-  // 6. القوالب الجاهزة ومكتبة Win32 SDK
-  // ==========================================
-  document.querySelectorAll('[data-template]').forEach(card => {
-    card.addEventListener('click', () => {
-      const tpl = card.getAttribute('data-template');
-      const map = {
-        cleaner: {
-          lang: 'python',
-          prompt: 'اصنع أداة متكاملة بلغة Python مع واجهة رسومية داكنة لتنظيف ملفات ويندوز المؤقتة وتحرير الذاكرة.'
-        },
-        wininstall: {
-          lang: 'powershell',
-          prompt: 'اصنع سكريبت PowerShell لأتمتة إعداد وتثبيت البرامج الأساسية وضبط إعدادات الأداء في ويندوز 11 بعد التثبيت.'
-        },
-        network: {
-          lang: 'powershell',
-          prompt: 'اصنع أداة PowerShell لإصلاح مشاكل الشبكة وتفريغ DNS وتعيين Cloudflare 1.1.1.1.'
-        },
-        sysinfo: {
-          lang: 'cpp',
-          prompt: 'اصنع برنامج C++ Win32 API لاستخراج مواصفات المعالج والرام وعرضها في نافذة نظام أصلية.'
-        }
-      };
-      if (map[tpl]) {
-        document.getElementById('targetLang').value = map[tpl].lang;
-        document.getElementById('aiPrompt').value = map[tpl].prompt;
-        showToast('تم تحميل وصف القالب! اضغط على "توليد الأداة في المحرر"');
-      }
-    });
-  });
-
-  document.querySelectorAll('[data-snippet]').forEach(card => {
-    card.addEventListener('click', () => {
-      const snip = card.getAttribute('data-snippet');
-      const snippets = {
-        msgbox: '\nimport ctypes\nctypes.windll.user32.MessageBoxW(0, "رسالة تنبيه من WinForge", "تنبيه النظام", 0x40)\n',
-        admin: '\nimport ctypes, sys\ndef is_admin():\n    try: return ctypes.windll.shell32.IsUserAnAdmin()\n    except: return False\nif not is_admin():\n    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)\n',
-        registry: '\nimport winreg\nkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)\nwinreg.SetValueEx(key, "WinForgeTool", 0, winreg.REG_SZ, "C:\\\\Path\\\\To\\\\Tool.exe")\n',
-        process: '\nimport subprocess\nsubprocess.run(["taskkill", "/F", "/IM", "notepad.exe"], shell=True)\n',
-        gui: '\nimport tkinter as tk\nroot = tk.Tk()\nroot.title("WinForge GUI")\nroot.geometry("450x300")\nroot.configure(bg="#0d1117")\nroot.mainloop()\n'
-      };
-      codeEditor.value += snippets[snip] || '';
-      updateLineNumbers();
-      saveFilesToStorage();
-      showToast('تم إدراج الدالة في المحرر!');
-      if (window.innerWidth <= 768) sidePanel.classList.add('collapsed');
-    });
-  });
-
-  // ==========================================
-  // 7. توليد الأكواد بالذكاء الاصطناعي (API أو محلي)
-  // ==========================================
-  document.getElementById('generateAiBtn').addEventListener('click', async () => {
-    const prompt = document.getElementById('aiPrompt').value.trim();
-    const lang = document.getElementById('targetLang').value;
-    const provider = ideState.settings.aiProvider;
-    const apiKey = ideState.settings.aiApiKey;
-    const btn = document.getElementById('generateAiBtn');
-
-    if (!prompt) {
-      showToast('يرجى كتابة وصف الأداة المطلوبة أولاً!', true);
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = '⏳ جاري التوليد...';
-    logTerminal(`AI Request started [Provider: ${provider}, Lang: ${lang}]...`, 'info');
-
-    try {
-      let generatedCode = '';
-      const extMap = { python: 'py', powershell: 'ps1', cpp: 'cpp', csharp: 'cs', bat: 'bat' };
-      const targetFileName = `generated_tool.${extMap[lang] || 'py'}`;
-
-      if (provider !== 'offline' && apiKey) {
-        const sysPrompt = `You are a senior Windows systems software engineer. Write complete, production-ready, runnable ${lang} code for Windows based on the user request. Output ONLY the raw source code without markdown backticks or explanations.`;
-
-        if (provider === 'gemini') {
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: `${sysPrompt}\n\nTask: ${prompt}` }] }]
-            })
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error?.message || 'خطأ في اتصال Gemini API');
-          generatedCode = data.candidates[0].content.parts[0].text;
-        } else if (provider === 'openai') {
-          const res = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-              model: 'gpt-4o-mini',
-              messages: [
-                { role: 'system', content: sysPrompt },
-                { role: 'user', content: prompt }
-              ]
-            })
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error?.message || 'خطأ في اتصال OpenAI API');
-          generatedCode = data.choices[0].message.content;
-        }
-
-        generatedCode = generatedCode.replace(/^```[a-z]*\n/i, '').replace(/\n```$/i, '').trim();
-        logTerminal('Cloud AI generated code successfully!', 'success');
-      } else {
-        await new Promise(r => setTimeout(r, 500));
-        generatedCode = buildLocalFallbackCode(lang, prompt);
-        logTerminal('Offline AI Engine generated code successfully!', 'success');
-      }
-
-      ideState.files[targetFileName] = generatedCode;
-      openFile(targetFileName);
-      saveFilesToStorage();
-      showToast('تم توليد الكود وفتحه في المحرر!');
-      if (window.innerWidth <= 768) sidePanel.classList.add('collapsed');
-
-    } catch (err) {
-      logTerminal(`AI Error: ${err.message}`, 'error');
-      showToast('فشل التوليد: ' + err.message, true);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '⚡ توليد الأداة في المحرر';
-    }
-  });
-
-  function buildLocalFallbackCode(lang, prompt) {
-    if (lang === 'powershell') {
-      return `# WinForge AI - PowerShell Windows Administration Tool\n# Goal: ${prompt}\n\nWrite-Host "=== WinForge Windows Utility ===" -ForegroundColor Cyan\nClear-DnsClientCache\nipconfig /flushdns\nGet-ComputerInfo | Select-Object CsName, WindowsProductName, OsArchitecture, CsTotalPhysicalMemory\nWrite-Host "Operation Completed Successfully!" -ForegroundColor Green\n`;
-    } else if (lang === 'cpp') {
-      return `// WinForge AI - C++ Win32 Native Executable\n// Goal: ${prompt}\n#include <windows.h>\n\nint WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR lpCmd, int nShow) {\n    MessageBoxW(NULL, L"تم تشغيل أداة ويندوز بنجاح!", L"WinForge C++ Tool", MB_OK | MB_ICONINFORMATION);\n    return 0;\n}\n`;
-    } else if (lang === 'csharp') {
-      return `// WinForge AI - C# .NET Windows Utility\n// Goal: ${prompt}\nusing System;\nusing System.Windows.Forms;\n\nclass Program {\n    static void Main() {\n        MessageBox.Show("WinForge C# Windows Tool Executed!", "WinForge IDE");\n    }\n}\n`;
-    } else if (lang === 'bat') {
-      return `@echo off\ntitle WinForge Windows Automation\ncolor 0B\necho Running Task: ${prompt}\ndel /q /f /s %TEMP%\\* >nul 2>&1\necho Done!\npause\n`;
-    }
-    return defaultCode.replace('# WinForge IDE - أداة إدارة وتنظيف نظام ويندوز المتقدمة', `# WinForge IDE - ${prompt}`);
-  }
-
-  // ==========================================
-  // 8. التشغيل المحاكي، التصدير، وبيئة تثبيت ويندوز
-  // ==========================================
-  document.getElementById('closeWin64Modal').addEventListener('click', () => {
-    document.getElementById('win64PreviewModal').style.display = 'none';
-  });
-
-  document.getElementById('runCodeBtn').addEventListener('click', () => {
-    const code = codeEditor.value.trim();
-    if (!code) return showToast('المحرر فارغ!', true);
-    logTerminal(`Executing syntax & Win64 API check on "${ideState.activeFile}"...`, 'info');
-    setTimeout(() => {
-      logTerminal(`[Build Check] 0 Errors, 0 Warnings. Launching interactive preview...`, 'success');
-      simWin64Action('refresh');
-      document.getElementById('win64PreviewModal').style.display = 'flex';
-    }, 300);
-  });
-
-  document.getElementById('exportExePackageBtn').addEventListener('click', () => {
-    const exeName = document.getElementById('exeOutputName').value.trim() || 'WinSystemUtility64';
-    const arch = document.getElementById('targetArch').value;
-    const isCpp = ideState.activeFile.endsWith('.cpp');
-    const batScript = isCpp
-      ? `@echo off\ntitle WinForge C++ Win64 Compiler (${arch})\necho Compiling ${ideState.activeFile} to ${exeName}.exe...\ng++ -O2 -mwindows -municode "${ideState.activeFile}" -o "${exeName}.exe"\necho Build Complete!\npause`
-      : `@echo off\ntitle WinForge Python EXE Compiler (${arch})\necho Building ${exeName}.exe for Windows (${arch})...\npip install pyinstaller\npyinstaller --onefile --noconsole --name "${exeName}" "${ideState.activeFile}"\necho Build Complete! Output: dist\\${exeName}.exe\npause`;
-
-    downloadFile(`Build_${exeName}_${arch}.bat`, batScript);
-    logTerminal(`Exported EXE builder script for ${exeName}.exe (${arch})`, 'success');
-    showToast('تم تنزيل سكريبت بناء ملف EXE!');
-  });
-
-  document.getElementById('exportWinpeBtn').addEventListener('click', () => {
-    const unattendXml = `<?xml version="1.0" encoding="utf-8"?>
-<!-- WinForge IDE - Windows Unattended Setup & WinPE Deployment Script -->
-<unattend xmlns="urn:schemas-microsoft-com:unattend">
-  <settings pass="oobeSystem">
-    <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-      <OOBE>
-        <HideEULAPage>true</HideEULAPage>
-        <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
-        <ProtectYourPC>3</ProtectYourPC>
-      </OOBE>
-    </component>
-  </settings>
-</unattend>`;
-    downloadFile('autounattend.xml', unattendXml);
-    logTerminal('Generated Windows Deployment Answer File (autounattend.xml)', 'success');
-    showToast('تم توليد ملف التثبيت التلقائي لويندوز!');
-  });
-
-  document.getElementById('downloadRawBtn').addEventListener('click', () => {
-    downloadFile(ideState.activeFile, codeEditor.value);
-    showToast(`تم تنزيل ${ideState.activeFile}`);
-  });
-
-  function downloadFile(filename, content) {
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
-  }
-
-  // ==========================================
-  // 9. ربط مستودع GitHub (رفع وجلب الملفات)
-  // ==========================================
-  async function pushFileToGitHub() {
-    const token = document.getElementById('ghToken').value.trim();
-    const owner = document.getElementById('ghOwner').value.trim();
-    const repo = document.getElementById('ghRepo').value.trim();
-    const branch = document.getElementById('ghBranch').value.trim() || 'main';
-    const path = document.getElementById('ghFilePath').value.trim();
-    const message = document.getElementById('ghCommitMsg').value.trim() || `Update ${path}`;
-    const content = codeEditor.value;
-
-    if (!token || !owner || !repo || !path) {
-      showToast('يرجى إدخال رمز GitHub واسم المالك والمستودع أولاً!', true);
-      document.querySelector('[data-view="view-github"]').click();
-      return;
-    }
-
-    logTerminal(`Connecting to GitHub repository: ${owner}/${repo} [${branch}]...`, 'info');
-
-    try {
-      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-      const headers = {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      };
-
-      let sha = null;
-      const getRes = await fetch(`${apiUrl}?ref=${branch}`, { headers });
-      if (getRes.ok) {
-        const existing = await getRes.json();
-        sha = existing.sha;
-        logTerminal(`File exists on GitHub (SHA: ${sha.substring(0, 7)}). Updating file...`, 'warn');
-      }
-
-      const base64Content = btoa(unescape(encodeURIComponent(content)));
-      const payload = { message, content: base64Content, branch };
-      if (sha) payload.sha = sha;
-
-      const putRes = await fetch(apiUrl, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify(payload)
+    const playPromise = audio.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(() => {
+        stopFallbackAudio();
+        setStatusMessage("يرجى تفعيل صوت اللغة العربية في إعدادات تحويل النص إلى كلام (TTS) في هاتفك لسماع القراءة بوضوح.");
       });
-
-      const result = await putRes.json();
-      if (!putRes.ok) throw new Error(result.message || 'فشل الرفع إلى المستودع');
-
-      logTerminal(`SUCCESS! Pushed to GitHub: ${result.content.html_url}`, 'success');
-      showToast('تم رفع الكود إلى مستودع GitHub بنجاح! 🚀');
-    } catch (err) {
-      logTerminal(`GitHub Error: ${err.message}`, 'error');
-      showToast('خطأ GitHub: ' + err.message, true);
     }
+  } catch (e) {
+    setStatusMessage("يرجى تفعيل صوت اللغة العربية في إعدادات تحويل النص إلى كلام (TTS) في هاتفك.");
+  }
+}
+
+function setStatusMessage(message) {
+  const statusEl = document.getElementById("statusBanner");
+  if (statusEl) {
+    statusEl.textContent = message;
+  }
+}
+
+function showStep(step) {
+  if (step < 1 || step > totalSteps) return;
+  stopStepAudio();
+  for (let i = 1; i <= totalSteps; i++) {
+    const panel = document.getElementById("step" + i);
+    if (panel) panel.classList.add("hidden");
+  }
+  const activePanel = document.getElementById("step" + step);
+  if (activePanel) activePanel.classList.remove("hidden");
+
+  currentStep = step;
+  document.getElementById("stepCounter").textContent = `الخطوة ${step} من ${totalSteps}`;
+  document.getElementById("progressBar").style.width = `${(step / totalSteps) * 100}%`;
+  setStatusMessage(`أنت الآن في الخطوة ${step} من ${totalSteps}.`);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function nextStep() {
+  if (currentStep < totalSteps) showStep(currentStep + 1);
+}
+
+function prevStep() {
+  if (currentStep > 1) showStep(currentStep - 1);
+}
+
+function restartWizard() {
+  showStep(1);
+}
+
+function openExternalUrl(url) {
+  const win = window.open(url, "_blank", "noopener,noreferrer");
+  if (!win) {
+    window.location.href = url;
+  }
+}
+
+function callSupport() {
+  setStatusMessage(`جاري طلب الاتصال بالدعم الفني على الرقم ${supportLocalNumber}...`);
+  window.location.href = `tel:${supportLocalNumber}`;
+}
+
+function whatsappSupport() {
+  const msg = encodeURIComponent("مرحباً، أحتاج إلى مساعدة بخصوص مشاكل حساب جوجل.");
+  setStatusMessage(`جاري فتح واتساب للتواصل مع الدعم (${supportLocalNumber})...`);
+  openExternalUrl(`https://wa.me/${supportInternationalNumber}?text=${msg}`);
+}
+
+function copySupportNumber(btnEl) {
+  copyTextToClipboard(
+    supportLocalNumber,
+    btnEl,
+    "📋 نسخ رقم الدعم",
+    `تم نسخ رقم الدعم الفني: ${supportLocalNumber}`
+  );
+}
+
+function copyTextToClipboard(text, btnEl, defaultLabel, successMessage) {
+  const handleSuccess = () => {
+    if (btnEl) {
+      btnEl.textContent = "تم النسخ ✔";
+      btnEl.classList.add("copied");
+      setTimeout(() => {
+        btnEl.textContent = defaultLabel;
+        btnEl.classList.remove("copied");
+      }, 1800);
+    }
+    setStatusMessage(successMessage);
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(handleSuccess).catch(() => {
+      fallbackCopy(text, handleSuccess);
+    });
+  } else {
+    fallbackCopy(text, handleSuccess);
+  }
+}
+
+function fallbackCopy(text, onSuccess) {
+  const tempArea = document.createElement("textarea");
+  tempArea.value = text;
+  tempArea.style.position = "fixed";
+  tempArea.style.opacity = "0";
+  document.body.appendChild(tempArea);
+  tempArea.select();
+  try {
+    document.execCommand("copy");
+    onSuccess();
+  } catch (err) {
+    setStatusMessage("تعذر النسخ تلقائياً في هذا المتصفح.");
+  }
+  document.body.removeChild(tempArea);
+}
+
+function copyFixItem(btnEl) {
+  const item = btnEl.closest(".fix-item");
+  if (!item) return;
+  const title = item.querySelector(".fix-title") ? item.querySelector(".fix-title").textContent.trim() : "";
+  const desc = item.querySelector(".fix-desc") ? item.querySelector(".fix-desc").textContent.trim() : "";
+  const fullText = `${title}\n${desc}`;
+  copyTextToClipboard(fullText, btnEl, "نسخ", `تم نسخ: ${title}`);
+}
+
+function copyAllFixes(btnEl) {
+  const items = document.querySelectorAll("#googleFixesContainer .fix-item");
+  const lines = Array.from(items).map((item) => {
+    const title = item.querySelector(".fix-title") ? item.querySelector(".fix-title").textContent.trim() : "";
+    const desc = item.querySelector(".fix-desc") ? item.querySelector(".fix-desc").textContent.trim() : "";
+    return `${title}\n${desc}`;
+  });
+  const combined = `خطوات حل مشكلة إنشاء حساب Google:\n\n${lines.join("\n\n")}`;
+  copyTextToClipboard(combined, btnEl, "📋 نسخ جميع خطوات الحل دفعة واحدة", "تم نسخ جميع خطوات حل مشكلة إنشاء حساب Google.");
+}
+
+function runEnvironmentScan() {
+  const resultsBox = document.getElementById("diagResults");
+  if (!resultsBox) return;
+
+  const isOnline = navigator.onLine;
+  const cookiesEnabled = navigator.cookieEnabled;
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "غير معروف";
+  const language = navigator.language || "غير معروف";
+
+  resultsBox.innerHTML = `
+    <div class="diag-item">
+      <span>حالة الاتصال:</span>
+      <span class="${isOnline ? "badge-ok" : "badge-warn"}">${isOnline ? "متصل ✔" : "غير متصل ✖"}</span>
+    </div>
+    <div class="diag-item">
+      <span>ملفات تعريف الارتباط (Cookies):</span>
+      <span class="${cookiesEnabled ? "badge-ok" : "badge-warn"}">${cookiesEnabled ? "مفعّلة ✔" : "معطلة ⚠"}</span>
+    </div>
+    <div class="diag-item">
+      <span>المنطقة الزمنية:</span>
+      <span class="badge-ok">${timeZone}</span>
+    </div>
+    <div class="diag-item">
+      <span>لغة المتصفح:</span>
+      <span class="badge-ok">${language}</span>
+    </div>
+  `;
+  resultsBox.classList.remove("hidden");
+  setStatusMessage("تم تحديث نتائج فحص بيئة المتصفح.");
+}
+
+function getStepSpokenText(stepNum) {
+  const activePanel = document.getElementById("step" + stepNum);
+  if (!activePanel) return "";
+
+  const parts = [];
+  const heading = activePanel.querySelector("h2");
+  if (heading) parts.push(heading.textContent.trim());
+
+  const paragraph = activePanel.querySelector("p");
+  if (paragraph) parts.push(paragraph.textContent.trim());
+
+  const subHeading = activePanel.querySelector("h3");
+  if (subHeading) parts.push(subHeading.textContent.trim());
+
+  activePanel.querySelectorAll(".checklist li").forEach((li) => {
+    parts.push(li.textContent.trim());
+  });
+
+  activePanel.querySelectorAll(".fix-item").forEach((item) => {
+    const title = item.querySelector(".fix-title") ? item.querySelector(".fix-title").textContent.trim() : "";
+    const desc = item.querySelector(".fix-desc") ? item.querySelector(".fix-desc").textContent.trim() : "";
+    parts.push(`${title}. ${desc}`);
+  });
+
+  return parts.join(". ").trim();
+}
+
+function playStepAudio() {
+  const textToRead = getStepSpokenText(currentStep);
+  if (!textToRead) {
+    setStatusMessage("لا يوجد نص للقراءة في هذه الخطوة.");
+    return;
   }
 
-  async function pullFileFromGitHub() {
-    const token = document.getElementById('ghToken').value.trim();
-    const owner = document.getElementById('ghOwner').value.trim();
-    const repo = document.getElementById('ghRepo').value.trim();
-    const branch = document.getElementById('ghBranch').value.trim() || 'main';
-    const path = document.getElementById('ghFilePath').value.trim();
+  stopFallbackAudio();
 
-    if (!owner || !repo || !path) {
-      return showToast('أدخل اسم المالك والمستودع ومسار الملف للجلب!', true);
-    }
-
-    logTerminal(`Pulling ${path} from ${owner}/${repo}...`, 'info');
+  // 1) إذا كان التطبيق يعمل داخل WebView مع جسر أندرويد، نستخدم نطق النظام مباشرة
+  if (window.AndroidBridge && typeof window.AndroidBridge.speakText === "function") {
     try {
-      const headers = { 'Accept': 'application/vnd.github.v3+json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-
-      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, { headers });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'الملف غير موجود في المستودع');
-
-      const decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
-      const fileName = path.split('/').pop();
-      ideState.files[fileName] = decoded;
-      openFile(fileName);
-      saveFilesToStorage();
-      logTerminal(`Pulled ${fileName} successfully!`, 'success');
-      showToast('تم جلب الكود من GitHub بنجاح!');
-    } catch (err) {
-      logTerminal(`GitHub Pull Error: ${err.message}`, 'error');
-      showToast('خطأ في الجلب: ' + err.message, true);
+      window.AndroidBridge.speakText(textToRead);
+      setStatusMessage(`🔊 جاري قراءة تعليمات الخطوة ${currentStep} باللغة العربية...`);
+      return;
+    } catch (e) {
+      // المتابعة إلى محرك النطق في المتصفح
     }
   }
 
-  document.getElementById('pushGhBtn').addEventListener('click', pushFileToGitHub);
-  document.getElementById('quickPushBtn').addEventListener('click', pushFileToGitHub);
-  document.getElementById('pullGhBtn').addEventListener('click', pullFileFromGitHub);
+  const hasSpeechSynthesis =
+    "speechSynthesis" in window &&
+    typeof window.speechSynthesis.speak === "function" &&
+    typeof SpeechSynthesisUtterance !== "undefined";
 
-  // ==========================================
-  // 10. حفظ الإعدادات والتحكم بالطرفية
-  // ==========================================
-  function saveAllSettings() {
-    ideState.settings = {
-      aiProvider: document.getElementById('aiProvider').value,
-      aiApiKey: document.getElementById('aiApiKey').value.trim(),
-      ghToken: document.getElementById('ghToken').value.trim(),
-      ghOwner: document.getElementById('ghOwner').value.trim(),
-      ghRepo: document.getElementById('ghRepo').value.trim(),
-      ghBranch: document.getElementById('ghBranch').value.trim() || 'main',
-      fontSize: document.getElementById('editorFontSize').value
-    };
-    localStorage.setItem('winforge_ide_settings', JSON.stringify(ideState.settings));
-    applySettingsToUI();
-    showToast('تم حفظ كافة الإعدادات ومفاتيح الربط!');
-    logTerminal('Settings & API credentials saved locally.', 'success');
+  if (!hasSpeechSynthesis) {
+    playArabicSpeechFallback(textToRead);
+    return;
   }
 
-  function applySettingsToUI() {
-    const s = ideState.settings;
-    document.getElementById('aiProvider').value = s.aiProvider;
-    document.getElementById('aiApiKey').value = s.aiApiKey;
-    document.getElementById('ghToken').value = s.ghToken;
-    document.getElementById('ghOwner').value = s.ghOwner;
-    document.getElementById('ghRepo').value = s.ghRepo;
-    document.getElementById('ghBranch').value = s.ghBranch;
-    document.getElementById('editorFontSize').value = s.fontSize;
+  loadVoices();
+  clearSpeechKeepAlive();
 
-    codeEditor.style.fontSize = s.fontSize;
-    lineNumbers.style.fontSize = s.fontSize;
-
-    document.getElementById('statusEngine').textContent =
-      (s.aiProvider !== 'offline' && s.aiApiKey) ? `AI: ${s.aiProvider.toUpperCase()}` : 'AI: Offline Engine';
-
-    document.getElementById('statusGit').textContent =
-      (s.ghOwner && s.ghRepo) ? `GitHub: ${s.ghOwner}/${s.ghRepo}` : 'GitHub: Disconnected';
+  try {
+    window.speechSynthesis.cancel();
+  } catch (e) {
+    // تجاهل
   }
 
-  document.getElementById('saveGhBtn').addEventListener('click', saveAllSettings);
-  document.getElementById('saveAllSettingsBtn').addEventListener('click', saveAllSettings);
+  const arabicVoice = findArabicVoice();
+  const utterance = new SpeechSynthesisUtterance(textToRead);
+  utterance.lang = arabicVoice && arabicVoice.lang ? arabicVoice.lang : "ar-SA";
+  if (arabicVoice) {
+    utterance.voice = arabicVoice;
+  }
+  utterance.rate = 0.95;
+  utterance.pitch = 1.0;
+  utterance.volume = 1.0;
 
-  document.getElementById('resetAllBtn').addEventListener('click', () => {
-    localStorage.removeItem('winforge_ide_settings');
-    localStorage.removeItem('winforge_ide_files');
-    location.reload();
+  let hasStarted = false;
+
+  utterance.onstart = () => {
+    hasStarted = true;
+    setStatusMessage(`🔊 جاري قراءة تعليمات الخطوة ${currentStep} باللغة العربية...`);
+  };
+
+  utterance.onend = () => {
+    clearSpeechKeepAlive();
+    setStatusMessage("انتهت القراءة الصوتية للخطوة.");
+  };
+
+  utterance.onerror = (event) => {
+    clearSpeechKeepAlive();
+    const errType = event && event.error ? event.error : "unknown";
+    if (errType === "interrupted" || errType === "canceled") return;
+    playArabicSpeechFallback(textToRead);
+  };
+
+  speechKeepAliveTimer = setInterval(() => {
+    if (!window.speechSynthesis.speaking) {
+      clearSpeechKeepAlive();
+      return;
+    }
+    if (window.speechSynthesis.paused) {
+      try {
+        window.speechSynthesis.resume();
+      } catch (e) {
+        // تجاهل
+      }
+    }
+  }, 3500);
+
+  try {
+    window.speechSynthesis.speak(utterance);
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
+    setStatusMessage(`🔊 جاري تشغيل القراءة الصوتية للخطوة ${currentStep}...`);
+
+    setTimeout(() => {
+      if (!hasStarted && !window.speechSynthesis.speaking) {
+        clearSpeechKeepAlive();
+        playArabicSpeechFallback(textToRead);
+      }
+    }, 1800);
+  } catch (err) {
+    clearSpeechKeepAlive();
+    playArabicSpeechFallback(textToRead);
+  }
+}
+
+function updateAppsCounter() {
+  const counterEl = document.getElementById("appsProgressCounter");
+  if (counterEl) {
+    counterEl.textContent = `تم فتح: ${visitedPackages.size} من ${appsList.length}`;
+  }
+}
+
+function handleAppClick(app, buttonEl) {
+  try {
+    visitedPackages.add(app.packageName);
+    buttonEl.classList.add("visited");
+    updateAppsCounter();
+
+    if (window.AndroidBridge && typeof window.AndroidBridge.openAppSettings === "function") {
+      window.AndroidBridge.openAppSettings(app.packageName);
+      setStatusMessage(`تم طلب فتح صفحة (${app.title}).`);
+      return;
+    }
+
+    const intentUri = `intent://settings/ApplicationDetails?settings:package_name=${app.packageName}#Intent;scheme=package;action=android.settings.APPLICATION_DETAILS_SETTINGS;S.package=${app.packageName};end`;
+    window.location.href = intentUri;
+    setStatusMessage(`محاولة فتح (${app.title})...`);
+  } catch (error) {
+    setStatusMessage(`تعذر فتح صفحة (${app.title}) - قد لا يكون مثبتاً أو لا يدعم شاشة التفاصيل.`);
+  }
+}
+
+function renderAppButtons() {
+  const listContainer = document.getElementById("appsListContainer");
+  if (!listContainer) return;
+
+  listContainer.innerHTML = "";
+  appsList.forEach((app) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "app-btn";
+
+    const titleSpan = document.createElement("span");
+    titleSpan.textContent = app.title;
+
+    const pkgSpan = document.createElement("span");
+    pkgSpan.className = "pkg-name";
+    pkgSpan.textContent = `(${app.packageName})`;
+
+    btn.appendChild(titleSpan);
+    btn.appendChild(pkgSpan);
+    btn.addEventListener("click", () => handleAppClick(app, btn));
+    listContainer.appendChild(btn);
   });
 
-  document.getElementById('clearTerminalBtn').addEventListener('click', () => {
-    terminalOutput.innerHTML = '';
-  });
+  updateAppsCounter();
+}
 
-  document.getElementById('toggleTerminalBtn').addEventListener('click', () => {
-    document.getElementById('bottomTerminal').classList.toggle('minimized');
-  });
-
-  // تشغيل التهيئة عند التحميل
-  loadState();
+document.addEventListener("DOMContentLoaded", () => {
+  loadVoices();
+  if ("speechSynthesis" in window && "onvoiceschanged" in window.speechSynthesis) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+  renderAppButtons();
+  showStep(1);
 });
 </script>
-</body>
+<script>// اكتب دوال JavaScript هنا
+console.log('gharb studi app ready');</script></body>
 </html>
+
+```
