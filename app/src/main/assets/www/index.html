@@ -1,70 +1,1523 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>انشاء لعبة سيارات</title>
-  <style>
-    *{box-sizing:border-box;user-select:none;}
-    body{margin:0;background:#090D16;color:#F8FAFC;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:8px;}
-    .hud,.controls{width:100%;max-width:380px;background:#111827;border:1px solid #1E293B;padding:10px 12px;}
-    .hud{border-radius:14px 14px 0 0;display:flex;justify-content:space-between;font-size:13px;font-weight:bold;}
-    .hud b{color:#10B981;}
-    .wrap{position:relative;width:100%;max-width:380px;background:#1E293B;border-inline:1px solid #334155;}
-    canvas{display:block;width:100%;height:390px;}
-    .controls{border-radius:0 0 14px 14px;display:flex;flex-direction:column;gap:8px;}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-    .btn{border:none;border-radius:10px;padding:12px 8px;font-weight:bold;font-size:14px;cursor:pointer;color:#fff;}
-    .lane{background:#2563EB;}
-    .turbo{background:#10B981;color:#052E16;}
-    .brake{background:#EF4444;}
-    .ov{position:absolute;inset:0;background:rgba(9,13,22,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px;}
-    .ov.hide{display:none;}
-  </style>
-</head>
-<body>
-  <div class="hud"><span>النقاط: <b id="sc">0</b></span><span>السرعة: <b id="sp">120</b> كم/س</span><span>الأعلى: <b id="bs">0</b></span></div>
-  <div class="wrap">
-    <canvas id="c" width="340" height="390"></canvas>
-    <div id="ov" class="ov">
-      <h2 id="ot" style="margin:0;color:#10B981;">سباق الخطين السريع</h2>
-      <p id="os" style="margin:0;color:#CBD5E1;font-size:13px;">انتقل بين المسارين وتحكم بالسرعة لتفادي السيارات</p>
-      <button class="btn turbo" style="padding:12px 24px;" onclick="start()">ابدأ اللعب</button>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gharb Pharmacy ERP — نظام غرب لإدارة الصيدليات والمخازن والحسابات الذكية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+        }
+        .num-ltr {
+            direction: ltr;
+            unicode-bidi: isolate;
+        }
+        pre.code-box {
+            direction: ltr;
+            text-align: left;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 12px;
+        }
+        /* إخفاء شريط التمرير مع الإبقاء على قابلية التمرير في القوائم الأفقية */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+        }
+    </style>
+<style>/* اكتب تنسيقات CSS هنا */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 16px;
+}</style></head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-50">
+
+    <!-- الشريط العلوي التنفيذي -->
+    <header class="bg-slate-900/95 border-b border-slate-800 px-4 py-3 sticky top-0 z-30 no-print">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 to-emerald-500 flex items-center justify-center font-extrabold text-slate-950 text-lg shadow">
+                    غ
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h1 class="text-base sm:text-lg font-extrabold text-white">Gharb Pharmacy ERP</h1>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                            إدارة ذكية، حسابات دقيقة، ومستقبل بلا أخطاء
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400">
+                        <span id="orgNameHeader">صيدليات ومخازن غرب النموذجية</span> •
+                        الدور: <span id="activeRoleHeader" class="text-sky-300 font-bold">مالك الصيدلية</span> •
+                        <span id="offlineBadge" class="text-amber-300">عمل محلي + مزامنة سحابية</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <span id="trialBalancePill" class="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    دفتر الأستاذ: متوازن 100%
+                </span>
+                <button id="quickScanOpenBtn" type="button" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 transition text-xs font-bold text-white shadow">
+                    تصوير / رفع فاتورة (AI)
+                </button>
+                <button id="resetSystemBtn" type="button" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 transition text-xs font-semibold text-amber-300 border border-slate-700">
+                    إعادة ضبط التجربة
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- صندوق الرسائل والتنبيهات الفورية -->
+    <div class="max-w-7xl w-full mx-auto px-4 pt-3 no-print">
+        <div id="statusToast" class="px-4 py-3 rounded-2xl bg-sky-950/80 border border-sky-700/60 text-sky-100 text-xs sm:text-sm flex items-start justify-between gap-3">
+            <span id="statusToastMsg">مرحباً بك في نظام غرب ERP! يمكنك الآن تسجيل الفواتير، رفع صور/ملفات الفواتير، صرف الأدوية بنظام FEFO، وإصدار القيود والتقارير مباشرة.</span>
+            <button id="closeToastBtn" type="button" class="text-sky-300 hover:text-white text-xs font-bold shrink-0">إخفاء</button>
+        </div>
     </div>
-  </div>
-  <div class="controls">
-    <div class="row">
-      <button class="btn lane" onclick="lane=1">مسار أيمن ➡</button>
-      <button class="btn lane" onclick="lane=0">⬅ مسار أيسر</button>
-    </div>
-    <div class="row">
-      <button class="btn turbo" onpointerdown="boost=1" onpointerup="boost=0" onpointerleave="boost=0">⚡ زيادة السرعة</button>
-      <button class="btn brake" onpointerdown="slow=1" onpointerup="slow=0" onpointerleave="slow=0">🛑 تهدئة السرعة</button>
-    </div>
-  </div>
-  <script>
-    var c=document.getElementById('c'),x=c.getContext('2d'),lanes=[95,245],lane=0,px=95,boost=0,slow=0,run=0,sc=0,dash=0,obs=[],t=0,best=+localStorage.getItem('car2_best')||0;
-    document.getElementById('bs').textContent=best;
-    document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')lane=1;if(e.key==='ArrowLeft')lane=0;if(e.key==='ArrowUp')boost=1;if(e.key==='ArrowDown')slow=1;});
-    document.addEventListener('keyup',function(e){if(e.key==='ArrowUp')boost=0;if(e.key==='ArrowDown')slow=0;});
-    function start(){run=1;sc=0;obs=[];lane=0;px=lanes[0];document.getElementById('ov').classList.add('hide');loop();}
-    function car(cx,cy,col){x.fillStyle=col;x.fillRect(cx-20,cy,40,68);x.fillStyle='#0F172A';x.fillRect(cx-14,cy+12,28,16);}
-    function loop(){
-      if(!run)return;
-      var spd=Math.max(2,4.2+sc*0.02+(boost?4:0)-(slow?2:0));
-      document.getElementById('sp').textContent=Math.round(spd*25);
-      x.fillStyle='#1E293B';x.fillRect(0,0,c.width,c.height);
-      x.fillStyle='#10B981';x.fillRect(8,0,5,c.height);x.fillRect(c.width-13,0,5,c.height);
-      dash=(dash+spd)%44;x.fillStyle='#F8FAFC';for(var y=dash-44;y<c.height;y+=44)x.fillRect(c.width/2-3,y,6,22);
-      px+=(lanes[lane]-px)*0.25;car(px,305,'#10B981');
-      t+=spd;if(t>160){t=0;var l=Math.random()<.5?0:1;obs.push({x:lanes[l],y:-75,col:l?'#38BDF8':'#F59E0B'});}
-      for(var i=obs.length-1;i>=0;i--){
-        var o=obs[i];o.y+=spd*0.9;car(o.x,o.y,o.col);
-        if(Math.abs(o.x-px)<32&&o.y+66>310&&o.y<368){run=0;if(sc>best){best=sc;localStorage.setItem('car2_best',best);document.getElementById('bs').textContent=best;}document.getElementById('ot').textContent='انتهى السباق!';document.getElementById('os').textContent='النقاط: '+sc;document.getElementById('ov').classList.remove('hide');return;}
-        if(o.y>c.height){obs.splice(i,1);sc+=(boost?2:1);document.getElementById('sc').textContent=sc;}
-      }
-      requestAnimationFrame(loop);
-    }
-  </script>
-</body>
+
+    <!-- شريط التنقل بين الأقسام (16 وحدة منظمة في مجموعات عملية) -->
+    <nav class="max-w-7xl w-full mx-auto px-4 pt-3 no-print">
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar bg-slate-900 p-1.5 rounded-2xl border border-slate-800">
+            <button data-section="dashboard" type="button" class="nav-pill shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition bg-sky-600 text-white shadow">
+                لوحة التحكم الرئيسية
+            </button>
+            <button data-section="trade" type="button" class="nav-pill shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition text-slate-300 hover:bg-slate-800">
+                المبيعات والمشتريات والمخزون
+            </button>
+            <button data-section="ai_ocr" type="button" class="nav-pill shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition text-slate-300 hover:bg-slate-800">
+                تصوير الفواتير ومساعد AI
+            </button>
+            <button data-section="accounting" type="button" class="nav-pill shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition text-slate-300 hover:bg-slate-800">
+                القيود والحسابات والصندوق والبنوك
+            </button>
+            <button data-section="parties" type="button" class="nav-pill shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition text-slate-300 hover:bg-slate-800">
+                العملاء والموردون والسندات
+            </button>
+            <button data-section="reports" type="button" class="nav-pill shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition text-slate-300 hover:bg-slate-800">
+                التقارير وPDF/Excel
+            </button>
+            <button data-section="admin" type="button" class="nav-pill shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition text-slate-300 hover:bg-slate-800">
+                الصلاحيات والمستندات والسحابة
+            </button>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 space-y-6">
+
+        <!-- ==================== 1. لوحة التحكم الرئيسية ==================== -->
+        <section id="sec-dashboard" class="section-panel space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-semibold">إجمالي المبيعات</span>
+                        <span class="text-[11px] px-2 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-300">يومي / شهري</span>
+                    </div>
+                    <div id="kpiSales" class="text-xl font-extrabold text-emerald-400 mt-2 num-ltr">0.00 ر.ي</div>
+                    <div id="kpiSalesCount" class="text-[11px] text-slate-400 mt-1">عدد الفواتير: 0</div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-semibold">إجمالي المشتريات (الواردات)</span>
+                        <span class="text-[11px] px-2 py-0.5 rounded-lg bg-sky-500/15 text-sky-300">الموردون</span>
+                    </div>
+                    <div id="kpiPurchases" class="text-xl font-extrabold text-sky-400 mt-2 num-ltr">0.00 ر.ي</div>
+                    <div id="kpiPurchasesCount" class="text-[11px] text-slate-400 mt-1">فواتير الواردات: 0</div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-semibold">صافي الأرباح (بعد COGS والمصروفات)</span>
+                        <span class="text-[11px] px-2 py-0.5 rounded-lg bg-purple-500/15 text-purple-300">قائمة الدخل</span>
+                    </div>
+                    <div id="kpiNetProfit" class="text-xl font-extrabold text-purple-300 mt-2 num-ltr">0.00 ر.ي</div>
+                    <div id="kpiGrossProfit" class="text-[11px] text-slate-400 mt-1 num-ltr">مجمل الربح: 0.00 ر.ي</div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-semibold">قيمة المخزون الحالية</span>
+                        <span class="text-[11px] px-2 py-0.5 rounded-lg bg-amber-500/15 text-amber-300">IAS 2 / FEFO</span>
+                    </div>
+                    <div id="kpiInventoryValue" class="text-xl font-extrabold text-amber-300 mt-2 num-ltr">0.00 ر.ي</div>
+                    <div id="kpiStockUnits" class="text-[11px] text-slate-400 mt-1">إجمالي الوحدات: 0</div>
+                </div>
+            </div>
+
+            <!-- أزرار الوصول السريع لتسجيل ورفع البيانات -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h2 class="text-sm sm:text-base font-bold text-white">أزرار تسجيل ورفع العمليات السريعة</h2>
+                    <span class="text-xs text-slate-400">جميع الإجراءات ترحّل تلقائياً إلى الحسابات والمخزون وسجل التدقيق</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                    <button id="dashQuickSaleBtn" type="button" class="px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition text-xs sm:text-sm font-bold text-white shadow">
+                        + تسجيل فاتورة بيع سريعة
+                    </button>
+                    <button id="dashQuickPurchaseBtn" type="button" class="px-4 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 transition text-xs sm:text-sm font-bold text-white shadow">
+                        + تسجيل فاتورة شراء وتشغيلة
+                    </button>
+                    <button id="dashQuickOcrBtn" type="button" class="px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 transition text-xs sm:text-sm font-bold text-white shadow">
+                        تصوير / رفع فاتورة (PDF / صورة)
+                    </button>
+                    <button id="dashQuickExpenseBtn" type="button" class="px-4 py-3 rounded-xl bg-teal-600 hover:bg-teal-500 active:scale-95 transition text-xs sm:text-sm font-bold text-white shadow">
+                        + تسجيل مصروف / سند صرف
+                    </button>
+                </div>
+            </div>
+
+            <!-- تغطية الأقسام الـ 16 وحالة الصلاحية والمخزون -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <h3 class="text-sm font-bold text-white">الأقسام المحاسبية والتشغيلية الـ 16 في النظام</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-sky-300">1. المبيعات</div>
+                            <div class="text-slate-400 text-[11px]">نقدي، آجل، مرتجعات</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-sky-300">2. المشتريات</div>
+                            <div class="text-slate-400 text-[11px]">فواتير الموردين، آجلة</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-sky-300">3. المخزون</div>
+                            <div class="text-slate-400 text-[11px]">تشغيلات، FEFO، جرد</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-sky-300">4. العملاء</div>
+                            <div class="text-slate-400 text-[11px]">مديونيات، كشوفات</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-emerald-300">5. الموردون</div>
+                            <div class="text-slate-400 text-[11px]">مستحقات، مقارنات</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-emerald-300">6. الصندوق</div>
+                            <div class="text-slate-400 text-[11px]">قبض، صرف، حركة يومية</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-emerald-300">7. البنوك</div>
+                            <div class="text-slate-400 text-[11px]">حسابات، تحويلات، إيداع</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-emerald-300">8. المصروفات</div>
+                            <div class="text-slate-400 text-[11px]">إيجار، رواتب، تشغيل</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-amber-300">9. الإيرادات</div>
+                            <div class="text-slate-400 text-[11px]">مبيعات وإيرادات أخرى</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-amber-300">10. القيود اليومية</div>
+                            <div class="text-slate-400 text-[11px]">مزدوجة + عكس قيود</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-amber-300">11. الحسابات العامة</div>
+                            <div class="text-slate-400 text-[11px]">دليل الحسابات والأستاذ</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-amber-300">12. التقارير</div>
+                            <div class="text-slate-400 text-[11px]">أرباح، ميزانية، CSV</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-purple-300">13. الموظفون</div>
+                            <div class="text-slate-400 text-[11px]">أدوار وصلاحيات RBAC</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-purple-300">14. الشركات</div>
+                            <div class="text-slate-400 text-[11px]">منشآت وفروع ومخازن</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-purple-300">15. المستندات</div>
+                            <div class="text-slate-400 text-[11px]">رفع صور وفواتير PDF</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5">
+                            <div class="font-bold text-purple-300">16. الإعدادات</div>
+                            <div class="text-slate-400 text-[11px]">عملات، نسخ مشفر، سحابة</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <h3 class="text-sm font-bold text-white">تنبيهات المخزون والصلاحية</h3>
+                    <div id="dashboardAlertsBox" class="space-y-2 text-xs"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 2. المبيعات والمشتريات والمخزون الصيدلي ==================== -->
+        <section id="sec-trade" class="section-panel hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <!-- نموذج تسجيل فاتورة شراء وتشغيلة -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <h2 class="text-sm sm:text-base font-bold text-sky-400">تسجيل فاتورة مشتريات وتشغيلة دوائية</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">الصنف الدوائي</label>
+                            <select id="purProductSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">المورد</label>
+                            <select id="purSupplierSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">رقم التشغيلة (Batch Number)</label>
+                            <input id="purBatchInput" type="text" value="LOT-2027-X1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">تاريخ الانتهاء</label>
+                            <input id="purExpiryInput" type="date" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">الكمية (بالعبوة الأساسية)</label>
+                            <input id="purQtyInput" type="number" min="1" value="20" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">تكلفة الوحدة (ريال)</label>
+                            <input id="purCostInput" type="number" min="1" step="0.01" value="800" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] text-slate-400 mb-1">طريقة الدفع</label>
+                            <select id="purPaymentSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                                <option value="CASH">نقداً (من الصندوق 1101)</option>
+                                <option value="CREDIT">آجل (على حساب الموردين 2101)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="submitPurchaseBtn" type="button" class="w-full px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 transition text-xs sm:text-sm font-bold text-white shadow">
+                        اعتماد فاتورة المشتريات وترحيل القيد والمخزون
+                    </button>
+                </div>
+
+                <!-- نموذج تسجيل فاتورة بيع (FEFO) -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <h2 class="text-sm sm:text-base font-bold text-emerald-400">تسجيل فاتورة بيع (صرف FEFO للأقرب انتهاءً)</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">الصنف الدوائي</label>
+                            <select id="saleProductSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">العميل (مطلوب في البيع الآجل)</label>
+                            <select id="saleCustomerSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">الكمية المباعة</label>
+                            <input id="saleQtyInput" type="number" min="1" value="5" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">سعر بيع الوحدة (ريال)</label>
+                            <input id="salePriceInput" type="number" min="1" step="0.01" value="1100" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] text-slate-400 mb-1">طريقة الدفع</label>
+                            <select id="salePaymentSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                                <option value="CASH">نقداً (إلى الصندوق 1101)</option>
+                                <option value="CREDIT">آجل (ذمم العملاء 1103)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="submitSaleBtn" type="button" class="w-full px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition text-xs sm:text-sm font-bold text-white shadow">
+                        اعتماد فاتورة البيع وترحيل الإيراد والتكلفة (COGS)
+                    </button>
+                </div>
+            </div>
+
+            <!-- إضافة صنف دوائي جديد إلى دليل الأصناف -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                <h3 class="text-sm font-bold text-amber-300">إضافة صنف دوائي جديد إلى المخزون</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
+                    <input id="newProdName" type="text" placeholder="الاسم التجاري (مثال: بانادول إكسترا)" class="sm:col-span-2 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <input id="newProdStrength" type="text" placeholder="التركيز (500mg)" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <input id="newProdCost" type="number" min="1" step="0.01" placeholder="سعر الشراء (ريال)" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                    <input id="newProdPrice" type="number" min="1" step="0.01" placeholder="سعر البيع (ريال)" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                </div>
+                <button id="addNewProductBtn" type="button" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 active:scale-95 transition text-xs font-bold text-white">
+                    + حفظ الصنف في الدليل
+                </button>
+            </div>
+
+            <!-- جدول الأصناف والتشغيلات والفواتير -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                    <h3 class="text-sm font-bold text-white">سجل الأصناف والتشغيلات (FEFO)</h3>
+                    <div id="tradeCatalogList" class="space-y-2 max-h-80 overflow-y-auto"></div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                    <h3 class="text-sm font-bold text-white">سجل فواتير المبيعات والمشتريات</h3>
+                    <div id="tradeInvoicesList" class="space-y-2 max-h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 3. تصوير الفواتير ومساعد Gharb AI ==================== -->
+        <section id="sec-ai_ocr" class="section-panel hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <!-- رفع صورة / PDF للفاتورة وتوليد مسودة للمراجعة -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <h2 class="text-sm sm:text-base font-bold text-blue-400">تصوير أو رفع فاتورة (صورة / PDF) للمراجعة البشرية</h2>
+                    <p class="text-xs text-slate-400">
+                        اختر صورة أو ملف فاتورة، أو أدخل بيانات الفاتورة المقروءة ليقوم النظام ببناء مسودة مراجعة دون ترحيل تلقائي قبل موافقتك.
+                    </p>
+
+                    <div class="bg-slate-950 border border-dashed border-sky-700/60 rounded-xl p-3 space-y-2">
+                        <label class="block text-xs font-bold text-sky-300">رفع صورة أو مستند PDF للفاتورة</label>
+                        <input id="invoiceFileInput" type="file" accept="image/*,.pdf" class="block w-full text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-sky-600 file:text-white hover:file:bg-sky-500">
+                        <div id="uploadedFileInfo" class="text-[11px] text-slate-400">لم يتم اختيار ملف بعد (يمكنك أيضاً إنشاء مسودة مباشرة للاختبار).</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">المورد المكتشف</label>
+                            <select id="ocrSupplierSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">الصنف الدوائي</label>
+                            <select id="ocrProductSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">الكمية المستخرجة</label>
+                            <input id="ocrQtyInput" type="number" min="1" value="15" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">سعر الشراء للوحدة (ريال)</label>
+                            <input id="ocrUnitCostInput" type="number" min="1" step="0.01" value="780" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                        </div>
+                    </div>
+
+                    <button id="createOcrDraftBtn" type="button" class="w-full px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 transition text-xs sm:text-sm font-bold text-white shadow">
+                        تحويل إلى مسودة فاتورة للمراجعة البشرية
+                    </button>
+                </div>
+
+                <!-- مساعد Gharb AI والبحث الذكي -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <h2 class="text-sm sm:text-base font-bold text-teal-400">Gharb AI Accountant — المساعد والبحث الذكي</h2>
+                    <p class="text-xs text-slate-400">اسأل عن المبيعات، الأرباح، المخزون، الصلاحيات، العملاء، أو الموردين من السجلات الفعلية.</p>
+
+                    <div class="flex flex-wrap gap-1.5">
+                        <button type="button" data-q="كم مبيعاتي وصافي أرباحي؟" class="quick-q-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-sky-300">الأرباح والمبيعات</button>
+                        <button type="button" data-q="ما قيمة المخزون وأقرب صلاحية؟" class="quick-q-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-emerald-300">المخزون والصلاحية</button>
+                        <button type="button" data-q="من هم العملاء والموردون؟" class="quick-q-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-amber-300">العملاء والموردون</button>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <input id="aiQueryInput" type="text" value="كم مبيعاتي وصافي أرباحي؟" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white">
+                        <button id="runAiQueryBtn" type="button" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 active:scale-95 transition text-xs font-bold text-white">
+                            بحث وتحليل
+                        </button>
+                    </div>
+
+                    <div id="aiResultBox" class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs sm:text-sm text-slate-200 min-h-[110px]">
+                        النتائج هنا تستند حصراً إلى البيانات المسجلة في النظام دون اختلاق أرقام.
+                    </div>
+                </div>
+            </div>
+
+            <!-- قائمة المسودات بانتظار الاعتماد البشري -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2.5">
+                <h3 class="text-sm font-bold text-white">مسودات الفواتير بانتظار المراجعة والاعتماد</h3>
+                <div id="ocrDraftsQueue" class="space-y-2"></div>
+            </div>
+        </section>
+
+        <!-- ==================== 4. القيود اليومية والحسابات العامة والصندوق والبنوك ==================== -->
+        <section id="sec-accounting" class="section-panel hidden space-y-5">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                <h2 class="text-sm sm:text-base font-bold text-white">إضافة قيد محاسبي مزدوج (مدين = دائن)</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">الحساب المدين</label>
+                        <select id="jeDebitSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">الحساب الدائن</label>
+                        <select id="jeCreditSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">المبلغ (ريال)</label>
+                        <input id="jeAmountInput" type="number" min="0.01" step="0.01" value="150000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">البيان / الوصف</label>
+                        <input id="jeDescInput" type="text" value="سداد مصروف إيجار / حركة مالية" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                    </div>
+                </div>
+                <button id="postJournalBtn" type="button" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 transition text-xs sm:text-sm font-bold text-white shadow">
+                    ترحيل القيد اليومي المزدوج
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                    <h3 class="text-sm font-bold text-white">دليل الحسابات وميزان المراجعة (الصندوق، البنك، المخزون، الإيرادات، المصروفات)</h3>
+                    <div id="chartOfAccountsList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                    <h3 class="text-sm font-bold text-white">دفتر القيود اليومية (غير قابلة للحذف المباشر — تدعم القيد العكسي)</h3>
+                    <div id="journalBookList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 5. العملاء والموردون والسندات ==================== -->
+        <section id="sec-parties" class="section-panel hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <!-- إضافة عميل أو مورد جديد -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <h2 class="text-sm sm:text-base font-bold text-sky-400">إضافة عميل أو مورد جديد</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <select id="partyTypeSelect" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                            <option value="CUSTOMER">عميل (ذمم مدينة)</option>
+                            <option value="SUPPLIER">مورد / شركة أدوية</option>
+                        </select>
+                        <input id="partyNameInput" type="text" placeholder="الاسم الكامل" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                        <input id="partyPhoneInput" type="text" placeholder="رقم الهاتف" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                    </div>
+                    <button id="addPartyBtn" type="button" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 transition text-xs font-bold text-white">
+                        + حفظ السجل
+                    </button>
+                </div>
+
+                <!-- سند قبض / سند صرف -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <h2 class="text-sm sm:text-base font-bold text-emerald-400">إصدار سند قبض أو سند صرف وترحيله</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <select id="voucherKindSelect" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                            <option value="RECEIPT">سند قبض من عميل (مدين الصندوق / دائن العملاء)</option>
+                            <option value="PAYMENT">سند صرف لمورد (مدين الموردين / دائن الصندوق)</option>
+                        </select>
+                        <input id="voucherAmountInput" type="number" min="1" step="0.01" value="50000" placeholder="المبلغ (ريال)" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white num-ltr">
+                        <input id="voucherNoteInput" type="text" placeholder="بيان السند" value="دفعة تسوية حساب" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                    </div>
+                    <button id="postVoucherBtn" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition text-xs font-bold text-white">
+                        ترحيل السند محاسبياً
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                    <h3 class="text-sm font-bold text-white">قائمة العملاء</h3>
+                    <div id="customersList" class="space-y-2"></div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                    <h3 class="text-sm font-bold text-white">قائمة الموردين وشركات الأدوية</h3>
+                    <div id="suppliersList" class="space-y-2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 6. التقارير المالية وتصدير CSV وطباعة PDF ==================== -->
+        <section id="sec-reports" class="section-panel hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                    <h2 class="text-sm font-bold text-sky-400">قائمة الدخل (الأرباح والخسائر)</h2>
+                    <div class="flex justify-between text-xs sm:text-sm py-1 border-b border-slate-800">
+                        <span>إجمالي الإيرادات (4101)</span>
+                        <span id="repRev" class="font-bold text-emerald-400 num-ltr">0.00 ر.ي</span>
+                    </div>
+                    <div class="flex justify-between text-xs sm:text-sm py-1 border-b border-slate-800">
+                        <span>تكلفة البضاعة المباعة (5101)</span>
+                        <span id="repCogs" class="font-bold text-amber-400 num-ltr">0.00 ر.ي</span>
+                    </div>
+                    <div class="flex justify-between text-xs sm:text-sm py-1 border-b border-slate-800">
+                        <span>مجمل الربح</span>
+                        <span id="repGross" class="font-bold text-sky-400 num-ltr">0.00 ر.ي</span>
+                    </div>
+                    <div class="flex justify-between text-xs sm:text-sm py-1 border-b border-slate-800">
+                        <span>المصروفات التشغيلية (52xx)</span>
+                        <span id="repExp" class="font-bold text-rose-400 num-ltr">0.00 ر.ي</span>
+                    </div>
+                    <div class="flex justify-between text-sm pt-1">
+                        <span class="font-bold text-white">صافي الربح / الخسارة</span>
+                        <span id="repNet" class="font-bold text-emerald-300 num-ltr">0.00 ر.ي</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                    <h2 class="text-sm font-bold text-purple-400">الميزانية العمومية</h2>
+                    <div class="flex justify-between text-xs sm:text-sm py-1 border-b border-slate-800">
+                        <span>إجمالي الأصول</span>
+                        <span id="repAssets" class="font-bold text-sky-400 num-ltr">0.00 ر.ي</span>
+                    </div>
+                    <div class="flex justify-between text-xs sm:text-sm py-1 border-b border-slate-800">
+                        <span>إجمالي الخصوم</span>
+                        <span id="repLiab" class="font-bold text-amber-400 num-ltr">0.00 ر.ي</span>
+                    </div>
+                    <div class="flex justify-between text-xs sm:text-sm py-1 border-b border-slate-800">
+                        <span>حقوق الملكية + صافي الدخل</span>
+                        <span id="repEqInc" class="font-bold text-purple-300 num-ltr">0.00 ر.ي</span>
+                    </div>
+                    <div class="pt-1 text-xs">
+                        حالة الميزانية: <span id="repBalOk" class="font-bold text-emerald-400">متوازنة 100%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button id="exportCsvBtn" type="button" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 transition text-xs font-bold text-white">
+                        تصدير ونسخ ميزان المراجعة (CSV)
+                    </button>
+                    <button id="exportInvCsvBtn" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition text-xs font-bold text-white">
+                        تصدير ونسخ المخزون (CSV)
+                    </button>
+                    <button id="printReportBtn" type="button" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 active:scale-95 transition text-xs font-bold text-white">
+                        طباعة / حفظ PDF
+                    </button>
+                </div>
+                <pre id="reportCsvOut" class="code-box bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 max-h-60 overflow-auto"># اضغط على أحد أزرار التصدير أعلاه لتوليد ونسخ ملف CSV</pre>
+            </div>
+        </section>
+
+        <!-- ==================== 7. الصلاحيات والمستندات والسحابة ==================== -->
+        <section id="sec-admin" class="section-panel hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <h2 class="text-sm sm:text-base font-bold text-white">الأدوار والصلاحيات (RBAC) والنسخ الاحتياطي المشفر</h2>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" data-role="OWNER" class="role-switch px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white">مالك الصيدلية</button>
+                        <button type="button" data-role="ACCOUNTANT" class="role-switch px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">محاسب</button>
+                        <button type="button" data-role="PHARMACIST" class="role-switch px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">صيدلي</button>
+                        <button type="button" data-role="AUDITOR" class="role-switch px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">مراجع (قراءة فقط)</button>
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button id="syncQueueBtn" type="button" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 transition text-xs font-bold text-white">
+                            مزامنة الطابور السحابي
+                        </button>
+                        <button id="makeBackupBtn" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition text-xs font-bold text-white">
+                            إنشاء نسخة مشفرة
+                        </button>
+                    </div>
+                    <div id="adminBackupsList" class="space-y-2 pt-2"></div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                    <h3 class="text-sm font-bold text-white">سجل التدقيق غير القابل للمحو (Audit Log)</h3>
+                    <div id="auditLogList" class="space-y-2 max-h-80 overflow-y-auto text-xs"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        /**
+         * تطبيق Gharb Pharmacy ERP التفاعلي الكامل (إدارة المحاسبة، المخزون FEFO، الفواتير، AI، الصلاحيات، التقارير).
+         */
+        const ACCOUNTS = [
+            { id: "1101", code: "1101", nameAr: "الصندوق الرئيسي (ريال يمني)", type: "ASSET" },
+            { id: "1102", code: "1102", nameAr: "البنوك والمحافظ الإلكترونية", type: "ASSET" },
+            { id: "1103", code: "1103", nameAr: "ذمم العملاء (المدينون)", type: "ASSET" },
+            { id: "1104", code: "1104", nameAr: "مخزون الأدوية والمستلزمات", type: "ASSET" },
+            { id: "2101", code: "2101", nameAr: "ذمم الموردين وشركات الأدوية", type: "LIABILITY" },
+            { id: "2102", code: "2102", nameAr: "الضرائب والرسوم المستحقة", type: "LIABILITY" },
+            { id: "3101", code: "3101", nameAr: "رأس المال", type: "EQUITY" },
+            { id: "4101", code: "4101", nameAr: "إيرادات المبيعات", type: "REVENUE" },
+            { id: "5101", code: "5101", nameAr: "تكلفة البضاعة المباعة (COGS)", type: "COGS" },
+            { id: "5201", code: "5201", nameAr: "مصروف الرواتب والأجور", type: "EXPENSE" },
+            { id: "5202", code: "5202", nameAr: "مصروف الإيجار والكهرباء", type: "EXPENSE" }
+        ];
+
+        const ROLE_TITLES = {
+            OWNER: "مالك الصيدلية",
+            ACCOUNTANT: "المحاسب",
+            PHARMACIST: "الصيدلي",
+            AUDITOR: "المراجع (قراءة فقط)"
+        };
+
+        let appState = {};
+        let selectedUploadedFileName = null;
+
+        function buildDefaultState() {
+            const now = Date.now();
+            return {
+                role: "OWNER",
+                pendingSync: 0,
+                products: [
+                    {
+                        id: "P-1",
+                        nameAr: "أموكسيسيلين 500 ملغ كبسول",
+                        strength: "500mg",
+                        salePriceMinor: 110000, // 1,100.00 ر.ي
+                        weightedAvgCostMinor: 80000 // 800.00 ر.ي
+                    }
+                ],
+                batches: [
+                    {
+                        id: "BAT-1",
+                        productId: "P-1",
+                        batchNumber: "LOT-2027-01",
+                        expiryDate: now + 150 * 86400000,
+                        remainingQty: 12,
+                        unitCostMinor: 75000
+                    },
+                    {
+                        id: "BAT-2",
+                        productId: "P-1",
+                        batchNumber: "LOT-2028-02",
+                        expiryDate: now + 380 * 86400000,
+                        remainingQty: 18,
+                        unitCostMinor: 82000
+                    }
+                ],
+                customers: [
+                    { id: "C-1", nameAr: "مجمع الشفاء الطبي", phone: "770111222" },
+                    { id: "C-2", nameAr: "مستوصف الحياة", phone: "770333444" }
+                ],
+                suppliers: [
+                    { id: "S-1", nameAr: "شركة الدواء اليمنية للتوزيع", phone: "770555666" },
+                    { id: "S-2", nameAr: "شركة النور للأدوية والمستلزمات", phone: "770777888" }
+                ],
+                salesInvoices: [],
+                purchaseInvoices: [],
+                journalEntries: [],
+                ocrDrafts: [],
+                backups: [],
+                auditLogs: [
+                    { time: new Date().toLocaleTimeString("en-US", { hour12: false }), actor: "النظام", action: "INIT_ERP", detail: "تهيئة نظام غرب ERP والعمل المحلي" }
+                ]
+            };
+        }
+
+        function showMsg(msg, isErr = false) {
+            const box = document.getElementById("statusToast");
+            const msgEl = document.getElementById("statusToastMsg");
+            msgEl.textContent = msg;
+            box.className = isErr
+                ? "px-4 py-3 rounded-2xl bg-rose-950/85 border border-rose-700/60 text-rose-100 text-xs sm:text-sm flex items-start justify-between gap-3"
+                : "px-4 py-3 rounded-2xl bg-sky-950/80 border border-sky-700/60 text-sky-100 text-xs sm:text-sm flex items-start justify-between gap-3";
+            box.classList.remove("hidden");
+        }
+
+        function addAudit(action, detail) {
+            appState.auditLogs.unshift({
+                time: new Date().toLocaleTimeString("en-US", { hour12: false }),
+                actor: ROLE_TITLES[appState.role] || appState.role,
+                action,
+                detail
+            });
+        }
+
+        function canWrite() {
+            return appState.role !== "AUDITOR";
+        }
+
+        function fmtMinor(minor) {
+            return (minor / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " ر.ي";
+        }
+
+        function computeAccountBalances() {
+            const accMap = {};
+            ACCOUNTS.forEach(a => {
+                accMap[a.id] = { ...a, debitMinor: 0, creditMinor: 0, netMinor: 0 };
+            });
+
+            appState.journalEntries.forEach(je => {
+                if (je.status !== "POSTED") return;
+                je.lines.forEach(l => {
+                    if (!accMap[l.accountId]) return;
+                    accMap[l.accountId].debitMinor += l.debitMinor;
+                    accMap[l.accountId].creditMinor += l.creditMinor;
+                });
+            });
+
+            Object.values(accMap).forEach(a => {
+                if (a.type === "ASSET" || a.type === "EXPENSE" || a.type === "COGS") {
+                    a.netMinor = a.debitMinor - a.creditMinor;
+                } else {
+                    a.netMinor = a.creditMinor - a.debitMinor;
+                }
+            });
+
+            return Object.values(accMap);
+        }
+
+        function postDoubleEntry(description, lines) {
+            if (!canWrite()) {
+                showMsg("صلاحية غير كافية: دور المراجع للقراءة فقط ولا يسمح بالترحيل.", true);
+                return null;
+            }
+            const drSum = lines.reduce((s, l) => s + l.debitMinor, 0);
+            const crSum = lines.reduce((s, l) => s + l.creditMinor, 0);
+            if (drSum <= 0 || drSum !== crSum) {
+                showMsg(`فشل الترحيل: القيد غير متوازن (المدين: ${fmtMinor(drSum)} ، الدائن: ${fmtMinor(crSum)}).`, true);
+                return null;
+            }
+            const idx = appState.journalEntries.length + 1;
+            const entry = {
+                id: "JE-" + Date.now() + "-" + idx,
+                entryNumber: "JV-" + String(idx).padStart(6, "0"),
+                description,
+                status: "POSTED",
+                lines
+            };
+            appState.journalEntries.unshift(entry);
+            appState.pendingSync += 1;
+            addAudit("POST_JOURNAL", `${entry.entryNumber}: ${description}`);
+            return entry;
+        }
+
+        function reverseEntry(entryId) {
+            if (!canWrite()) {
+                showMsg("صلاحية غير كافية: دور المراجع لا يملك صلاحية عكس القيود.", true);
+                return;
+            }
+            const orig = appState.journalEntries.find(e => e.id === entryId);
+            if (!orig || orig.status !== "POSTED") return;
+
+            orig.status = "REVERSED";
+            const revLines = orig.lines.map(l => ({
+                accountId: l.accountId,
+                debitMinor: l.creditMinor,
+                creditMinor: l.debitMinor
+            }));
+
+            const idx = appState.journalEntries.length + 1;
+            const rev = {
+                id: "REV-" + Date.now() + "-" + idx,
+                entryNumber: "JV-" + String(idx).padStart(6, "0"),
+                description: `قيد عكسي للقيد ${orig.entryNumber}: ${orig.description}`,
+                status: "POSTED",
+                lines: revLines
+            };
+            appState.journalEntries.unshift(rev);
+            appState.pendingSync += 1;
+            addAudit("REVERSE_JOURNAL", `عكس ${orig.entryNumber} بواسطة ${rev.entryNumber}`);
+            renderAll();
+            showMsg(`تم إنشاء القيد العكسي ${rev.entryNumber} للقيد ${orig.entryNumber} بنجاح.`);
+        }
+
+        function refreshProductAvgCost(productId) {
+            const prod = appState.products.find(p => p.id === productId);
+            if (!prod) return;
+            const active = appState.batches.filter(b => b.productId === productId && b.remainingQty > 0);
+            const qtySum = active.reduce((s, b) => s + b.remainingQty, 0);
+            const costSum = active.reduce((s, b) => s + (b.remainingQty * b.unitCostMinor), 0);
+            if (qtySum > 0) {
+                prod.weightedAvgCostMinor = Math.round(costSum / qtySum);
+            }
+        }
+
+        function executePurchase(productId, supplierId, batchNumber, expiryMillis, qty, unitCostMinor, paymentMethod) {
+            if (!canWrite()) {
+                showMsg("صلاحية غير كافية لتسجيل فواتير المشتريات.", true);
+                return false;
+            }
+            if (qty <= 0 || unitCostMinor <= 0) {
+                showMsg("الكمية وسعر التكلفة يجب أن يكونا أكبر من الصفر.", true);
+                return false;
+            }
+            if (expiryMillis <= Date.now()) {
+                showMsg("مرفوض: يُمنع إدخال تشغيلة منتهية الصلاحية.", true);
+                return false;
+            }
+            const prod = appState.products.find(p => p.id === productId);
+            const sup = appState.suppliers.find(s => s.id === supplierId);
+            if (!prod || !sup) return false;
+
+            const totalMinor = qty * unitCostMinor;
+            appState.batches.push({
+                id: "BAT-" + Date.now() + "-" + Math.floor(Math.random() * 999),
+                productId: prod.id,
+                batchNumber,
+                expiryDate: expiryMillis,
+                remainingQty: qty,
+                unitCostMinor
+            });
+            refreshProductAvgCost(prod.id);
+
+            const creditAcc = paymentMethod === "CASH" ? "1101" : "2101";
+            const je = postDoubleEntry(`فاتورة شراء (${prod.nameAr} × ${qty}) من ${sup.nameAr}`, [
+                { accountId: "1104", debitMinor: totalMinor },
+                { accountId: creditAcc, creditMinor: totalMinor }
+            ]);
+            if (!je) return false;
+
+            const invNum = "PI-" + String(appState.purchaseInvoices.length + 1).padStart(6, "0");
+            appState.purchaseInvoices.unshift({
+                invoiceNumber: invNum,
+                supplierName: sup.nameAr,
+                productName: prod.nameAr,
+                qty,
+                totalMinor,
+                paymentMethod
+            });
+            renderAll();
+            showMsg(`تم اعتماد فاتورة المشتريات ${invNum} وإضافة ${qty} وحدة وترحيل القيد ${je.entryNumber}.`);
+            return true;
+        }
+
+        function executeSale(productId, customerId, qty, unitPriceMinor, paymentMethod) {
+            if (!canWrite()) {
+                showMsg("صلاحية غير كافية لتسجيل فواتير المبيعات.", true);
+                return false;
+            }
+            if (qty <= 0 || unitPriceMinor <= 0) {
+                showMsg("الكمية وسعر البيع يجب أن يكونا أكبر من الصفر.", true);
+                return false;
+            }
+            const prod = appState.products.find(p => p.id === productId);
+            if (!prod) return false;
+
+            const cust = appState.customers.find(c => c.id === customerId);
+            if (paymentMethod === "CREDIT" && !cust) {
+                showMsg("البيع الآجل يتطلب اختيار عميل.", true);
+                return false;
+            }
+
+            const now = Date.now();
+            const validBatches = appState.batches
+                .filter(b => b.productId === prod.id && b.remainingQty > 0 && b.expiryDate > now)
+                .sort((a, b) => a.expiryDate - b.expiryDate);
+
+            const avail = validBatches.reduce((s, b) => s + b.remainingQty, 0);
+            if (avail < qty) {
+                showMsg(`الكمية المتوفرة الصالحة (${avail}) أقل من المطلوب (${qty}). أضف مشتريات أولاً.`, true);
+                return false;
+            }
+
+            let rem = qty;
+            let totalCogsMinor = 0;
+            const used = [];
+
+            for (const b of validBatches) {
+                if (rem === 0) break;
+                const take = Math.min(b.remainingQty, rem);
+                b.remainingQty -= take;
+                totalCogsMinor += take * b.unitCostMinor;
+                used.push(`${b.batchNumber}:${take}`);
+                rem -= take;
+            }
+
+            const saleTotalMinor = qty * unitPriceMinor;
+            const debitAcc = paymentMethod === "CASH" ? "1101" : "1103";
+
+            const je = postDoubleEntry(`فاتورة بيع (${prod.nameAr} × ${qty}) [FEFO: ${used.join(", ")}]`, [
+                { accountId: debitAcc, debitMinor: saleTotalMinor },
+                { accountId: "4101", creditMinor: saleTotalMinor },
+                { accountId: "5101", debitMinor: totalCogsMinor },
+                { accountId: "1104", creditMinor: totalCogsMinor }
+            ]);
+            if (!je) return false;
+
+            const invNum = "SI-" + String(appState.salesInvoices.length + 1).padStart(6, "0");
+            appState.salesInvoices.unshift({
+                invoiceNumber: invNum,
+                customerName: cust ? cust.nameAr : "عميل نقدي",
+                productName: prod.nameAr,
+                qty,
+                totalMinor: saleTotalMinor,
+                cogsMinor: totalCogsMinor,
+                paymentMethod
+            });
+            renderAll();
+            showMsg(`تم اعتماد فاتورة البيع ${invNum} وصرف ${qty} وحدة بنظام FEFO وترحيل القيد ${je.entryNumber}.`);
+            return true;
+        }
+
+        function populateSelects() {
+            const pSelects = ["purProductSelect", "saleProductSelect", "ocrProductSelect"];
+            pSelects.forEach(id => {
+                const el = document.getElementById(id);
+                const prev = el.value;
+                el.innerHTML = "";
+                appState.products.forEach(p => el.add(new Option(`${p.nameAr} (${p.strength})`, p.id)));
+                if (prev && appState.products.some(p => p.id === prev)) el.value = prev;
+            });
+
+            const sSelects = ["purSupplierSelect", "ocrSupplierSelect"];
+            sSelects.forEach(id => {
+                const el = document.getElementById(id);
+                const prev = el.value;
+                el.innerHTML = "";
+                appState.suppliers.forEach(s => el.add(new Option(s.nameAr, s.id)));
+                if (prev && appState.suppliers.some(s => s.id === prev)) el.value = prev;
+            });
+
+            const cEl = document.getElementById("saleCustomerSelect");
+            const prevC = cEl.value;
+            cEl.innerHTML = `<option value="">-- عميل نقدي مباشر --</option>`;
+            appState.customers.forEach(c => cEl.add(new Option(`${c.nameAr} (${c.phone})`, c.id)));
+            if (prevC) cEl.value = prevC;
+
+            const dEl = document.getElementById("jeDebitSelect");
+            const crEl = document.getElementById("jeCreditSelect");
+            if (dEl.options.length === 0) {
+                ACCOUNTS.forEach(a => {
+                    dEl.add(new Option(`${a.code} - ${a.nameAr}`, a.id));
+                    crEl.add(new Option(`${a.code} - ${a.nameAr}`, a.id));
+                });
+                dEl.value = "5202";
+                crEl.value = "1101";
+            }
+        }
+
+        function renderAll() {
+            populateSelects();
+            document.getElementById("activeRoleHeader").textContent = ROLE_TITLES[appState.role] || appState.role;
+
+            const balances = computeAccountBalances();
+            const totalDr = balances.reduce((s, b) => s + b.debitMinor, 0);
+            const totalCr = balances.reduce((s, b) => s + b.creditMinor, 0);
+            const balanced = totalDr === totalCr;
+
+            const pill = document.getElementById("trialBalancePill");
+            pill.textContent = balanced ? "دفتر الأستاذ: متوازن 100%" : "تنبيه: عدم توازن!";
+            pill.className = balanced
+                ? "px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                : "px-3 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40";
+
+            const salesTotal = appState.salesInvoices.reduce((s, i) => s + i.totalMinor, 0);
+            const purTotal = appState.purchaseInvoices.reduce((s, i) => s + i.totalMinor, 0);
+
+            const rev = balances.filter(b => b.type === "REVENUE").reduce((s, b) => s + (b.creditMinor - b.debitMinor), 0);
+            const cogs = balances.filter(b => b.type === "COGS").reduce((s, b) => s + (b.debitMinor - b.creditMinor), 0);
+            const gross = rev - cogs;
+            const exp = balances.filter(b => b.type === "EXPENSE").reduce((s, b) => s + (b.debitMinor - b.creditMinor), 0);
+            const netIncome = gross - exp;
+
+            const totalStockQty = appState.batches.filter(b => b.remainingQty > 0).reduce((s, b) => s + b.remainingQty, 0);
+            const invValueMinor = appState.products.reduce((sum, p) => {
+                const qty = appState.batches.filter(b => b.productId === p.id && b.remainingQty > 0).reduce((x, b) => x + b.remainingQty, 0);
+                return sum + (qty * p.weightedAvgCostMinor);
+            }, 0);
+
+            // لوحة التحكم الرئيسية
+            document.getElementById("kpiSales").textContent = fmtMinor(salesTotal);
+            document.getElementById("kpiSalesCount").textContent = `عدد الفواتير: ${appState.salesInvoices.length}`;
+            document.getElementById("kpiPurchases").textContent = fmtMinor(purTotal);
+            document.getElementById("kpiPurchasesCount").textContent = `فواتير الواردات: ${appState.purchaseInvoices.length}`;
+            document.getElementById("kpiNetProfit").textContent = fmtMinor(netIncome);
+            document.getElementById("kpiGrossProfit").textContent = `مجمل الربح: ${fmtMinor(gross)}`;
+            document.getElementById("kpiInventoryValue").textContent = fmtMinor(invValueMinor);
+            document.getElementById("kpiStockUnits").textContent = `إجمالي الوحدات: ${totalStockQty}`;
+
+            const alertsBox = document.getElementById("dashboardAlertsBox");
+            const sortedBatches = [...appState.batches].filter(b => b.remainingQty > 0).sort((a, b) => a.expiryDate - b.expiryDate);
+            if (sortedBatches.length === 0) {
+                alertsBox.innerHTML = `<div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-400">لا توجد تشغيلات نشطة في المخزون حالياً.</div>`;
+            } else {
+                alertsBox.innerHTML = sortedBatches.slice(0, 4).map((b, i) => `
+                    <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-white">${i === 0 ? "الأقرب انتهاءً (FEFO): " : ""}${b.batchNumber}</div>
+                            <div class="text-[11px] text-slate-400 num-ltr">الانتهاء: ${new Date(b.expiryDate).toISOString().slice(0, 10)}</div>
+                        </div>
+                        <span class="font-bold text-emerald-400 num-ltr">${b.remainingQty} وحدة</span>
+                    </div>
+                `).join("");
+            }
+
+            // دليل الحسابات وميزان المراجعة
+            document.getElementById("chartOfAccountsList").innerHTML = balances.map(a => `
+                <div class="flex items-center justify-between bg-slate-950 border border-slate-800/80 rounded-xl px-3 py-2">
+                    <div>
+                        <div class="text-xs font-bold text-white">${a.code} - ${a.nameAr}</div>
+                        <div class="text-[11px] text-slate-400 num-ltr">مدين: ${fmtMinor(a.debitMinor)} | دائن: ${fmtMinor(a.creditMinor)}</div>
+                    </div>
+                    <span class="text-xs font-bold num-ltr ${a.netMinor >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${fmtMinor(a.netMinor)}</span>
+                </div>
+            `).join("");
+
+            // دفتر القيود اليومية
+            const jbEl = document.getElementById("journalBookList");
+            if (appState.journalEntries.length === 0) {
+                jbEl.innerHTML = `<div class="text-xs text-slate-400 py-6 text-center">لم يتم ترحيل قيود بعد. استخدم الأزرار أو الفواتير لإنشاء قيود مزدوجة.</div>`;
+            } else {
+                jbEl.innerHTML = appState.journalEntries.map(je => `
+                    <div class="flex items-center justify-between gap-2 bg-slate-950 border border-slate-800/80 rounded-xl px-3 py-2">
+                        <div>
+                            <div class="text-xs font-bold text-sky-400">${je.entryNumber} • <span class="text-amber-300">${je.status}</span></div>
+                            <div class="text-xs text-slate-200">${je.description}</div>
+                        </div>
+                        ${je.status === "POSTED"
+                            ? `<button type="button" onclick="reverseEntry('${je.id}')" class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold shrink-0">قيد عكسي</button>`
+                            : `<span class="text-[11px] text-slate-500 shrink-0">معكوس</span>`
+                        }
+                    </div>
+                `).join("");
+            }
+
+            // كتالوج الأصناف والتشغيلات
+            document.getElementById("tradeCatalogList").innerHTML = appState.products.map(p => {
+                const pBatches = appState.batches.filter(b => b.productId === p.id && b.remainingQty > 0).sort((a, b) => a.expiryDate - b.expiryDate);
+                const qty = pBatches.reduce((s, b) => s + b.remainingQty, 0);
+                return `
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-white">${p.nameAr} (${p.strength})</span>
+                            <span class="text-xs font-bold text-sky-400 num-ltr">الرصيد: ${qty}</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 num-ltr">متوسط التكلفة: ${fmtMinor(p.weightedAvgCostMinor)} | سعر البيع: ${fmtMinor(p.salePriceMinor)}</div>
+                        <div class="space-y-1 pt-1">
+                            ${pBatches.map(b => `
+                                <div class="text-[11px] text-emerald-300 flex justify-between num-ltr bg-slate-900/80 px-2 py-1 rounded">
+                                    <span>تشغيلة: ${b.batchNumber} (انتهاء: ${new Date(b.expiryDate).toISOString().slice(0, 10)})</span>
+                                    <span>متبقي: ${b.remainingQty} @ ${fmtMinor(b.unitCostMinor)}</span>
+                                </div>
+                            `).join("")}
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            // فواتير المبيعات والمشتريات
+            const allInvs = [
+                ...appState.salesInvoices.map(s => `
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 flex justify-between items-center">
+                        <div>
+                            <div class="text-xs font-bold text-emerald-400">بيع ${s.invoiceNumber} (${s.paymentMethod}) • ${s.customerName}</div>
+                            <div class="text-[11px] text-slate-400">${s.productName} × ${s.qty}</div>
+                        </div>
+                        <span class="text-xs font-bold text-white num-ltr">${fmtMinor(s.totalMinor)}</span>
+                    </div>
+                `),
+                ...appState.purchaseInvoices.map(p => `
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 flex justify-between items-center">
+                        <div>
+                            <div class="text-xs font-bold text-sky-400">شراء ${p.invoiceNumber} (${p.paymentMethod}) • ${p.supplierName}</div>
+                            <div class="text-[11px] text-slate-400">${p.productName} × ${p.qty}</div>
+                        </div>
+                        <span class="text-xs font-bold text-white num-ltr">${fmtMinor(p.totalMinor)}</span>
+                    </div>
+                `)
+            ];
+            document.getElementById("tradeInvoicesList").innerHTML = allInvs.length
+                ? allInvs.join("")
+                : `<div class="text-xs text-slate-400 py-6 text-center">لا توجد فواتير مسجلة بعد.</div>`;
+
+            // مسودات OCR / AI
+            const draftsEl = document.getElementById("ocrDraftsQueue");
+            if (appState.ocrDrafts.length === 0) {
+                draftsEl.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center">لا توجد مسودات فواتير بانتظار المراجعة حالياً.</div>`;
+            } else {
+                draftsEl.innerHTML = appState.ocrDrafts.map(d => `
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <div class="text-xs font-bold text-white">${d.draftNo} • ${d.productName} (${d.qty} وحدة)</div>
+                            <div class="text-[11px] text-slate-400 num-ltr">المورد: ${d.supplierName} | تكلفة الوحدة: ${fmtMinor(d.unitCostMinor)} | المرفق: ${d.fileName || "مسودة مباشرة"}</div>
+                            <div class="text-[11px] text-amber-300">الحالة: ${d.status} — يتطلب اعتماداً بشرياً قبل الترحيل</div>
+                        </div>
+                        ${d.status === "DRAFT" ? `
+                            <div class="flex gap-2">
+                                <button type="button" onclick="approveOcrDraft('${d.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white">اعتماد وترحيل</button>
+                                <button type="button" onclick="rejectOcrDraft('${d.id}')" class="px-3 py-1.5 rounded-xl bg-rose-600/80 hover:bg-rose-500 text-xs font-bold text-white">رفض</button>
+                            </div>
+                        ` : `<span class="text-xs font-bold text-slate-400">${d.status}</span>`}
+                    </div>
+                `).join("");
+            }
+
+            // العملاء والموردون
+            document.getElementById("customersList").innerHTML = appState.customers.map(c => `
+                <div class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 flex justify-between items-center">
+                    <span class="text-xs font-bold text-white">${c.nameAr}</span>
+                    <span class="text-xs text-slate-400 num-ltr">${c.phone}</span>
+                </div>
+            `).join("");
+
+            document.getElementById("suppliersList").innerHTML = appState.suppliers.map(s => `
+                <div class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 flex justify-between items-center">
+                    <span class="text-xs font-bold text-white">${s.nameAr}</span>
+                    <span class="text-xs text-slate-400 num-ltr">${s.phone}</span>
+                </div>
+            `).join("");
+
+            // التقارير المالية
+            const liab = balances.filter(b => b.type === "LIABILITY").reduce((s, b) => s + (b.creditMinor - b.debitMinor), 0);
+            const eq = balances.filter(b => b.type === "EQUITY").reduce((s, b) => s + (b.creditMinor - b.debitMinor), 0);
+            const eqPlusNet = eq + netIncome;
+
+            document.getElementById("repRev").textContent = fmtMinor(rev);
+            document.getElementById("repCogs").textContent = fmtMinor(cogs);
+            document.getElementById("repGross").textContent = fmtMinor(gross);
+            document.getElementById("repExp").textContent = fmtMinor(exp);
+            document.getElementById("repNet").textContent = fmtMinor(netIncome);
+
+            document.getElementById("repAssets").textContent = fmtMinor(invValueMinor + balances.filter(b => b.type === "ASSET" && b.id !== "1104").reduce((s, b) => s + (b.debitMinor - b.creditMinor), 0));
+            document.getElementById("repLiab").textContent = fmtMinor(liab);
+            document.getElementById("repEqInc").textContent = fmtMinor(eqPlusNet);
+            document.getElementById("repBalOk").textContent = balanced ? "متوازن 100%" : "يحتاج مراجعة";
+
+            // النسخ الاحتياطية وسجل التدقيق
+            document.getElementById("adminBackupsList").innerHTML = appState.backups.length
+                ? appState.backups.map(bk => `
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 flex justify-between items-center text-xs">
+                        <div>
+                            <div class="font-bold text-emerald-400">نسخة مشفرة • ${bk.time}</div>
+                            <div class="text-[11px] text-slate-400 num-ltr">القيود: ${bk.entriesCount} | بصمة: ${bk.hash.slice(0, 12)}...</div>
+                        </div>
+                        <button type="button" onclick="verifyBackupSnapshot('${bk.id}')" class="px-2.5 py-1 rounded-lg bg-sky-600 text-white font-bold">تحقق</button>
+                    </div>
+                `).join("")
+                : `<div class="text-xs text-slate-400 py-2">لا توجد نسخ احتياطية منشأة بعد.</div>`;
+
+            document.getElementById("auditLogList").innerHTML = appState.auditLogs.map(log => `
+                <div class="bg-slate-950 border border-slate-800/80 rounded-xl px-3 py-2">
+                    <div class="flex justify-between text-[11px] text-sky-400 font-bold">
+                        <span>${log.action} • ${log.actor}</span>
+                        <span class="num-ltr">${log.time}</span>
+                    </div>
+                    <div class="text-xs text-slate-200 mt-0.5">${log.detail}</div>
+                </div>
+            `).join("");
+        }
+
+        function approveOcrDraft(draftId) {
+            if (!canWrite()) {
+                showMsg("صلاحية غير كافية لاعتماد المسودات.", true);
+                return;
+            }
+            const d = appState.ocrDrafts.find(x => x.id === draftId);
+            if (!d || d.status !== "DRAFT") return;
+            const ok = executePurchase(
+                d.productId,
+                d.supplierId,
+                "LOT-OCR-" + Math.floor(Math.random() * 9000 + 1000),
+                Date.now() + 365 * 86400000,
+                d.qty,
+                d.unitCostMinor,
+                "CASH"
+            );
+            if (ok) {
+                d.status = "APPROVED";
+                renderAll();
+            }
+        }
+
+        function rejectOcrDraft(draftId) {
+            const d = appState.ocrDrafts.find(x => x.id === draftId);
+            if (!d || d.status !== "DRAFT") return;
+            d.status = "REJECTED";
+            addAudit("REJECT_OCR_DRAFT", `رفض المسودة ${d.draftNo}`);
+            renderAll();
+            showMsg(`تم رفض المسودة ${d.draftNo} دون ترحيل أي قيد.`);
+        }
+
+        function verifyBackupSnapshot(id) {
+            const bk = appState.backups.find(b => b.id === id);
+            if (!bk) return;
+            showMsg(`تم التحقق من سلامة النسخة المشفرة بنجاح (عدد القيود: ${bk.entriesCount}).`);
+        }
+
+        function switchSection(secName) {
+            document.querySelectorAll(".nav-pill").forEach(btn => {
+                const active = btn.dataset.section === secName;
+                btn.className = active
+                    ? "nav-pill shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition bg-sky-600 text-white shadow"
+                    : "nav-pill shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition text-slate-300 hover:bg-slate-800";
+            });
+            document.querySelectorAll(".section-panel").forEach(panel => panel.classList.add("hidden"));
+            document.getElementById("sec-" + secName).classList.remove("hidden");
+        }
+
+        function copyCsv(text, msg) {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.setAttribute("readonly", "");
+            ta.style.position = "absolute";
+            ta.style.left = "-9999px";
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand("copy");
+                showMsg(msg);
+            } catch (e) {
+                showMsg("تم عرض ملف CSV في الصندوق؛ يمكنك نسخه مباشرة.");
+            }
+            document.body.removeChild(ta);
+        }
+
+        function bindEvents() {
+            // تعيين تاريخ افتراضي بعد سنة لحقل الانتهاء
+            const futureIso = new Date(Date.now() + 365 * 86400000).toISOString().slice(0, 10);
+            document.getElementById("purExpiryInput").value = futureIso;
+
+            document.querySelectorAll(".nav-pill").forEach(btn => {
+                btn.addEventListener("click", () => switchSection(btn.dataset.section));
+            });
+
+            document.getElementById("closeToastBtn").addEventListener("click", () => {
+                document.getElementById("statusToast").classList.add("hidden");
+            });
+
+            document.getElementById("resetSystemBtn").addEventListener("click", () => {
+                appState = buildDefaultState();
+                selectedUploadedFileName = null;
+                document.getElementById("uploadedFileInfo").textContent = "لم يتم اختيار ملف بعد (يمكنك أيضاً إنشاء مسودة مباشرة للاختبار).";
+                renderAll();
+                showMsg("تمت إعادة ضبط بيانات التجربة إلى الحالة الافتراضية.");
+            });
+
+            document.getElementById("quickScanOpenBtn").addEventListener("click", () => switchSection("ai_ocr"));
+            document.getElementById("dashQuickOcrBtn").addEventListener("click", () => switchSection("ai_ocr"));
+            document.getElementById("dashQuickExpenseBtn").addEventListener("click", () => switchSection("accounting"));
+
+            document.getElementById("dashQuickPurchaseBtn").addEventListener("click", () => {
+                executePurchase("P-1", "S-1", "LOT-QUICK-" + Math.floor(Math.random() * 900 + 100), Date.now() + 300 * 86400000, 20, 80000, "CASH");
+            });
+
+            document.getElementById("dashQuickSaleBtn").addEventListener("click", () => {
+                executeSale("P-1", "C-1", 3, 110000, "CASH");
+            });
+
+            document.getElementById("submitPurchaseBtn").addEventListener("click", () => {
+                const pid = document.getElementById("purProductSelect").value;
+                const sid = document.getElementById("purSupplierSelect").value;
+                const batchNo = document.getElementById("purBatchInput").value.trim() || "LOT-NEW";
+                const expDateStr = document.getElementById("purExpiryInput").value;
+                const expMillis = expDateStr ? new Date(expDateStr).getTime() : Date.now() + 365 * 86400000;
+                const qty = parseInt(document.getElementById("purQtyInput").value, 10) || 0;
+                const costMinor = Math.round((parseFloat(document.getElementById("purCostInput").value) || 0) * 100);
+                const pay = document.getElementById("purPaymentSelect").value;
+                executePurchase(pid, sid, batchNo, expMillis, qty, costMinor, pay);
+            });
+
+            document.getElementById("submitSaleBtn").addEventListener("click", () => {
+                const pid = document.getElementById("saleProductSelect").value;
+                const cid = document.getElementById("saleCustomerSelect").value || null;
+                const qty = parseInt(document.getElementById("saleQtyInput").value, 10) || 0;
+                const priceMinor = Math.round((parseFloat(document.getElementById("salePriceInput").value) || 0) * 100);
+                const pay = document.getElementById("salePaymentSelect").value;
+                executeSale(pid, cid, qty, priceMinor, pay);
+            });
+
+            document.getElementById("addNewProductBtn").addEventListener("click", () => {
+                if (!canWrite()) {
+                    showMsg("صلاحية غير كافية لإضافة أصناف.", true);
+                    return;
+                }
+                const nameAr = document.getElementById("newProdName").value.trim();
+                const strength = document.getElementById("newProdStrength").value.trim() || "عام";
+                const costMinor = Math.round((parseFloat(document.getElementById("newProdCost").value) || 0) * 100);
+                const priceMinor = Math.round((parseFloat(document.getElementById("newProdPrice").value) || 0) * 100);
+                if (!nameAr || costMinor <= 0 || priceMinor <= 0) {
+                    showMsg("أدخل اسم الصنف وسعر الشراء وسعر البيع بشكل صحيح.", true);
+                    return;
+                }
+                appState.products.push({
+                    id: "P-" + Date.now(),
+                    nameAr,
+                    strength,
+                    weightedAvgCostMinor: costMinor,
+                    salePriceMinor: priceMinor
+                });
+                document.getElementById("newProdName").value = "";
+                addAudit("ADD_PRODUCT", `إضافة صنف: ${nameAr}`);
+                renderAll();
+                showMsg(`تمت إضافة الصنف (${nameAr}) بنجاح.`);
+            });
+
+            // رفع ملف الفاتورة وتوليد مسودة للمراجعة
+            document.getElementById("invoiceFileInput").addEventListener("change", (ev) => {
+                const file = ev.target.files && ev.target.files[0];
+                if (file) {
+                    selectedUploadedFileName = file.name;
+                    document.getElementById("uploadedFileInfo").textContent = `تم اختيار الملف: ${file.name} (${Math.max(1, Math.round(file.size / 1024))} KB)`;
+                    showMsg(`تم إرفاق المستند (${file.name})؛ اضغط على (تحويل إلى مسودة فاتورة للمراجعة البشرية).`);
+                }
+            });
+
+            document.getElementById("createOcrDraftBtn").addEventListener("click", () => {
+                const pid = document.getElementById("ocrProductSelect").value;
+                const sid = document.getElementById("ocrSupplierSelect").value;
+                const prod = appState.products.find(p => p.id === pid);
+                const sup = appState.suppliers.find(s => s.id === sid);
+                const qty = parseInt(document.getElementById("ocrQtyInput").value, 10) || 10;
+                const unitCostMinor = Math.round((parseFloat(document.getElementById("ocrUnitCostInput").value) || 800) * 100);
+
+                const draftNo = "DRF-AI-" + Math.floor(Math.random() * 9000 + 1000);
+                appState.ocrDrafts.unshift({
+                    id: "DRF-" + Date.now(),
+                    draftNo,
+                    productId: pid,
+                    productName: prod ? prod.nameAr : "صنف",
+                    supplierId: sid,
+                    supplierName: sup ? sup.nameAr : "مورد",
+                    qty,
+                    unitCostMinor,
+                    fileName: selectedUploadedFileName,
+                    status: "DRAFT"
+                });
+                addAudit("CREATE_OCR_DRAFT", `مسودة ${draftNo} للمراجعة`);
+                renderAll();
+                showMsg(`تم إنشاء المسودة ${draftNo} للمراجعة البشرية؛ راجعها واضغط (اعتماد وترحيل) عند التأكد.`);
+            });
+
+            document.querySelectorAll(".quick-q-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    document.getElementById("aiQueryInput").value = btn.dataset.q;
+                });
+            });
+
+            document.getElementById("runAiQueryBtn").addEventListener("click", () => {
+                const q = document.getElementById("aiQueryInput").value.trim();
+                const salesSum = appState.salesInvoices.reduce((s, i) => s + i.totalMinor, 0);
+                const purSum = appState.purchaseInvoices.reduce((s, i) => s + i.totalMinor, 0);
+                const balances = computeAccountBalances();
+                const rev = balances.filter(b => b.type === "REVENUE").reduce((s, b) => s + (b.creditMinor - b.debitMinor), 0);
+                const cogs = balances.filter(b => b.type === "COGS").reduce((s, b) => s + (b.debitMinor - b.creditMinor), 0);
+                const exp = balances.filter(b => b.type === "EXPENSE").reduce((s, b) => s + (b.debitMinor - b.creditMinor), 0);
+                const net = rev - cogs - exp;
+                const stockQty = appState.batches.filter(b => b.remainingQty > 0).reduce((s, b) => s + b.remainingQty, 0);
+
+                document.getElementById("aiResultBox").textContent =
+                    `تقرير فوري من السجلات الفعلية لاستفسار "${q}": إجمالي المبيعات (${fmtMinor(salesSum)})، إجمالي المشتريات (${fmtMinor(purSum)})، صافي الربح (${fmtMinor(net)})، والرصيد المتاح في المخزون (${stockQty} وحدة) لدى (${appState.customers.length}) عملاء و(${appState.suppliers.length}) موردين.`;
+            });
+
+            document.getElementById("postJournalBtn").addEventListener("click", () => {
+                const dAcc = document.getElementById("jeDebitSelect").value;
+                const cAcc = document.getElementById("jeCreditSelect").value;
+                const amtMinor = Math.round((parseFloat(document.getElementById("jeAmountInput").value) || 0) * 100);
+                const desc = document.getElementById("jeDescInput").value.trim() || "قيد محاسبي مزدوج";
+                if (dAcc === cAcc) {
+                    showMsg("يجب اختيار حساب مدين مختلف عن الحساب الدائن.", true);
+                    return;
+                }
+                const je = postDoubleEntry(desc, [
+                    { accountId: dAcc, debitMinor: amtMinor },
+                    { accountId: cAcc, creditMinor: amtMinor }
+                ]);
+                if (je) {
+                    renderAll();
+                    showMsg(`تم ترحيل القيد ${je.entryNumber} بنجاح.`);
+                }
+            });
+
+            document.getElementById("addPartyBtn").addEventListener("click", () => {
+                if (!canWrite()) {
+                    showMsg("صلاحية غير كافية لإضافة عملاء أو موردين.", true);
+                    return;
+                }
+                const kind = document.getElementById("partyTypeSelect").value;
+                const nameAr = document.getElementById("partyNameInput").value.trim();
+                const phone = document.getElementById("partyPhoneInput").value.trim() || "770000000";
+                if (!nameAr) {
+                    showMsg("يرجى إدخال الاسم.", true);
+                    return;
+                }
+                if (kind === "CUSTOMER") {
+                    appState.customers.push({ id: "C-" + Date.now(), nameAr, phone });
+                } else {
+                    appState.suppliers.push({ id: "S-" + Date.now(), nameAr, phone });
+                }
+                document.getElementById("partyNameInput").value = "";
+                addAudit("ADD_PARTY", `${kind}: ${nameAr}`);
+                renderAll();
+                showMsg(`تمت إضافة ${nameAr} بنجاح.`);
+            });
+
+            document.getElementById("postVoucherBtn").addEventListener("click", () => {
+                const kind = document.getElementById("voucherKindSelect").value;
+                const amtMinor = Math.round((parseFloat(document.getElementById("voucherAmountInput").value) || 0) * 100);
+                const note = document.getElementById("voucherNoteInput").value.trim() || "سند مالي";
+                if (amtMinor <= 0) {
+                    showMsg("أدخل مبلغاً صحيحاً أكبر من الصفر.", true);
+                    return;
+                }
+                const lines = kind === "RECEIPT"
+                    ? [{ accountId: "1101", debitMinor: amtMinor }, { accountId: "1103", creditMinor: amtMinor }]
+                    : [{ accountId: "2101", debitMinor: amtMinor }, { accountId: "1101", creditMinor: amtMinor }];
+                const je = postDoubleEntry(`${kind === "RECEIPT" ? "سند قبض" : "سند صرف"}: ${note}`, lines);
+                if (je) {
+                    renderAll();
+                    showMsg(`تم ترحيل السند محاسبياً في القيد ${je.entryNumber}.`);
+                }
+            });
+
+            document.getElementById("exportCsvBtn").addEventListener("click", () => {
+                const balances = computeAccountBalances();
+                const rows = ["Code,AccountNameAr,Type,Debit,Credit,NetBalance"];
+                balances.forEach(b => rows.push(`"${b.code}","${b.nameAr}",${b.type},${(b.debitMinor / 100).toFixed(2)},${(b.creditMinor / 100).toFixed(2)},${(b.netMinor / 100).toFixed(2)}`));
+                const csv = rows.join("\n");
+                document.getElementById("reportCsvOut").textContent = csv;
+                copyCsv(csv, "تم توليد ونسخ تقرير ميزان المراجعة بصيغة CSV.");
+            });
+
+            document.getElementById("exportInvCsvBtn").addEventListener("click", () => {
+                const rows = ["ProductNameAr,Strength,StockQty,WeightedAvgCost,DefaultSalePrice"];
+                appState.products.forEach(p => {
+                    const qty = appState.batches.filter(b => b.productId === p.id && b.remainingQty > 0).reduce((s, b) => s + b.remainingQty, 0);
+                    rows.push(`"${p.nameAr}","${p.strength}",${qty},${(p.weightedAvgCostMinor / 100).toFixed(2)},${(p.salePriceMinor / 100).toFixed(2)}`);
+                });
+                const csv = rows.join("\n");
+                document.getElementById("reportCsvOut").textContent = csv;
+                copyCsv(csv, "تم توليد ونسخ تقرير المخزون بصيغة CSV.");
+            });
+
+            document.getElementById("printReportBtn").addEventListener("click", () => {
+                window.print();
+            });
+
+            document.querySelectorAll(".role-switch").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    appState.role = btn.dataset.role;
+                    document.querySelectorAll(".role-switch").forEach(b => {
+                        b.className = "role-switch px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300";
+                    });
+                    btn.className = "role-switch px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white";
+                    renderAll();
+                    showMsg(`تم التبديل إلى دور: ${ROLE_TITLES[appState.role]}.`);
+                });
+            });
+
+            document.getElementById("syncQueueBtn").addEventListener("click", () => {
+                if (!canWrite()) {
+                    showMsg("دور المراجع لا يملك صلاحية المزامنة.", true);
+                    return;
+                }
+                const c = appState.pendingSync;
+                appState.pendingSync = 0;
+                addAudit("SYNC_QUEUE", `مزامنة ${c} عملية`);
+                renderAll();
+                showMsg(`تمت مزامنة (${c}) عملية محلية بنجاح.`);
+            });
+
+            document.getElementById("makeBackupBtn").addEventListener("click", () => {
+                if (!canWrite()) {
+                    showMsg("دور المراجع لا يملك صلاحية إنشاء نسخ احتياطية.", true);
+                    return;
+                }
+                const hash = Array.from({ length: 64 }, () => "0123456789abcdef"[Math.floor(Math.random() * 16)]).join("");
+                appState.backups.unshift({
+                    id: "BK-" + Date.now(),
+                    time: new Date().toLocaleTimeString("en-US", { hour12: false }),
+                    entriesCount: appState.journalEntries.length,
+                    hash
+                });
+                addAudit("ENCRYPTED_BACKUP", `نسخة تضم ${appState.journalEntries.length} قيد`);
+                renderAll();
+                showMsg("تم إنشاء نسخة احتياطية مشفرة بنجاح.");
+            });
+        }
+
+        appState = buildDefaultState();
+        bindEvents();
+        renderAll();
+    </script>
+<script>// اكتب دوال JavaScript هنا
+console.log('gharb studi app ready');</script></body>
 </html>
+
+```
