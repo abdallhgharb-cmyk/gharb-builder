@@ -1,4 +1,4 @@
-package com. Accountantadministration.app
+package com.accountantadministration.app
 
 import android.annotation.SuppressLint
 import android.os.Bundle

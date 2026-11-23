@@ -3,10 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "com. Accountantadministration.app"
+    namespace = "com.accountantadministration.app"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com. Accountantadministration.app"
+        applicationId = "com.accountantadministration.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
