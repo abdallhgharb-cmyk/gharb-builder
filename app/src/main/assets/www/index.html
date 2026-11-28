@@ -3,160 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحليل إعدادات تعطيل الحزم (importExportSetting)</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f4f6f9;
-            color: #1f2937;
-            line-height: 1.7;
-            margin: 0;
-            padding: 24px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            padding: 32px;
-        }
-        h1 {
-            color: #111827;
-            font-size: 1.6rem;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 12px;
-            margin-top: 0;
-        }
-        h2 {
-            color: #1e3a8a;
-            font-size: 1.25rem;
-            margin-top: 28px;
-            margin-bottom: 12px;
-        }
-        p {
-            margin-bottom: 16px;
-        }
-        .code-block {
-            background-color: #1e293b;
-            color: #e2e8f0;
-            padding: 16px;
-            border-radius: 8px;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 0.9rem;
-            direction: ltr;
-            text-align: left;
-            overflow-x: auto;
-            margin-bottom: 24px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 0.95rem;
-        }
-        th, td {
-            border: 1px solid #d1d5db;
-            padding: 12px 14px;
-            text-align: right;
-            vertical-align: top;
-        }
-        th {
-            background-color: #1e3a8a;
-            color: #ffffff;
-            font-weight: 600;
-        }
-        tr:nth-child(even) {
-            background-color: #f9fafb;
-        }
-        .pkg-name {
-            font-family: "Courier New", Courier, monospace;
-            font-weight: bold;
-            color: #b91c1c;
-            direction: ltr;
-            display: inline-block;
-        }
-        ul {
-            padding-right: 20px;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        code {
-            background-color: #f3f4f6;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 0.9em;
-            color: #dc2626;
-            direction: ltr;
-            display: inline-block;
-        }
-        .note-box {
-            background-color: #eff6ff;
-            border-right: 4px solid #2563eb;
-            padding: 14px 18px;
-            border-radius: 6px;
-            margin-top: 24px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>تحليل ملف إعدادات تعطيل الحزم (XML)</h1>
-        <p>
-            يمثل كود XML المرفق <strong>قائمة إعدادات استيراد/تصدير</strong> (مُحوَّلة من مصفوفة Java <code>ArrayList</code>) تُستخدم في أدوات تعطيل الحزم وإدارة أجهزة أندرويد لتحديد حزم نظام معينة وجعلها <strong>معطّلة (Disabled)</strong>.
-        </p>
-
-        <div class="code-block">&lt;importExportSetting&gt;
-  &lt;disabledPackages class="java.util.ArrayList"&gt;
-    &lt;string&gt;com.sec.enterprise.knox.cloudmdm.smdms&lt;/string&gt;
-    &lt;string&gt;com.google.android.apps.work.oobconfig&lt;/string&gt;
-    &lt;string&gt;com.google.android.gms&lt;/string&gt;
-  &lt;/disabledPackages&gt;
-&lt;/importExportSetting&gt;</div>
-
-        <h2>وظيفة كل حزمة وتأثير تعطيلها</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>اسم الحزمة (Package Name)</th>
-                    <th>ماهيتها</th>
-                    <th>الدور والتأثير عند التعطيل</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span class="pkg-name">com.sec.enterprise.knox.cloudmdm.smdms</span></td>
-                    <td><strong>خدمة تسجيل Samsung Knox</strong></td>
-                    <td>تتولى تسجيل الأجهزة في أنظمة إدارة المؤسسات (MDM) وتطبيق السياسات عن بُعد على أجهزة سامسونج. يؤدي تعطيلها إلى إيقاف مطالبات التسجيل على الأجهزة المدعومة، رغم أن القيود على مستوى الخادم أو العتاد قد تستمر بعد إعادة ضبط المصنع.</td>
-                </tr>
-                <tr>
-                    <td><span class="pkg-name">com.google.android.apps.work.oobconfig</span></td>
-                    <td><strong>تهيئة الإعداد الأولي (OOB Config)</strong></td>
-                    <td>تعمل أثناء الإعداد الأولي للجهاز أو عند الاتصال بالشبكة للتحقق من التهيئة عن بُعد وحالات القفل/السياسات. قد يؤدي تعطيلها إلى التأثير على خطوات معالج الإعداد أو تدفقات التحقق من الحسابات والسياسات.</td>
-                </tr>
-                <tr>
-                    <td><span class="pkg-name">com.google.android.gms</span></td>
-                    <td><strong>خدمات Google Play (Google Play Services)</strong></td>
-                    <td>الإطار الأساسي الذي يشغّل متجر Play، وإشعارات التطبيقات (FCM)، وخدمات الموقع، وتسجيل الدخول بحساب جوجل، ومعظم تطبيقات جوجل والجهات الخارجية. يؤدي تعطيلها إلى تعطل المتجر وتسجيل الدخول والعديد من التطبيقات اليومية.</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h2>ملاحظات عملية وتنبيهات</h2>
-        <ul>
-            <li><strong>توافق الأدوات:</strong> صيغة <code>&lt;importExportSetting&gt;</code> مع <code>class="java.util.ArrayList"</code> تخص تطبيقات وأدوات تعطيل حزم خارجية محددة، ولا تُستخدم مباشرة مع أوامر <code>adb</code> القياسية (حيث يتم تمرير أسماء الحزم مباشرة لأوامر مثل <code>pm disable-user</code>).</li>
-            <li><strong>الآثار الجانبية:</strong> تعطيل <code>com.google.android.gms</code> يؤثر بشكل واسع على عمل أغلب التطبيقات والإشعارات المعتمدة على خدمات جوجل، كما أن تعطيل <code>oobconfig</code> أو حزم Knox قد يسبب أخطاء في الإعداد أو تعطل بعض الميزات حسب إصدار النظام.</li>
-            <li><strong>الملكية والصلاحيات:</strong> يجب تعديل مكونات التسجيل والتهيئة فقط على الأجهزة التي تملكها بشكل قانوني أو لديك تصريح بإدارتها.</li>
-        </ul>
-
-        <div class="note-box">
-            <strong>ما الذي تود القيام به؟</strong> هل ترغب في تحويل هذه القائمة إلى أوامر ADB، أو استكشاف مشكلة متعلقة بإعداد الجهاز، أو مراجعة تأثير تعطيل هذه الحزم؟
-        </div>
-    </div>
-</body>
+    <meta http-equiv="refresh" content="0; url=https://ai.studio/apps/90c1503e-d618-4e4b-9005-5ddae2fad4dc?fullscreenApplet=true">
+    <title>ai.studio</title>
+<style>/* اكتب تنسيقات CSS هنا */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 16px;
+}</style></head>
+<body style="background:#0B1120;color:#F8FAFC;font-family:sans-serif;text-align:center;padding:40px;">
+    <h2 style="color:#10B981;">جاري فتح التطبيق...</h2>
+    <p>https://ai.studio/apps/90c1503e-d618-4e4b-9005-5ddae2fad4dc?fullscreenApplet=true</p>
+<script>// اكتب دوال JavaScript هنا
+console.log('gharb studi app ready');</script></body>
 </html>
